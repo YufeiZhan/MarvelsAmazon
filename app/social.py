@@ -29,4 +29,4 @@ def reviews():
         results = Reviews.get_reviews_for_seller(current_user.id)
         return render_template('review.html', reviews=results)
     else:
-        return render_template('base.html')
+        return redirect(url_for('users.login'))
