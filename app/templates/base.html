@@ -7,6 +7,7 @@
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" id="bootstrap-icon">
   <style>
     body {
         font-family: "Lato", sans-serif;
@@ -22,6 +23,7 @@
         background-color: #000;
         overflow-x: hidden;
         padding-top: 20px;
+        display: flex; /* Allow elements to display in a row */
     }
 
     .main {
@@ -48,12 +50,14 @@
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue">Welcome to CompSci 316 Mini Amazon!</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+      <a href="{{ url_for('index.index') }}" type="button"> <h1 style="color:aliceblue">Young N Broke</h1></a>
+      <div style="color: aliceblue; text-align: right; margin-bottom: 25px; margin-left: auto;">
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+          Hello {{current_user.firstname}}! 
+          <a href="{{ url_for('carts.lookup') }}" type="button" class="btn btn-light"><i class="bi bi-cart"></i> Cart</a>
+          <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
         {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Login/Register</a>
         {% endif %}
       </div>
     {% endblock %}
