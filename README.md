@@ -4,7 +4,7 @@ Based on  [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](h
 ## Dummy User
 For development purpose, we have a dummy user that can be used to test newly-implemented functionalities.
 
-**Username**: dummy@duke.edu
+**Username**: dummy@duke.edu <br>
 **Password**: 123
 
 ## Development Notes
@@ -21,6 +21,7 @@ Some useful commands:
 
 ### Links
 - **Database design**: https://lucid.app/lucidchart/b888d686-46d6-44e5-a180-3501dc886c98/edit?invitationId=inv_de774230-9b13-42ec-8b57-4c7cc1f3fb67&page=0_0#
+- **Website Figma**: https://www.figma.com/file/yUVon71jBbMF8h5J8P4IyM/Mini-Amazon?type=design&node-id=0%3A1&mode=design&t=4pAnItnrbubzwm4u-1
 - **Tutorial**: https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton/-/blob/main/TUTORIAL.md
 
 ### Milestones
@@ -36,8 +37,8 @@ Some useful commands:
 **Social Guru**: Ethan <br>
 
 ### Todo:
-[] Some database schemas creation in create.sql didn't enforce primary key constraint
-[] Fix Cartitems status field (should only has 2 status)
+- [] Some database schemas creation in create.sql didn't enforce primary key constraint
+- [] Fix Cartitems status field (should only has 2 status)
 
 ## Note on Hiding Credentials
 
