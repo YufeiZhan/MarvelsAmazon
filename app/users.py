@@ -25,6 +25,22 @@ def account():
         return render_template('account.html', title='Account Detail')
 
 
+@bp.route('/update/<id>', methods=['GET', 'POST'])
+def update(id):
+    if current_user.is_authenticated:
+        form = UpdateForm()
+        if form.validate_on_submit():
+            if User.update_user_info(id, form.email.data, form.password.data, form.firstname.data, form.lastname.data):
+                flash('Congratulations. You have updated your user information.')
+                return redirect(url_for('users.account'))
+        return render_template('update.html', title='Account Info Update', form=form)
+    # Restrict user/request from accessing this page w/o login
+    else:
+        flash('Restricted access ONLY. Please sign in or register first.')
+        return redirect(url_for('users.login'))
+
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -53,6 +69,18 @@ class RegistrationForm(FlaskForm):
         'Repeat Password', validators=[DataRequired(),
                                        EqualTo('password')])
     submit = SubmitField('Register')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Update')
 
     def validate_email(self, email):
         if User.email_exists(email.data):
