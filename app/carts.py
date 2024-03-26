@@ -13,7 +13,7 @@ def lookup():
     if current_user.is_authenticated:
         # Get all inventory items for the current user/seller
         cart_items = Cart.get_all_by_uid(current_user.id)
-        return render_template('cart.html', cart_items=cart_items)
+        return render_template('cart.html', cart_items=cart_items if cart_items else [])
     else:
         # If the user is not authenticated,  redirect to login page
         return redirect(url_for('users.login'))
