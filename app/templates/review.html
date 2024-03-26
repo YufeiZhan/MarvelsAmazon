@@ -4,29 +4,33 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-<h2>Reviews for user:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Seller ID</th>
-      <th scope="col">Rating</th>
-      <th scope="col">Review Time</th>
-      <th scope="col">Upvotes</th>
-      <th scope="col">Content</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for r in reviews%}
+  {% if reviews %}
+  <h2>Reviews for sellers that you've brough items from:</h2>
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
       <tr>
-        <td>{{r.seller_id}}</td>
-        <td>{{r.rating}}</td>
-        <td>{{r.review_time}}</td>
-        <td>{{r.upvotes}}</td>
-        <td>{{r.content}}</td>
+        <th scope="col">Seller ID</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review Time</th>
+        <th scope="col">Upvotes</th>
+        <th scope="col">Content</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for r in reviews%}
+        <tr>
+          <td>{{r.seller_id}}</td>
+          <td>{{r.rating}}</td>
+          <td>{{r.review_time}}</td>
+          <td>{{r.upvotes}}</td>
+          <td>{{r.content}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <h2>You have no reviews for any seller so far.</h2>
+  {% endif %}
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
 {% endif %}

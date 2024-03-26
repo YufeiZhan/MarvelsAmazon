@@ -16,10 +16,6 @@ def seller_inventory():
         # If the user is not authenticated,  redirect to login page
         return redirect(url_for('users.login'))
     
-
-    # Render the seller inventory page, passing the inventory items for display
-    fake_user =  User(5, '', '', '', '', balance=0, role_indicator=0)
-    login_user(fake_user)
     # Get all inventory items for the current seller:
     inventory_items = InventoryItem.get_all_by_seller_id(current_user.id)
 
