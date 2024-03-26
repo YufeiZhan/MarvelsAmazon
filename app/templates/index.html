@@ -29,7 +29,11 @@
 </table>
 
 <br><br>
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+{% if current_user.is_authenticated %}
+{% else %}
+<p><a href=" 'users.login') }}">Log in</a > to see your purchase history!</p >
+{% endif %}
+
 
 <form action="{{ url_for('products.k_items') }}" method="get">
   <label for="k">Enter number of top expensive products to display:</label>

@@ -27,4 +27,6 @@ def create_app():
     from .seller import bp as seller_bp
     app.register_blueprint(seller_bp)
 
+    from .social import bp as social_bp
+    app.register_blueprint(social_bp)
     return app
