@@ -21,6 +21,9 @@ def create_app():
     from .users import bp as user_bp
     app.register_blueprint(user_bp)
 
+    from .carts import bp as cart_bp
+    app.register_blueprint(cart_bp)
+
     from .products import bp as products_bp
     app.register_blueprint(products_bp)
 
@@ -29,4 +32,5 @@ def create_app():
 
     from .social import bp as social_bp
     app.register_blueprint(social_bp)
+    
     return app

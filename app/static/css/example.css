@@ -21,3 +21,11 @@ position: absolute;
 right: 0px;
 width: 50%;
 }
+
+
+/* CSS for base.html */
+.buyer-logo,
+.seller-logo {
+    height: 20%;
+    aspect-ratio: 1/1;
+}
