@@ -64,7 +64,7 @@
 
           <div class="dropdow-center" style="display: inline-block;">
             <a class="btn dropdown-toggle " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
+              <img src="/static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item" href="#">Balance: #</a>
@@ -81,7 +81,7 @@
         {% else %}
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Login/Register</a>
           <a class="btn" href="{{ url_for('users.login') }}" role="button">
-            <img src="static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
+            <img src="/static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
           </a>
         {% endif %}
       </div>
