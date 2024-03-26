@@ -28,16 +28,17 @@ def account():
 @bp.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
     if current_user.is_authenticated:
-        print("*****")
-        print(request.form.get("_method"))
         form = UpdateForm()
         if form.validate_on_submit():
-            print("Form validated......")
             if User.update_user_info(id, form.email.data, form.password.data, form.firstname.data, form.lastname.data):
-                print("Data updated......")
                 flash('Congratulations. You have updated your user information.')
                 return redirect(url_for('users.account'))
         return render_template('update.html', title='Account Info Update', form=form)
+    # Restrict user/request from accessing this page w/o login
+    else:
+        flash('Restricted access ONLY. Please sign in or register first.')
+        return redirect(url_for('users.login'))
+
 
 
 @bp.route('/login', methods=['GET', 'POST'])
