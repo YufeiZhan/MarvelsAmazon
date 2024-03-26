@@ -19,7 +19,12 @@ class User():
 @bp.route('/reviews')
 def reviews():
     if current_user.is_authenticated:
-        results = Reviews.get_reviews_for_seller(current_user.id)
-        return render_template('review.html', reviews=results)
+        seller_reviews = Reviews.get_reviews_for_seller(current_user.id)
+        product_reviews = Reviews.get_reviews_for_products(current_user.id)
+        reviews_recieved = Reviews.get_reviews_recieved(current_user.id)
+        return render_template('review.html', 
+                               seller_reviews=seller_reviews, 
+                               product_reviews=product_reviews, 
+                               reviews_recieved=reviews_recieved)
     else:
         return redirect(url_for('users.login'))

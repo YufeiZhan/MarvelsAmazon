@@ -4,8 +4,8 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-  {% if reviews %}
-  <h2>Reviews for sellers that you've brough items from:</h2>
+  {% if seller_reviews %}
+  <h2>Most recent 5 reviews for sellers that you've brough items from:</h2>
   <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>
@@ -17,9 +17,9 @@
       </tr>
     </thead>
     <tbody>
-      {% for r in reviews%}
+      {% for r in seller_reviews%}
         <tr>
-          <td>{{r.seller_id}}</td>
+          <td>{{r.target_id}}</td>
           <td>{{r.rating}}</td>
           <td>{{r.review_time}}</td>
           <td>{{r.upvotes}}</td>
@@ -29,8 +29,65 @@
     </tbody>
   </table>
   {% else %}
-  <h2>You have no reviews for any seller so far.</h2>
+  <h3>You have no reviews for any seller so far.</h2>
   {% endif %}
+
+  {% if product_reviews %}
+  <h2>Most recent 5 reviews for sellers that you've brough items from:</h2>
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Item ID</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review Time</th>
+        <th scope="col">Upvotes</th>
+        <th scope="col">Content</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in product_reviews%}
+        <tr>
+          <td>{{r.target_id}}</td>
+          <td>{{r.rating}}</td>
+          <td>{{r.review_time}}</td>
+          <td>{{r.upvotes}}</td>
+          <td>{{r.content}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <h3>You have no reviews for any item so far.</h2>
+  {% endif %}
+
+  {% if reviews_recieved %}
+  <h2>Most recent 5 reviews you recieved</h2>
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Buyer ID</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Review Time</th>
+        <th scope="col">Upvotes</th>
+        <th scope="col">Content</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reviews_recieved%}
+        <tr>
+          <td>{{r.buyer_id}}</td>
+          <td>{{r.rating}}</td>
+          <td>{{r.review_time}}</td>
+          <td>{{r.upvotes}}</td>
+          <td>{{r.content}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <h3>You have no reviews from any buyer so far.</h2>
+  {% endif %}
+
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
 {% endif %}
