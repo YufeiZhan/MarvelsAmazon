@@ -3,4 +3,7 @@
 **/.venv
 poetry.lock
 
+.DS_Store
+**/.DS_Store
+
 .flaskenv
