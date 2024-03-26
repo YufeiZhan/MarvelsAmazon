@@ -25,6 +25,12 @@ def account():
         return render_template('account.html', title='Account Detail')
 
 
+@bp.route('/update', methods=['GET', 'POST'])
+def update():
+    if current_user.is_authenticated:
+        return render_template('account.html', title='Account Detail')
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -53,6 +59,18 @@ class RegistrationForm(FlaskForm):
         'Repeat Password', validators=[DataRequired(),
                                        EqualTo('password')])
     submit = SubmitField('Register')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Update')
 
     def validate_email(self, email):
         if User.email_exists(email.data):
