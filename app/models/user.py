@@ -32,6 +32,28 @@ WHERE email = :email
         else:
             return User(*rows[0])
 
+
+    @staticmethod
+    def update_user_info(id, email, password, firstname, lastname):
+        if User.email_exists(email):
+            return None
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET email = :email, password = :password, firstname = :firstname, lastname = :lastname
+WHERE uid = :id
+""",
+email=email,
+firstname=firstname,
+lastname=lastname,
+password=generate_password_hash(password),
+id=id)
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+        
+
     @staticmethod
     def email_exists(email):
         rows = app.db.execute("""

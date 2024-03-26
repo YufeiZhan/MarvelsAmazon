@@ -27,7 +27,19 @@
   </tbody>
 </table>
 
-<a type="button" href="{{ url_for('users.update') }}" style="background-color: #795DEA; color: white;">Edit</a>
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+
+<a type="button" href="{{ url_for('users.update', id=current_user.id) }}" style="background-color: #795DEA; color: white;">Edit</a>
 <button style="background-color: #795DEA; color: white;">Top Up</button>
 <button style="background-color: #795DEA; color: white;">Withdraw</button>
 
