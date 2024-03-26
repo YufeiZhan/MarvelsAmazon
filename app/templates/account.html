@@ -39,9 +39,9 @@
   {% endwith %}
 </p>
 
-<a type="button" href="{{ url_for('users.update', id=current_user.id) }}" style="background-color: #795DEA; color: white;">Edit</a>
-<button style="background-color: #795DEA; color: white;">Top Up</button>
-<button style="background-color: #795DEA; color: white;">Withdraw</button>
+<a type="button" href="{{ url_for('users.update', id=current_user.id) }}" class="btn" style="background-color: #795DEA; color: white;">Edit</a>
+<button class="btn" style="background-color: #795DEA; color: white;">Top Up</button>
+<button class="btn" style="background-color: #795DEA; color: white;">Withdraw</button>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>

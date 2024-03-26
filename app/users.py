@@ -45,6 +45,7 @@ def update(id):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
+        
     form = LoginForm()
     if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
