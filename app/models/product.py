@@ -28,7 +28,9 @@ class Product:
             WHERE 
                 p.pid = :id
             GROUP BY 
-                p.pid, p.name, p.description, p.type, p.creator_id;
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                p.pid ASC;
             ''', id=id)
         return Product(*(rows[0])) if rows is not None else None
 
@@ -48,9 +50,10 @@ class Product:
             JOIN 
                 Inventory i ON p.pid = i.pid
             GROUP BY 
-                p.pid, p.name, p.description, p.type, p.creator_id;
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                p.pid ASC;
             ''')
-
         return [Product(*row) for row in rows]
 
 

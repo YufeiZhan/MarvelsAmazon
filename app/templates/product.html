@@ -22,10 +22,13 @@
         <td>{{product.name}}</td>
         <td>{{product.description}}</td>
         <td>{{product.type}}</td>
-        <td>{{product.avg_price}}</td>
+        <td>${{product.avg_price}}</td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<br><br>
+<a href="{{ url_for('index.index') }}" type="button" class="btn btn-primary">Go Back</a>
 
 {% endblock %}
