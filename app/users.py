@@ -19,6 +19,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
+@bp.route('/account')
+def account():
+    if current_user.is_authenticated:
+        return render_template('account.html', title='Account Detail')
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
