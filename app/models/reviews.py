@@ -30,7 +30,7 @@ LIMIT 5
 ''', buyer_id=buyer_id)
         return [Reviews(*(r)) for r in rows] if rows else None
     
-    def get_reviews_recieved(seller_id):
+    def get_reviews_received(seller_id):
         rows = app.db.execute('''
 SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
 FROM SellerReview as sr
