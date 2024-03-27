@@ -35,6 +35,10 @@ Yufei Zhan (yz858):
 3. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
 4. Integrated several other flows into the navigation bar
 
+Honggang Min (hm246):
+1. Implemented the public view for buyers's accounts
+2. Implemented the feature where 'users can update all information except the id' while ensuring email uniqueness. Also setup the associated flows and endpoints.
+
 Ethan Yang (qy46):
 1. Created the schema of the database in `create.sql`, debuged the database setup process
 2. Generated fake data and the `dummy user` for demo purposes
