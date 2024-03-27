@@ -30,8 +30,12 @@ Ethan Yang (qy46):
 
 ----------- Milestone 3 ----------- 
 
-
-
-
+Ethan Yang (qy46):
+1. Created the schema of the database in `create.sql`.
+2. Generated fake data and the `dummy user` for demo purposes.
+3. Added the model, controller and view components for Social guru.
+4. Modified the backend api and frontend template for Index to connect the homepage with our database.
+5. Helped debuged the backend for Product and Seller guru.
+6. Modified the frontend views
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
