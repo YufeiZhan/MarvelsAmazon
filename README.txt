@@ -42,4 +42,14 @@ Ethan Yang (qy46):
 4. Modified the backend api and frontend template for Index to connect the homepage with the database
 5. Helped debuged the backend and frontend for Product and Seller
 
+Longtian Ye (ly186):
+1. Completed the Seller counterpart including backend API endpoints, model and frontend elements 
+2. Created fake data according to our database design schema
+3. Modified the backend User model to fix the login page issues and adapt to our database design.
+
+
+
+
+
+
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
