@@ -30,13 +30,20 @@ Ethan Yang (qy46):
 
 ----------- Milestone 3 ----------- 
 Yufei Zhan (yz858):
-0. Revised the database schema and updated the schema design
-1. Implemented frontend of the navigation bar 
-2. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
-3. Integrated several other flows into the navigation bar
+1. Revised the database schema and updated the schema design
+2. Implemented frontend of the navigation bar 
+3. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
+4. Integrated several other flows into the navigation bar
 
 Honggang Min (hm246):
 1. Implemented the public view for buyers's accounts
 2. Implemented the feature where 'users can update all information except the id' while ensuring email uniqueness. Also setup the associated flows and endpoints.
+
+Ethan Yang (qy46):
+1. Created the schema of the database in `create.sql`, debuged the database setup process
+2. Generated fake data and the `dummy user` for demo purposes
+3. Added the model, controller and view components for Social guru
+4. Modified the backend api and frontend template for Index to connect the homepage with the database
+5. Helped debuged the backend and frontend for Product and Seller
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
