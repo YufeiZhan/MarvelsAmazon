@@ -29,8 +29,11 @@ Ethan Yang (qy46):
 2. Wrote the assumptions and completed the constraints in the report 
 
 ----------- Milestone 3 ----------- 
-
-
+Yufei Zhan (yz858):
+0. Revised the database schema and updated the schema design
+1. Implemented frontend of the navigation bar 
+2. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
+3. Integrated several other flows into the navigation bar
 
 
 
