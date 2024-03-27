@@ -9,15 +9,18 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 
 ## Development Notes
 ### To run website locally:
-1. Enter container environment: to to your 316-container folder and run **‘docker compose start’** and **‘docker compose exec -it ubuntu bash --login’**
+1. Enter container environment: to to your 516-container folder and run **‘docker compose start’** and **‘docker compose exec -it ubuntu bash --login’**
 2. Enter Python virtual environment: cd into your mini-amazon folder and enter virtual env by **‘poetry shell’**
-3. Run the flask server using **'flask run'** and enter **'localhost:8080'** in your browser 
+3. Init the database with **`db/setup.sh`**: cd into **`/db`** directory and run **`./setup.sh`**
+4. Run the flask server using **'flask run'** and enter **'localhost:8080'** in your browser 
 
 ### To interact with database:
 To change schema, modify 	‘db/create.sql’ and ‘db/load.sql’ and run ‘db/setup.sh’ to recreate the database from scratch. <br><br>
 Use **'psql amazon'** to enter the database. <br><br>
 Some useful commands:
 - List all tables in database: \dt
+- List info of one table: \d [TABLE_NAME]
+- Check table with SQL query: SELECT * FROM [TABLE_NAME]
 
 ### Links
 - **Database design**: https://lucid.app/lucidchart/b888d686-46d6-44e5-a180-3501dc886c98/edit?invitationId=inv_de774230-9b13-42ec-8b57-4c7cc1f3fb67&page=0_0#
@@ -26,19 +29,27 @@ Some useful commands:
 
 ### Milestones
 **Milestone 3 (03/26)**: at least 1 backend API endpoint + frontend for each Guru; demo video (<3 min)
+
 **Milestone 4 (04/16)**: functionalities almost complete and integrated; test on large database; demo video (< 5min)
+
 **Final Milestone (05/03)**: full functionalities; final report + demo video
 
 ### Roles
 **Users Guru**: Peter <br>
+
 **Products Guru**: Ryan <br>
+
 **Carts Guru**: Selina <br>
+
 **Seller Guru**: Ye Long-tian <br>
+
 **Social Guru**: Ethan <br>
 
 ### Todo:
 - [] Some database schemas creation in create.sql didn't enforce primary key constraint
 - [] Fix Cartitems status field (should only has 2 status)
+- [] Filter the reviews (most recent # reviews)
+- [] For buyer and seller, provide different page views
 
 ## Note on Hiding Credentials
 
