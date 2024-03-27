@@ -65,3 +65,4 @@ Code implemented: /models/product.py, app/products.py, templates/product.html
 
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
+LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
