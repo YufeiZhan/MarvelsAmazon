@@ -5,7 +5,7 @@
 <br><br>
 {% if current_user.is_authenticated %}
   {% if seller_reviews %}
-  <h2>Most recent 5 reviews for sellers that you've brought items from:</h2>
+  <h2>Most recent 5 reviews for sellers that you've bought items from:</h2>
   <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>
@@ -33,7 +33,7 @@
   {% endif %}
 
   {% if product_reviews %}
-  <h2>Most recent 5 reviews for inventory items that you've brought:</h2>
+  <h2>Most recent 5 reviews for inventory items that you've bought:</h2>
   <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>
@@ -60,8 +60,8 @@
   <h3>You have no reviews for any item so far.</h2>
   {% endif %}
 
-  {% if reviews_recieved %}
-  <h2>Most recent 5 reviews you recieved</h2>
+  {% if reviews_received %}
+  <h2>Most recent 5 reviews you received</h2>
   <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>
@@ -73,7 +73,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for r in reviews_recieved%}
+      {% for r in reviews_received%}
         <tr>
           <td>{{r.buyer_id}}</td>
           <td>{{r.rating}}</td>

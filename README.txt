@@ -34,10 +34,12 @@ Yufei Zhan (yz858):
 2. Implemented frontend of the navigation bar 
 3. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
 4. Integrated several other flows into the navigation bar
+Code implemented: /app/carts.py, models/cart.py, templates/cart.html, templates/base.html
 
 Honggang Min (hm246):
 1. Implemented the public view for buyers's accounts
 2. Implemented the feature where 'users can update all information except the id' while ensuring email uniqueness. Also setup the associated flows and endpoints.
+Code implemented: /app/users.py, models/user.py, templates/update.html, templates/account.html
 
 Ethan Yang (qy46):
 1. Created the schema of the database in `create.sql`, debuged the database setup process
@@ -45,13 +47,19 @@ Ethan Yang (qy46):
 3. Added the model, controller and view components for Social guru
 4. Modified the backend api and frontend template for Index to connect the homepage with the database
 5. Helped debuged the backend and frontend for Product and Seller
+Code implemented: /app/reviews.py, models/reviews.py, templates/review.html
 
 Longtian Ye (ly186):
 1. Completed the Seller counterpart including backend API endpoints, model and frontend elements 
 2. Created fake data according to our database design schema
 3. Modified the backend User model to fix the login page issues and adapt to our database design.
+Code implemented: /models/seller.py, app/seller.py, templates/seller.html
 
-
+Yanzheng Wu (yw609):
+1. Implemented the model, controller and view components for Product guru
+2. Implemented the feature that users can find top expensive products to display
+3. Generated fake data of products and users, and helped debuged model components adapting to our database
+Code implemented: /models/product.py, app/products.py, templates/product.html
 
 
 
