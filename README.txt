@@ -35,6 +35,8 @@ Yufei Zhan (yz858):
 2. Implemented the Cart flow including the endpoint and data model to fetch all cart items for the user 
 3. Integrated several other flows into the navigation bar
 
-
+Honggang Min (hm246):
+1. Implemented the public view for buyers's accounts
+2. Implemented the feature where 'users can update all information except the id' while ensuring email uniqueness. Also setup the associated flows and endpoints.
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
