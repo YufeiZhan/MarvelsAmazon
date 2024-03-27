@@ -21,10 +21,10 @@ def reviews():
     if current_user.is_authenticated:
         seller_reviews = Reviews.get_reviews_for_seller(current_user.id)
         product_reviews = Reviews.get_reviews_for_products(current_user.id)
-        reviews_recieved = Reviews.get_reviews_recieved(current_user.id)
+        reviews_received = Reviews.reviews_received(current_user.id)
         return render_template('review.html', 
                                seller_reviews=seller_reviews, 
                                product_reviews=product_reviews, 
-                               reviews_recieved=reviews_recieved)
+                               reviews_received=reviews_received)
     else:
         return redirect(url_for('users.login'))
