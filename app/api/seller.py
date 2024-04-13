@@ -2,9 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_user
 import datetime
 
-from .models.seller import InventoryItem
-from .models.product import Product
-from .models.user import User
+from ..models.seller import InventoryItem
 
 from flask import Blueprint
 bp = Blueprint('seller', __name__)

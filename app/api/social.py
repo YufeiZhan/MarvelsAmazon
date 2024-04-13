@@ -1,7 +1,7 @@
 from flask_login import current_user, login_user
 from flask import render_template, redirect, url_for
 
-from .models.reviews import Reviews
+from ..models.reviews import Reviews
 
 from flask import Blueprint
 bp = Blueprint('social', __name__)
