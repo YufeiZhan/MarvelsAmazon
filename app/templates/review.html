@@ -1,95 +1,95 @@
 {% extends "base.html" %}
 
+<!-- {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %} -->
+
 {% block content %}
-
-<br><br>
-{% if current_user.is_authenticated %}
-  {% if seller_reviews %}
-  <h2>Most recent 5 reviews for sellers that you've bought items from:</h2>
-  <table class='table table-hover table-bordered container'>
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Seller ID</th>
-        <th scope="col">Rating</th>
-        <th scope="col">Review Time</th>
-        <th scope="col">Upvotes</th>
-        <th scope="col">Content</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in seller_reviews%}
+  <br><br>
+  {% if current_user.is_authenticated %}
+    {% if seller_reviews %}
+    <h2>Most recent 5 reviews for sellers that you've bought items from:</h2>
+    <table class='table table-hover table-bordered container'>
+      <thead class="thead-dark">
         <tr>
-          <td>{{r.target_id}}</td>
-          <td>{{r.rating}}</td>
-          <td>{{r.review_time}}</td>
-          <td>{{r.upvotes}}</td>
-          <td>{{r.content}}</td>
+          <th scope="col">Seller ID</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Review Time</th>
+          <th scope="col">Upvotes</th>
+          <th scope="col">Content</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <h3>You have no reviews for any seller so far.</h2>
-  {% endif %}
+      </thead>
+      <tbody>
+        {% for r in seller_reviews%}
+          <tr>
+            <td>{{r.target_id}}</td>
+            <td>{{r.rating}}</td>
+            <td>{{r.review_time}}</td>
+            <td>{{r.upvotes}}</td>
+            <td>{{r.content}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h3>You have no reviews for any seller so far.</h2>
+    {% endif %}
 
-  {% if product_reviews %}
-  <h2>Most recent 5 reviews for inventory items that you've bought:</h2>
-  <table class='table table-hover table-bordered container'>
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Item ID</th>
-        <th scope="col">Rating</th>
-        <th scope="col">Review Time</th>
-        <th scope="col">Upvotes</th>
-        <th scope="col">Content</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in product_reviews%}
+    {% if product_reviews %}
+    <h2>Most recent 5 reviews for inventory items that you've bought:</h2>
+    <table class='table table-hover table-bordered container'>
+      <thead class="thead-dark">
         <tr>
-          <td>{{r.target_id}}</td>
-          <td>{{r.rating}}</td>
-          <td>{{r.review_time}}</td>
-          <td>{{r.upvotes}}</td>
-          <td>{{r.content}}</td>
+          <th scope="col">Item ID</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Review Time</th>
+          <th scope="col">Upvotes</th>
+          <th scope="col">Content</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <h3>You have no reviews for any item so far.</h2>
-  {% endif %}
+      </thead>
+      <tbody>
+        {% for r in product_reviews%}
+          <tr>
+            <td>{{r.target_id}}</td>
+            <td>{{r.rating}}</td>
+            <td>{{r.review_time}}</td>
+            <td>{{r.upvotes}}</td>
+            <td>{{r.content}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h3>You have no reviews for any item so far.</h2>
+    {% endif %}
 
-  {% if reviews_received %}
-  <h2>Most recent 5 reviews you received</h2>
-  <table class='table table-hover table-bordered container'>
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Buyer ID</th>
-        <th scope="col">Rating</th>
-        <th scope="col">Review Time</th>
-        <th scope="col">Upvotes</th>
-        <th scope="col">Content</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in reviews_received%}
+    {% if reviews_received %}
+    <h2>Most recent 5 reviews you received</h2>
+    <table class='table table-hover table-bordered container'>
+      <thead class="thead-dark">
         <tr>
-          <td>{{r.buyer_id}}</td>
-          <td>{{r.rating}}</td>
-          <td>{{r.review_time}}</td>
-          <td>{{r.upvotes}}</td>
-          <td>{{r.content}}</td>
+          <th scope="col">Buyer ID</th>
+          <th scope="col">Rating</th>
+          <th scope="col">Review Time</th>
+          <th scope="col">Upvotes</th>
+          <th scope="col">Content</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for r in reviews_received%}
+          <tr>
+            <td>{{r.buyer_id}}</td>
+            <td>{{r.rating}}</td>
+            <td>{{r.review_time}}</td>
+            <td>{{r.upvotes}}</td>
+            <td>{{r.content}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h3>You have no reviews from any buyer so far.</h2>
+    {% endif %}
+
   {% else %}
-  <h3>You have no reviews from any buyer so far.</h2>
+  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
   {% endif %}
-
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
-{% endif %}
-
 {% endblock %}
