@@ -66,6 +66,22 @@ class User(UserMixin):
             return None
 
     @staticmethod
+    def topup(id):
+        try:
+            rows = app.db.execute(
+                """
+                UPDATE Users
+                SET balance = balance + 100
+                WHERE uid = :id
+                """,
+                id=id
+            )
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
     def update_user_info(id, email, password, firstname, lastname):
         if User.email_exists(email):
             return None
