@@ -50,6 +50,8 @@ Some useful commands:
 - [] Fix Cartitems status field (should only has 2 status)
 - [] Filter the reviews (most recent # reviews)
 - [x] For buyer and seller, provide different page views
+- [] Fix Balance value
+- [] Order History and Sale History integrate to a same page
 
 ## Note on Hiding Credentials
 
