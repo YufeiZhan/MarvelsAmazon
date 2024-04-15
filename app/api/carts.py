@@ -1,6 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_user, login_required
 
+from ..models.cart import Cart
+from ..models.user import User
+
 from flask import Blueprint
 bp = Blueprint('carts', __name__)
 
@@ -12,4 +15,4 @@ bp = Blueprint('carts', __name__)
 def lookup():
     # Get all inventory items for the current user/seller
     cart_items = Cart.get_all_by_uid(current_user.id)
-    return render_template('cart.html', cart_items=cart_items if cart_items else [])
+    return render_template('cart.html', cart_items=cart_items if cart_items else [], role=User.getRole(current_user.id))
