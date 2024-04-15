@@ -22,8 +22,15 @@ class LoginForm(FlaskForm):
 @bp.route('/account')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
 def account():
-    return render_template('account.html', title='Account Detail', role=User.getRole(current_user.id))
+    user_info = User.get(current_user.id)
+    return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
+
+@bp.route('/topup/<id>')
+def topup(id):
+    if User.topup(id):
+        flash('Congratulations. You have increased your account balance by $100.')
+    return redirect(url_for('users.account'))
 
 @bp.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
