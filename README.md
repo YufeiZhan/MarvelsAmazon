@@ -49,7 +49,7 @@ Some useful commands:
 - [] Some database schemas creation in create.sql didn't enforce primary key constraint
 - [] Fix Cartitems status field (should only has 2 status)
 - [] Filter the reviews (most recent # reviews)
-- [] For buyer and seller, provide different page views
+- [x] For buyer and seller, provide different page views
 
 ## Note on Hiding Credentials
 
