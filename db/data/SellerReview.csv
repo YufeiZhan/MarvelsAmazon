@@ -1,2 +1,14 @@
 3,0,"Great seller, fast shipping!",4.5,'2023-03-15 12:34:56',10
 5,1,"Item as described, would buy again.",5.0,'2023-03-16 14:45:12',8
+1,7,"dummy review for seller 1",1.0,'2023-03-16 14:46:00',8
+2,7,"dummy review for seller 2",2.5,'2023-03-16 14:47:00',2
+3,7,"dummy review for seller 3",5.0,'2023-03-16 14:48:00',5
+4,7,"dummy review for seller 4",5.0,'2023-03-16 14:49:00',3
+5,7,"dummy review for seller 5",5.0,'2023-03-16 14:50:00',1
+6,7,"dummy review for seller 6",5.0,'2023-03-16 14:51:00',0
+7,1,"dummy review for seller 7 from user 1",5.0,'2023-03-16 14:45:00',3
+7,2,"dummy review for seller 7 from user 2",4.0,'2023-03-16 14:46:00',7
+7,3,"dummy review for seller 7 from user 3",3.0,'2023-03-16 14:47:00',9
+7,4,"dummy review for seller 7 from user 4",2.0,'2023-03-16 14:48:00',4
+7,5,"dummy review for seller 7 from user 5",1.0,'2023-03-16 14:49:00',8
+7,6,"dummy review for seller 7 from user 6",4.5,'2023-03-16 14:50:00',1

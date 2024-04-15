@@ -1,11 +1,11 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from werkzeug.urls import url_parse
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
-from .models.user import User
+from ..models.user import User
 
 
 from flask import Blueprint
@@ -19,10 +19,33 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
+@bp.route('/account')
+@login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
+def account():
+    return render_template('account.html', title='Account Detail', role=User.getRole(current_user.id))
+
+
+@bp.route('/update/<id>', methods=['GET', 'POST'])
+def update(id):
+    if current_user.is_authenticated:
+        form = UpdateForm()
+        if form.validate_on_submit():
+            if User.update_user_info(id, form.email.data, form.password.data, form.firstname.data, form.lastname.data):
+                flash('Congratulations. You have updated your user information.')
+                return redirect(url_for('users.account'))
+        return render_template('update.html', title='Account Info Update', form=form, role=User.getRole(current_user.id))
+    # Restrict user/request from accessing this page w/o login
+    else:
+        flash('Restricted access ONLY. Please sign in or register first.')
+        return redirect(url_for('users.login'))
+
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
+        
     form = LoginForm()
     if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
@@ -53,6 +76,18 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Already a user with this email.')
 
 
+class UpdateForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -66,6 +101,14 @@ def register():
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
+
+@bp.route('/updateRole/<int:role>')
+@login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
+def updateRole(role):
+    print("api entered")
+    User.update_user_role(current_user.id, role)
+    return jsonify({'message': 'Role updated successfully'})  # Example response
+
 
 
 @bp.route('/logout')
