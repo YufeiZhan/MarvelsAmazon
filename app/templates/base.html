@@ -72,7 +72,7 @@
                 <img src="/static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Balance: #</a> 
+                <a class="dropdown-item" href="#">Balance: {{current_user.balance}}</a> 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url_for('users.account') }}">Account Details</a>
                 <div class="dropdown-divider"></div>
@@ -90,7 +90,7 @@
                 <img src="/static/images/SellerIcon.png" alt="Seller Profile Icon" style="width: 30px; height: 30px;">
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Balance: #</a> 
+                <a class="dropdown-item" href="#">Balance: {{current_user.balance}}</a> 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url_for('users.account') }}">Account Details</a>
                 <div class="dropdown-divider"></div>
