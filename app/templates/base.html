@@ -60,11 +60,18 @@
   <!-- <div id="roleData" data-my-variable="{{ role }}"></div> -->
   <div class="sidenav">
     {% block msg %}
+      <!-- logo -->
       <a href="{{ url_for('index.index') }}" style="color: aliceblue; text-align: right; margin: 0.5em; font-size: 20px;"> Young N Broke </a>
       <div style="color: aliceblue; text-align: right;">
         {% if current_user.is_authenticated %}
-          <span id="greeting" style="margin: 5px;"> Hello {{current_user.firstname}}! </span> 
-          <input id="role-toggler" type="checkbox" data-toggle="toggle" data-on="Buyer" data-off="Seller" data-onstyle="light" data-offstyle="dark" onchange="toggleRole()">
+          <!-- greeting -->
+          <span id="greeting" style="margin: 5px;"> Hello {{current_user.firstname}}! </span>
+          <!-- toggle -->
+          {% if role == 0 %}
+            <input id="role-toggler" checked type="checkbox" data-toggle="toggle" data-on="Buyer" data-off="Seller" data-onstyle="light" data-offstyle="dark" onchange="toggleRole()">
+          {% else %}
+            <input id="role-toggler" unchecked type="checkbox" data-toggle="toggle" data-on="Buyer" data-off="Seller" data-onstyle="light" data-offstyle="dark" onchange="toggleRole()">
+          {% endif %}
           <!-- buyer view -->
             <a id="buyer-cart" href="{{ url_for('carts.lookup') }}" type="button" class="btn btn-light "><i class="bi bi-cart"></i> Cart</a>
             <div id="buyer-dropdown" class="dropdow-center" style="display: inline-block;">
@@ -118,13 +125,11 @@
     if ({{current_user.is_authenticated | tojson}}){
       var current_role = document.getElementById('roleData').dataset.myVariable; // initialize to buyer when page gets rendered
       if (current_role == 0){
-        $('#role-toggler').bootstrapToggle('on', true); // silence mode: set true to stop onchange be called
         document.getElementById('buyer-cart').style.display = 'inline';
         document.getElementById('buyer-dropdown').style.display = 'inline-block';
         document.getElementById('seller-inventory').style.display = 'none';
         document.getElementById('seller-dropdown').style.display = 'none';
       } else {
-        $('#role-toggler').bootstrapToggle('off', true); // silence mode: set true to stop onchange be called
         document.getElementById('buyer-cart').style.display = 'none';
         document.getElementById('buyer-dropdown').style.display = 'none';
         document.getElementById('seller-inventory').style.display = 'inline';
@@ -139,13 +144,15 @@
         document.getElementById('buyer-dropdown').style.display = 'none';
         document.getElementById('seller-inventory').style.display = 'inline';
         document.getElementById('seller-dropdown').style.display = 'inline-block';
-        current_role = 1
+        current_role = 1;
+        fetch("/updateRole/" + current_role, { method: 'GET', headers: {'Content-Type': 'application/json'} });
       } else { // turn on buyer elements and turn off seller elements
         document.getElementById('buyer-cart').style.display = 'inline';
         document.getElementById('buyer-dropdown').style.display = 'inline-block';
         document.getElementById('seller-inventory').style.display = 'none';
         document.getElementById('seller-dropdown').style.display = 'none';
-        current_role = 0
+        current_role = 0;
+        fetch("/updateRole/" + current_role, { method: 'GET', headers: {'Content-Type': 'application/json'} });
       };
     };
 

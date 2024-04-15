@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
@@ -101,6 +101,14 @@ def register():
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
+
+@bp.route('/updateRole/<int:role>')
+@login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
+def updateRole(role):
+    print("api entered")
+    User.update_user_role(current_user.id, role)
+    return jsonify({'message': 'Role updated successfully'})  # Example response
+
 
 
 @bp.route('/logout')

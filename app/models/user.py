@@ -112,3 +112,14 @@ class User(UserMixin):
             uid=uid)[0][0]
 
         return role
+
+    @staticmethod
+    def update_user_role(id, role):
+        print("model entered", role)
+        app.db.execute(
+                """
+                UPDATE Users
+                SET role_indicator = :role
+                WHERE uid = :id
+                """,
+                role=role, id=id)
