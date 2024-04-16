@@ -21,4 +21,4 @@ def index(page=1):
                            products_on_page=products,role=User.getRole(current_user.id),page=page,max_page=max_page)
     else:
         return render_template('index.html',
-                           avail_products=products,page=page,max_page=max_page)
+                           products_on_page=products,page=page,max_page=max_page)
