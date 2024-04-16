@@ -40,13 +40,13 @@
   {% endwith %}
 </p>
 
-<a type="button" id="editButton" href="{{ url_for('users.update', id=current_user.id) }}" class="btn">Edit</a>
-<a type="button" id="topupButton" href="{{ url_for('users.topup', id=current_user.id) }}" class="btn">Top Up (1 click = $100)</a>
-<a type="button" id="withdrawButton" href="#" class="btn" >Withdraw (No Overdraft)</a>
+<a type="button" id="editButton" href="{{ url_for('users.update', id=current_user.id) }}" class="btn btn-purple">Edit</a>
+<a type="button" id="topupButton" href="{{ url_for('users.topup', id=current_user.id) }}" class="btn btn-purple">Top Up (1 click = $100)</a>
+<a type="button" id="withdrawButton" href="#" class="btn btn-purple" >Withdraw (No Overdraft)</a>
 <input type="number" id="withdrawAmount" name="withdrawAmount" value="{{ user_info.balance }}" class="input">
 
 <style>
-  .btn {
+  .btn-purple {
     background-color: #795DEA; 
     color: white;
   }
