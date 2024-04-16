@@ -5,7 +5,7 @@ mypath=`realpath "$0"`
 mybase=`dirname "$mypath"`
 cd $mybase
 
-# See whether the 'generate' argument is passed in 
+# See whether the 'generated' argument is passed in 
 datadir="${1:-data/}" # use either generate/ or data/ by default
 if [ ! -d $datadir ] ; then
     echo "$datadir does not exist under $mybase"

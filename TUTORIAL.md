@@ -73,8 +73,8 @@ We will walk you through the steps of checking in code changes next.
      with caution.)
      - Running `db/setup.sh` will (re)create a small sample database
        for testing, using the data from the `data/` subdirectory.
-     - Running `db/setup.sh generate` will (re)create a larger test
-       database, using the synthetic data from the `generate/`
+     - Running `db/setup.sh generated` will (re)create a larger test
+       database, using the synthetic data from the `generated/`
        subdirectory (which also contains the generator code).
 
 2. Now, let's figure out what to add to `db/create.sql` to support

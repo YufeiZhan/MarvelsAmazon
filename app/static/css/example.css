@@ -29,3 +29,12 @@ width: 50%;
     height: 20%;
     aspect-ratio: 1/1;
 }
+
+.btn-purple {
+    background-color: #795DEA; 
+    color: white;
+  }
+
+.number-input {
+    height: 38px;
+}

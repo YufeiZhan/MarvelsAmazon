@@ -159,7 +159,6 @@ class User(UserMixin):
 
     @staticmethod
     def update_user_role(id, role):
-        print("model entered", role)
         app.db.execute(
                 """
                 UPDATE Users
