@@ -5,91 +5,120 @@
 {% block content %}
   <br><br>
   {% if current_user.is_authenticated %}
-    {% if seller_reviews %}
-    <h2>Most recent 5 reviews for sellers that you've bought items from:</h2>
-    <table class='table table-hover table-bordered container'>
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Seller ID</th>
-          <th scope="col">Rating</th>
-          <th scope="col">Review Time</th>
-          <th scope="col">Upvotes</th>
-          <th scope="col">Content</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in seller_reviews%}
-          <tr>
-            <td>{{r.target_id}}</td>
-            <td>{{r.rating}}</td>
-            <td>{{r.review_time}}</td>
-            <td>{{r.upvotes}}</td>
-            <td>{{r.content}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <h3>You have no reviews for any seller so far.</h2>
-    {% endif %}
+    {% if role ==0 %}
+      {% if seller_reviews %}
+        <h2>All Seller Reviews Left by You:</h2>
+        <div class='table table-hover table-bordered container'>
+          {% for r in seller_reviews%}
+            <strong>{{r.target_id}}</strong>
+            <p>{{r.content}}</p>
+            <div class="voting"></div>
+            <div class="rating">
+              {% for i in range(5) %}
+                {% if i <= r.rating %}
+                  <i class="bi bi-star-fill"></i>
+                {% elif i - 0.5 == r.rating%}
+                  <i class="bi bi-star-half"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="review-actions">
+              <a href="#">Edit</a>
+              <a href="#" class="delete">Delete</a>
+            </div>
+          {% endfor %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item {% if page_sr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=1,page_pr=page_pr,page_rr=page_rr)}}">Start</a></li>
+              <li class="page-item {% if page_sr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=page_sr-1,page_pr=page_pr,page_rr=page_rr)}}" >Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">{{page_sr}}</a></li>
+              <li class="page-item {% if page_sr == max_page_sr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=page_sr+1,page_pr=page_pr,page_rr=page_rr)}}">Next</a></li>
+              <li class="page-item {% if page_sr == max_page_sr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=max_page_sr,page_pr=page_pr,page_rr=page_rr)}}">End</a></li>
+            </ul>
+          </nav>        
+        </div>
+      {% else %}
+        <h3>You have no reviews for any seller so far.</h2>
+      {% endif %}
 
-    {% if product_reviews %}
-    <h2>Most recent 5 reviews for inventory items that you've bought:</h2>
-    <table class='table table-hover table-bordered container'>
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Item ID</th>
-          <th scope="col">Rating</th>
-          <th scope="col">Review Time</th>
-          <th scope="col">Upvotes</th>
-          <th scope="col">Content</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in product_reviews%}
-          <tr>
-            <td>{{r.target_id}}</td>
-            <td>{{r.rating}}</td>
-            <td>{{r.review_time}}</td>
-            <td>{{r.upvotes}}</td>
-            <td>{{r.content}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+      {% if product_reviews %}
+        <h2>All Product Reviews Left by You:</h2>
+        <div class='table table-hover table-bordered container'>
+          {% for r in product_reviews%}
+            <strong>{{r.target_id}}</strong>
+            <p>{{r.content}}</p>
+            <div class="voting"></div>
+            <div class="rating">
+              {% for i in range(5) %}
+                {% if i <= r.rating %}
+                  <i class="bi bi-star-fill"></i>
+                {% elif i - 0.5 == r.rating%}
+                  <i class="bi bi-star-half"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="review-actions">
+              <a href="#">Edit</a>
+              <a href="#" class="delete">Delete</a>
+            </div>
+          {% endfor %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item {% if page_pr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_pr=1,page_sr=page_sr,page_rr=page_rr)}}">Start</a></li>
+              <li class="page-item {% if page_pr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_pr=page_pr-1,page_sr=page_sr,page_rr=page_rr)}}" >Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">{{page_pr}}</a></li>
+              <li class="page-item {% if page_pr == max_page_pr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_pr=page_pr+1,page_sr=page_sr,page_rr=page_rr)}}">Next</a></li>
+              <li class="page-item {% if page_pr == max_page_pr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_pr=max_page_pr,page_sr=page_sr,page_rr=page_rr)}}">End</a></li>
+            </ul>
+          </nav>  
+        </div>
+      {% else %}
+        <h3>You have no reviews for any item so far.</h2>
+      {% endif %}
     {% else %}
-    <h3>You have no reviews for any item so far.</h2>
-    {% endif %}
 
-    {% if reviews_received %}
-    <h2>Most recent 5 reviews you received</h2>
-    <table class='table table-hover table-bordered container'>
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Buyer ID</th>
-          <th scope="col">Rating</th>
-          <th scope="col">Review Time</th>
-          <th scope="col">Upvotes</th>
-          <th scope="col">Content</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in reviews_received%}
-          <tr>
-            <td>{{r.buyer_id}}</td>
-            <td>{{r.rating}}</td>
-            <td>{{r.review_time}}</td>
-            <td>{{r.upvotes}}</td>
-            <td>{{r.content}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-    <h3>You have no reviews from any buyer so far.</h2>
+      {% if reviews_received %}
+        <h2>All Reviews You Recieved</h2>
+        <div class='table table-hover table-bordered container'>
+          {% for r in reviews_received%}
+            <strong>{{r.buyer_id}}</strong>
+            <p>{{r.content}}</p>
+            <div class="voting"></div>
+            <div class="rating">
+              {% for i in range(5) %}
+                {% if i <= r.rating %}
+                  <i class="bi bi-star-fill"></i>
+                {% elif i - 0.5 == r.rating%}
+                  <i class="bi bi-star-half"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="review-actions">
+              <a href="#">Edit</a>
+              <a href="#" class="delete">Delete</a>
+            </div>
+          {% endfor %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_rr=1,page_sr=page_sr,page_pr=page_pr)}}">Start</a></li>
+              <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_rr=page_rr-1,page_sr=page_sr,page_pr=page_pr)}}" >Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
+              <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_rr=page_rr+1,page_sr=page_sr,page_pr=page_pr)}}">Next</a></li>
+              <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_rr=max_page_rr,page_sr=page_sr,page_pr=page_pr)}}">End</a></li>
+            </ul>
+          </nav> 
+        </div>
+      {% else %}
+        <h3>You have no reviews from any buyer so far.</h2>
+      {% endif %}
     {% endif %}
-
   {% else %}
-  <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
+    <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>
   {% endif %}
 {% endblock %}
