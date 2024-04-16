@@ -16,3 +16,9 @@ def k_items():
     return render_template('product.html',
                            avail_products=products,
                            role=User.getRole(current_user.id))
+
+@bp.route('/products/search')
+def search():
+    query = request.args.get('query')
+    search_results = Product.get_search(query)
+    return render_template('product.html', avail_products=search_results)
