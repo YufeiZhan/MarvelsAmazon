@@ -53,7 +53,9 @@ Some useful commands:
 - [] Fix Balance value
 - [] Order History and Sale History integrate to a same page
 - [] Add image to product field
-- [] change users's updateRole to PUT request
+- [] Change users's updateRole to PUT request
+- [] Deal with the case where page is out of range
+- [] Cartitems add a time field to sort it in cart
 
 ## Note on Hiding Credentials
 
