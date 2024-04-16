@@ -48,7 +48,6 @@
 
 <script>
     function removeRow(iid, row_index){
-        console.log("test")
         fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
         document.getElementById(String(row_index+"-cartitem")).remove();
     }

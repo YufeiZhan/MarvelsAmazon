@@ -120,7 +120,6 @@ def register():
 @bp.route('/updateRole/<int:role>')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
 def updateRole(role):
-    print("api entered")
     User.update_user_role(current_user.id, role)
     return jsonify({'message': 'Role updated successfully'})  # Example response
 
