@@ -44,6 +44,28 @@ def withdraws(id, amount):
             flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
             return redirect(url_for('users.account'))
 
+
+@bp.route('/topup/<id>')
+def topup(id):
+    if User.topup(id):
+        flash('Congratulations. You have increased your account balance by $100.')
+    return redirect(url_for('users.account'))
+
+
+@bp.route('/withdraws/<id>/<amount>', methods=['GET', 'POST'])
+def withdraws(id, amount):
+    withdrawAmount = int(amount)
+    if withdrawAmount < 0:
+        flash(f'Cannot withdraw an amount of {amount} smaller than 0!')
+        return redirect(url_for('users.account'))
+    else:
+        if User.get_balance(id) < withdrawAmount:
+            flash(f'Insufficient balance. Cannot withdraw the specified amount of ${withdrawAmount}!')
+            return redirect(url_for('users.account'))
+        elif User.withdraw(id, withdrawAmount):
+            flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
+            return redirect(url_for('users.account'))
+
 @bp.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
     if current_user.is_authenticated:
@@ -57,6 +79,7 @@ def update(id):
     else:
         flash('Restricted access ONLY. Please sign in or register first.')
         return redirect(url_for('users.login'))
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -122,6 +145,7 @@ def register():
 def updateRole(role):
     User.update_user_role(current_user.id, role)
     return jsonify({'message': 'Role updated successfully'})  # Example response
+
 
 @bp.route('/logout')
 def logout():
