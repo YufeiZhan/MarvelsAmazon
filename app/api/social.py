@@ -34,7 +34,6 @@ def reviews(page_sr=1, page_pr=1, page_rr=1):
                             product_reviews=product_reviews, page_pr=page_pr, max_page_pr=max_page_pr,
                             reviews_received=reviews_received, page_rr=page_rr, max_page_rr=max_page_rr,
                             role=role)
-
 @bp.route('/reviews/delete/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
 def reviews_delete(buyer_id, target_id, target_type):
     if target_type:
