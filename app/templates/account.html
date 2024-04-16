@@ -41,9 +41,41 @@
   {% endwith %}
 </p>
 
-<a type="button" href="{{ url_for('users.update', id=current_user.id) }}" class="btn" style="background-color: #795DEA; color: white;">Edit</a>
-<a type="button" href="{{ url_for('users.topup', id=current_user.id) }}" class="btn" style="background-color: #795DEA; color: white;">Top Up (1 click = $100)</a>
-<button class="btn" style="background-color: #795DEA; color: white;">Withdraw</button>
+<a type="button" id="editButton" href="{{ url_for('users.update', id=current_user.id) }}" class="btn">Edit</a>
+<a type="button" id="topupButton" href="{{ url_for('users.topup', id=current_user.id) }}" class="btn">Top Up (1 click = $100)</a>
+<a type="button" id="withdrawButton" href="#" class="btn" >Withdraw (No Overdraft)</a>
+<input type="number" id="withdrawAmount" name="withdrawAmount" value="{{ user_info.balance }}" class="input">
 
+<style>
+  .btn {
+    background-color: #795DEA; 
+    color: white;
+  }
+  .input {
+    height: 38px;
+  }
+</style>
+
+<script>
+  let withdrawAmount = document.getElementById("withdrawAmount").value;
+  const withdrawButton = document.getElementById("withdrawButton");
+  
+  // Update the href attribute of the button with the new URL
+  function updateWithdrawURL() {
+    const currentUserId = {{ current_user.id }}; // Fetch current user ID from Flask
+    const url = "{{ url_for('users.withdraws', id='__id__', amount='__amount__') }}";
+    const newUrl = url.replace('__id__', currentUserId).replace('__amount__', withdrawAmount);
+    withdrawButton.href = newUrl;
+  }
+
+  // Listen for changes in the input field and update the URL accordingly
+  document.getElementById("withdrawAmount").addEventListener("input", function() {
+    withdrawAmount = this.value;
+    updateWithdrawURL();
+  });
+
+  // Initially update the URL on page load
+  updateWithdrawURL();
+</script>
 
 {% endblock %}
