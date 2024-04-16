@@ -33,6 +33,37 @@ class User(UserMixin):
         else:
             return User(*rows[0])
 
+    @staticmethod
+    def topup(id):
+        try:
+            rows = app.db.execute(
+                """
+                UPDATE Users
+                SET balance = balance + 100
+                WHERE uid = :id
+                """,
+                id=id
+            )
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+    
+    @staticmethod
+    def withdraw(id, amount):
+        try:
+            rows = app.db.execute(
+                """
+                UPDATE Users
+                SET balance = balance - :amount
+                WHERE uid = :id
+                """,
+                id=id, amount=amount
+            )
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
 
     @staticmethod
     def update_user_info(id, email, password, firstname, lastname):
@@ -51,7 +82,6 @@ class User(UserMixin):
         except Exception as e:
             print(str(e))
             return None
-        
 
     @staticmethod
     def email_exists(email):
@@ -90,7 +120,7 @@ class User(UserMixin):
     def get(uid):
         rows = app.db.execute(
             """
-            SELECT uid, email, firstname, lastname, balance, role_indicator
+            SELECT uid, email, firstname, lastname, password, balance, role_indicator
             FROM Users
             WHERE uid = :uid
             """, 
@@ -100,6 +130,20 @@ class User(UserMixin):
             return None
         else:
             return User(*rows[0])
+    
+
+    @staticmethod
+    def get_balance(uid):
+        rows = app.db.execute(
+            """
+            SELECT balance
+            FROM Users
+            WHERE uid = :uid
+            """,
+            uid=uid
+        )[0][0]
+        return rows
+
 
     @staticmethod
     def getRole(uid):
