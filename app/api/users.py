@@ -22,29 +22,6 @@ def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
-
-@bp.route('/topup/<id>')
-def topup(id):
-    if User.topup(id):
-        flash('Congratulations. You have increased your account balance by $100.')
-    return redirect(url_for('users.account'))
-
-
-@bp.route('/withdraws/<id>/<amount>', methods=['GET', 'POST'])
-def withdraws(id, amount):
-    withdrawAmount = int(amount)
-    if withdrawAmount < 0:
-        flash(f'Cannot withdraw an amount of {amount} smaller than 0!')
-        return redirect(url_for('users.account'))
-    else:
-        if User.get_balance(id) < withdrawAmount:
-            flash(f'Insufficient balance. Cannot withdraw the specified amount of ${withdrawAmount}!')
-            return redirect(url_for('users.account'))
-        elif User.withdraw(id, withdrawAmount):
-            flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
-            return redirect(url_for('users.account'))
-
-
 @bp.route('/topup/<id>')
 def topup(id):
     if User.topup(id):
