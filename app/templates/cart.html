@@ -19,12 +19,14 @@
         </thead>
         <tbody>
             {% for item in cart_items %}
-            <tr>
+            <tr id="{{ loop.index }}-cartitem">
                 <th scope="row">{{ loop.index }}</th>
                 <td>{{ item.uid }}</td>
                 <td>{{ item.iid }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.status }}</td>            </tr>
+                <td>{{ item.status }}</td>      
+                <td><button id="removeButton" class="btn btn-purple" onclick="removeRow({{item.iid}}, {{loop.index}})">X</button></td>
+            </tr>    
             {% else %}
             <tr>
                 <td colspan="5">No items added to the cart.</td>
@@ -43,6 +45,14 @@
         </ul>
       </nav>
 </div>
+
+<script>
+    function removeRow(iid, row_index){
+        console.log("test")
+        fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
+        document.getElementById(String(row_index+"-cartitem")).remove();
+    }
+</script>
 
 
 {% endblock %}

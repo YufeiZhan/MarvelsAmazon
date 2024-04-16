@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user, login_user, login_required
 import math
 
@@ -22,3 +22,9 @@ def lookup(page=1):
     # Get all carts items for the current user/seller
     cart_items = Cart.get_all_by_uid(current_user.id)
     return render_template('cart.html', cart_items=items, role=User.getRole(current_user.id), page=page, max_page=max_page)
+
+@bp.route('/cart/remove/<int:inventoryid>')
+@login_required
+def remove_item(inventoryid):
+    Cart.remove_item(current_user.id, inventoryid)
+    return jsonify({'message': 'Item removed successfully'})

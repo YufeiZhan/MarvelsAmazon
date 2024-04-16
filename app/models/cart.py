@@ -34,3 +34,11 @@ class Cart:
             ''', id=id, n=Cart.entry_per_page, start=offset)
 
         return [Cart(*row) for row in rows] if rows else None
+
+    @staticmethod
+    def remove_item(userid,inventoryid):
+        rows = app.db.execute(
+            '''
+            DELETE FROM CartItems
+            WHERE uid = :uid AND iid = :iid ;
+            ''', uid=userid, iid=inventoryid)
