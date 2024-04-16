@@ -6,6 +6,9 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 
 **Username**: dummy@duke.edu <br>
 **Password**: 123
+<br>
+**Username2**: woodtina@gmail.com <br>
+**Password2**: pass1
 
 ## Development Notes
 ### To run website locally:
