@@ -154,6 +154,8 @@
         current_role = 0;
         fetch("/updateRole/" + current_role, { method: 'GET', headers: {'Content-Type': 'application/json'} });
       };
+        // Reload the page to reflect changes
+        window.location.reload();
     };
 
   </script>
