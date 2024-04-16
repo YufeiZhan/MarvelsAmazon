@@ -1,7 +1,10 @@
 from flask import current_app as app
 
 
+
 class Product:
+    entry_per_page = 10
+
     def __init__(self, id, name, description, product_type, creator_id, avg_price):
         self.id = id
         self.name = name
@@ -78,5 +81,31 @@ class Product:
                 avg_unit_price DESC
             LIMIT :k;
             ''', k=k)
+
+        return [Product(*row) for row in rows]
+
+
+    @staticmethod
+    def get_page(n):
+        offset = (n-1)* Product.entry_per_page
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                avg_unit_price DESC
+            LIMIT :n OFFSET :start;
+            ''', n=Product.entry_per_page, start=offset)
 
         return [Product(*row) for row in rows]

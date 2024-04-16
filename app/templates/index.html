@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for product in avail_products%}
+      {% for product in avail_products %}
         <tr>
           <th scope="row">{{product.id}}</th>
           <td>{{product.name}}</td>
@@ -26,17 +26,18 @@
           <td>${{product.avg_price}}</td>
         </tr>
       {% endfor %}
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-      </nav>
     </tbody>
   </table>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=1)}}">Start</a></li>
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=page-1)}}" >Previous</a></li>
+      <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
+      <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=page+1)}}">Next</a></li>
+      <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=max_page)}}">End</a></li>
+    </ul>
+  </nav>
 
   <br><br>
   {% if current_user.is_authenticated %}

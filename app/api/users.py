@@ -7,10 +7,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from ..models.user import User
 
-
 from flask import Blueprint
 bp = Blueprint('users', __name__)
-
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -18,12 +16,10 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
-
 @bp.route('/account')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
 def account():
     return render_template('account.html', title='Account Detail', role=User.getRole(current_user.id))
-
 
 @bp.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
@@ -38,8 +34,6 @@ def update(id):
     else:
         flash('Restricted access ONLY. Please sign in or register first.')
         return redirect(url_for('users.login'))
-
-
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,7 +54,6 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
-
 class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
@@ -75,7 +68,6 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
-
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
@@ -86,7 +78,6 @@ class UpdateForm(FlaskForm):
     def validate_email(self, email):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
-
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -108,8 +99,6 @@ def updateRole(role):
     print("api entered")
     User.update_user_role(current_user.id, role)
     return jsonify({'message': 'Role updated successfully'})  # Example response
-
-
 
 @bp.route('/logout')
 def logout():
