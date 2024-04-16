@@ -12,7 +12,7 @@
           {% for r in seller_reviews%}
             <strong>{{r.target_id}}</strong>
             <p>{{r.content}}</p>
-            <div class="voting"></div>
+            <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
               {% for i in range(5) %}
                 {% if i <= r.rating %}
@@ -25,8 +25,8 @@
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a href="#">Edit</a>
-              <a href="#" class="delete">Delete</a>
+              <a class="btn btn-purple" id="edit_sr" href="#">Edit</a>
+              <a class="btn btn-purple" id="delete_sr" href="#" class="delete">Delete</a>
             </div>
           {% endfor %}
           <nav aria-label="Page navigation example">
@@ -49,7 +49,7 @@
           {% for r in product_reviews%}
             <strong>{{r.target_id}}</strong>
             <p>{{r.content}}</p>
-            <div class="voting"></div>
+            <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
               {% for i in range(5) %}
                 {% if i <= r.rating %}
@@ -62,8 +62,8 @@
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a href="#">Edit</a>
-              <a href="#" class="delete">Delete</a>
+              <a class="btn btn-purple" id="edit_pr" href="#">Edit</a>
+              <a class="btn btn-purple" id="delete_pr" href="#" class="delete">Delete</a>
             </div>
           {% endfor %}
           <nav aria-label="Page navigation example">
@@ -87,7 +87,7 @@
           {% for r in reviews_received%}
             <strong>{{r.buyer_id}}</strong>
             <p>{{r.content}}</p>
-            <div class="voting"></div>
+            <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
               {% for i in range(5) %}
                 {% if i <= r.rating %}
@@ -100,8 +100,8 @@
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a href="#">Edit</a>
-              <a href="#" class="delete">Delete</a>
+              <a class="btn btn-purple" id="edit_rr" href="#">Edit</a>
+              <a class="btn btn-purple" id="delete_rr" href="#" class="delete">Delete</a>
             </div>
           {% endfor %}
           <nav aria-label="Page navigation example">

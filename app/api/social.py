@@ -34,4 +34,4 @@ def reviews(page_sr=1, page_pr=1, page_rr=1):
                             product_reviews=product_reviews, page_pr=page_pr, max_page_pr=max_page_pr,
                             reviews_received=reviews_received, page_rr=page_rr, max_page_rr=max_page_rr,
                             role=role)
-        
+
