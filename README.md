@@ -52,6 +52,8 @@ Some useful commands:
 - [x] For buyer and seller, provide different page views
 - [] Fix Balance value
 - [] Order History and Sale History integrate to a same page
+- [] Add image to product field
+- [] change users's updateRole to PUT request
 
 ## Note on Hiding Credentials
 
