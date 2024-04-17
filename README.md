@@ -9,6 +9,10 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 <br>
 **Username2**: woodtina@gmail.com <br>
 **Password2**: pass1
+<br>
+**DemoUsername**: woodtina@gmail.com <br>
+**DemoPassword**: pass1
+
 
 ## Development Notes
 ### To run website locally:
