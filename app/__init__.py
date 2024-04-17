@@ -27,6 +27,9 @@ def create_app():
     from .api.products import bp as products_bp
     app.register_blueprint(products_bp)
 
+    from .api.sellersProduct import bp as sellersProduct_sp
+    app.register_blueprint(sellersProduct_sp)
+
     from .api.seller import bp as seller_bp
     app.register_blueprint(seller_bp)
 

@@ -22,7 +22,6 @@ def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
-
 @bp.route('/topup/<id>')
 def topup(id):
     if User.topup(id):
@@ -32,7 +31,7 @@ def topup(id):
 
 @bp.route('/withdraws/<id>/<amount>', methods=['GET', 'POST'])
 def withdraws(id, amount):
-    withdrawAmount = int(amount)
+    withdrawAmount = float(amount)
     if withdrawAmount < 0:
         flash(f'Cannot withdraw an amount of {amount} smaller than 0!')
         return redirect(url_for('users.account'))
@@ -57,6 +56,7 @@ def update(id):
     else:
         flash('Restricted access ONLY. Please sign in or register first.')
         return redirect(url_for('users.login'))
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -122,6 +122,7 @@ def register():
 def updateRole(role):
     User.update_user_role(current_user.id, role)
     return jsonify({'message': 'Role updated successfully'})  # Example response
+
 
 @bp.route('/logout')
 def logout():

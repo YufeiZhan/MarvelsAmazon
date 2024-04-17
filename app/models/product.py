@@ -4,7 +4,7 @@ from flask import current_app as app
 
 class Product:
     entry_per_page = 10
-
+    
     def __init__(self, id, name, description, product_type, creator_id, avg_price):
         self.id = id
         self.name = name
@@ -84,6 +84,30 @@ class Product:
 
         return [Product(*row) for row in rows]
 
+    @staticmethod
+    def get_search(query):
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            WHERE
+                p.name = :query
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                p.pid ASC;
+            ''', query=query)
+
+        return [Product(*row) for row in rows]
 
     @staticmethod
     def get_page(n):

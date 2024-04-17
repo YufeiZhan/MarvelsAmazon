@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
+
+{% block content %}
+  <br><br>
+
+  <h2>All Sellers</h2>
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Seller ID</th>
+        <th scope="col">Seller Name</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Unit Price</th>
+        <th scope="col">Quantity Available</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in avail_products %}
+        <tr>
+          <th scope="row">{{s.seller_id}}</th>
+          <td>{{s.seller_name}}</td>
+          <td>{{s.product_name}}</td>
+          <td>${{s.unit_price}}</td>
+          <td>{{ s.quantity_available }} units left</td>
+          <td>
+            {% if s.quantity_available > 0 %}
+              <button type="button" class="btn btn-primary">Add To Cart</button>
+            {% else %}
+              <button type="button" class="btn btn-secondary" disabled>Out Of Stock</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+  <br><br>
+  <a href="{{ url_for('index.index') }}" type="button" class="btn btn-primary">Back</a>
+{% endblock %}
