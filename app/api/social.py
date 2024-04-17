@@ -1,7 +1,7 @@
 import math
 
-from flask_login import current_user, login_user, login_required
-from flask import render_template, redirect, url_for
+from flask_login import current_user, login_required
+from flask import render_template, redirect, url_for, flash
 
 from ..models.user import User
 from ..models.reviews import Reviews
@@ -34,4 +34,17 @@ def reviews(page_sr=1, page_pr=1, page_rr=1):
                             product_reviews=product_reviews, page_pr=page_pr, max_page_pr=max_page_pr,
                             reviews_received=reviews_received, page_rr=page_rr, max_page_rr=max_page_rr,
                             role=role)
+
+@bp.route('/reviews/delete/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
+def reviews_delete(buyer_id, target_id, target_type):
+    if target_type:
+        if Reviews.remove_seller_review(seller_id=target_id, buyer_id=buyer_id):
+            return redirect(url_for('social.reviews'))
+        else:
+            flash("Failed to remove the item.")
+    else:
+        if Reviews.remove_product_review(iid=target_id, buyer_id=buyer_id):
+            return redirect(url_for('social.reviews'))
+        else:
+            flash("Failed to remove the item.")
 
