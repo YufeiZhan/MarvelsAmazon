@@ -18,7 +18,7 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 ### To run website locally:
 1. Enter container environment: to to your 516-container folder and run **‘docker compose start’** and **‘docker compose exec -it ubuntu bash --login’**
 2. Enter Python virtual environment: cd into your mini-amazon folder and enter virtual env by **‘poetry shell’**
-3. Init the database with **`db/setup.sh`**: cd into **`/db`** directory and run **`./setup.sh`**
+3. Init the database with **`db/setup.sh`**: cd into **`/db`** directory and run **`./setup.sh`** or **`./setup.sh generated`**
 4. Run the flask server using **'flask run'** and enter **'localhost:8080'** in your browser 
 
 ### To interact with database:
@@ -58,7 +58,7 @@ Some useful commands:
 - [] Fix Cartitems status field (should only has 2 status)
 - [] Filter the reviews (most recent # reviews)
 - [x] For buyer and seller, provide different page views
-- [] Fix Balance value
+- [x] Fix Balance value
 - [] Order History and Sale History integrate to a same page
 - [] Add image to product field
 - [] Change users's updateRole to PUT request
