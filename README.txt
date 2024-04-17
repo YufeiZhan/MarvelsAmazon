@@ -68,10 +68,15 @@ Ethan Yang (qy46):
 3. Fixed base template to make toggle button real-time interactive
 4. Updated the database design and Figma for report
 
-Longtian Ye (qy46):
+Longtian Ye (ly186):
 1. Drafted gen.py to generate large scale data according to our database table design schema and debugged to pass our constraints.
 2. Implemented pagination for seller inventory page.
 3. Added a functionality for seller to add new product to its inventory.
+
+Yanzheng Wu (yw609):
+1. Implemented search functionality enabling users to quickly find products by name
+2. Added feature whereby a buyer can view all the sellers' information associated with each product listed on the main page
+3. Implemented functionality for buyers to add product to cart
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
 LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
