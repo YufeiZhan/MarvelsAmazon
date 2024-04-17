@@ -19,12 +19,14 @@
         </thead>
         <tbody>
             {% for item in cart_items %}
-            <tr>
+            <tr id="{{ loop.index }}-cartitem">
                 <th scope="row">{{ loop.index }}</th>
                 <td>{{ item.uid }}</td>
                 <td>{{ item.iid }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>{{ item.status }}</td>            </tr>
+                <td>{{ item.status }}</td>      
+                <td><button id="removeButton" class="btn btn-purple" onclick="removeRow({{item.iid}}, {{loop.index}})">X</button></td>
+            </tr>    
             {% else %}
             <tr>
                 <td colspan="5">No items added to the cart.</td>
@@ -32,7 +34,24 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=1)}}">Start</a></li>
+          <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=page-1)}}" >Previous</a></li>
+          <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
+          <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=page+1)}}">Next</a></li>
+          <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=max_page)}}">End</a></li>
+        </ul>
+      </nav>
 </div>
+
+<script>
+    function removeRow(iid, row_index){
+        fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
+        document.getElementById(String(row_index+"-cartitem")).remove();
+    }
+</script>
 
 
 {% endblock %}

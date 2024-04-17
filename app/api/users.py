@@ -7,10 +7,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from ..models.user import User
 
-
 from flask import Blueprint
 bp = Blueprint('users', __name__)
-
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -18,13 +16,11 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
-
 @bp.route('/account')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
 def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
-
 
 @bp.route('/topup/<id>')
 def topup(id):
@@ -46,7 +42,6 @@ def withdraws(id, amount):
         elif User.withdraw(id, withdrawAmount):
             flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
             return redirect(url_for('users.account'))
-
 
 @bp.route('/update/<id>', methods=['GET', 'POST'])
 def update(id):
@@ -82,7 +77,6 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
-
 class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
@@ -97,7 +91,6 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
-
 class UpdateForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
@@ -108,7 +101,6 @@ class UpdateForm(FlaskForm):
     def validate_email(self, email):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
-
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -128,7 +120,6 @@ def register():
 @bp.route('/updateRole/<int:role>')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
 def updateRole(role):
-    print("api entered")
     User.update_user_role(current_user.id, role)
     return jsonify({'message': 'Role updated successfully'})  # Example response
 

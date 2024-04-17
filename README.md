@@ -6,6 +6,9 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 
 **Username**: dummy@duke.edu <br>
 **Password**: 123
+<br>
+**Username2**: woodtina@gmail.com <br>
+**Password2**: pass1
 
 ## Development Notes
 ### To run website locally:
@@ -50,6 +53,12 @@ Some useful commands:
 - [] Fix Cartitems status field (should only has 2 status)
 - [] Filter the reviews (most recent # reviews)
 - [x] For buyer and seller, provide different page views
+- [] Fix Balance value
+- [] Order History and Sale History integrate to a same page
+- [] Add image to product field
+- [] Change users's updateRole to PUT request
+- [] Deal with the case where page is out of range
+- [] Cartitems add a time field to sort it in cart
 
 ## Note on Hiding Credentials
 

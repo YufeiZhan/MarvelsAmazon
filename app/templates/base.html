@@ -57,7 +57,7 @@
 
 <body>
   {% block role %} {% endblock %}
-  <!-- <div id="roleData" data-my-variable="{{ role }}"></div> -->
+  <div id="roleData" data-my-variable="{{ role }}"></div>
   <div class="sidenav">
     {% block msg %}
       <!-- logo -->
@@ -73,7 +73,7 @@
             <input id="role-toggler" unchecked type="checkbox" data-toggle="toggle" data-on="Buyer" data-off="Seller" data-onstyle="light" data-offstyle="dark" onchange="toggleRole()">
           {% endif %}
           <!-- buyer view -->
-            <a id="buyer-cart" href="{{ url_for('carts.lookup') }}" type="button" class="btn btn-light "><i class="bi bi-cart"></i> Cart</a>
+            <a id="buyer-cart" href="{{ url_for('carts.lookup') }}" type="button" class="btn btn-light"><i class="bi bi-cart"></i> Cart</a>
             <div id="buyer-dropdown" class="dropdow-center" style="display: inline-block;">
               <a class="btn dropdown-toggle " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img src="/static/images/BuyerIcon.png" alt="Buyer Profile Icon" style="width: 30px; height: 30px;">
@@ -154,6 +154,8 @@
         current_role = 0;
         fetch("/updateRole/" + current_role, { method: 'GET', headers: {'Content-Type': 'application/json'} });
       };
+        // Reload the page to reflect changes
+        window.location.reload();
     };
 
   </script>
