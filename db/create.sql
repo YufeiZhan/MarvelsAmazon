@@ -29,7 +29,6 @@ CREATE TABLE CartItems (
     iid INT NOT NULL REFERENCES Inventory(iid),
     quantity INT NOT NULL DEFAULT 0 CHECK (quantity >=0),
     status INT NOT NULL DEFAULT 1
-    PRIMARY KEY (uid, iid)
 );
 
 CREATE TABLE Orders (
