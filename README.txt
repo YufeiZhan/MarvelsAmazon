@@ -61,6 +61,8 @@ Yanzheng Wu (yw609):
 3. Generated fake data of products and users, and helped debuged model components adapting to our database
 Code implemented: /models/product.py, /app/products.py, /templates/product.html, /app/index.py, /templates/index.html
 
+LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
+LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
 ----------- Milestone 4 ----------- 
 Ethan Yang (qy46):
 1. Modified gen.py to generate large scale data that satisfied the relationship constraints; manually generated interesting demo data on top of the randomly generated large scale data for demo purposes
@@ -82,5 +84,10 @@ Honggang Min (hm246):
 1. Tested and finalized requirement no.3 of user balance topup and withdraw.
 2. Aligned the buttons with the designs from Figma.
 
+Yufei Zhan (yz858):
+1. Implemented buyer/seller toggle to switch role and view and update with database
+2. Implemented pagination functionality on products to be used in different parts of the app
+3. Modified the template and API endpoint for cart guru to adapt the pagination and match Figma's design as well as functionalities
+
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
-LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
+LINK to Milestone 4 Video: +++

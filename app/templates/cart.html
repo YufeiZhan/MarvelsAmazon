@@ -4,7 +4,6 @@
 
 
 {% block content %}
-
 <div class="container mt-5">
     <h2>Your Cart Items</h2>
     <table class="table table-hover">
@@ -15,6 +14,7 @@
                 <th scope="col"> Inventory ID</th>
                 <th scope="col"> Quantity</th>
                 <th scope="col"> Status</th>
+                <th scope="col"> Price </th>
             </tr>
         </thead>
         <tbody>
@@ -23,8 +23,13 @@
                 <th scope="row">{{ loop.index }}</th>
                 <td>{{ item.uid }}</td>
                 <td>{{ item.iid }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.status }}</td>      
+                <td>
+                    <button class="btn btn-purple" onclick="decreaseQuantity({{item.uid}}, {{item.iid}}, {{item.unit_price}}, {{loop.index}})"> - </button>
+                    <i id="{{ loop.index }}-quantity">{{ item.quantity }}</i>
+                    <button class="btn btn-purple" onclick="increaseQuantity({{item.uid}}, {{item.iid}},{{item.unit_price}}, {{loop.index}})"> + </button>
+                </td>
+                <td>{{ item.status }}</td>
+                <td id="{{ loop.index }}-price"> {{ item.unit_price }} * {{ item.quantity }} = {{item.unit_price * item.quantity}}</td>       
                 <td><button id="removeButton" class="btn btn-purple" onclick="removeRow({{item.iid}}, {{loop.index}})">X</button></td>
             </tr>    
             {% else %}
@@ -35,22 +40,45 @@
         </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=1)}}">Start</a></li>
-          <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=page-1)}}" >Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
-          <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=page+1)}}">Next</a></li>
-          <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('carts.lookup',page=max_page)}}">End</a></li>
-        </ul>
-      </nav>
+    <div style="text-align: right;">
+        <form class="form-inline"> 
+            <div class="form-group mr-sm-2">
+                <label for="coupon">Coupon:</label>
+                <input type="text" class="form-control" id="coupon" aria-describedby="coupon" placeholder="Enter Coupon">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-purple"> ✔️ </button>
+            </div>
+        </form>
+        <h2 id="total-price" >Total Price: {{total_price}}</h2>
+        <button class="btn btn-danger"> Clean All </button>
+        <button class="btn btn-purple"> Submit </button>
+    </div>
 </div>
 
 <script>
     function removeRow(iid, row_index){
         fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
-        document.getElementById(String(row_index+"-cartitem")).remove();
-    }
+        .then(response => {
+            window.location.reload();
+        })        
+    };
+
+    function decreaseQuantity(uid,iid,price,row_index){
+        var quantity = parseInt(document.getElementById(String(row_index+"-quantity")).innerHTML)
+        fetch("/cart/decrease/" + uid + "/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
+        .then(response => {
+            window.location.reload();
+        })
+    };
+
+    function increaseQuantity(uid,iid,price,row_index){
+        var quantity = parseInt(document.getElementById(String(row_index+"-quantity")).innerHTML)
+        fetch("/cart/increase/" + uid + "/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
+        .then(response => {
+            window.location.reload();
+        })
+    };
 </script>
 
 

@@ -9,6 +9,10 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 <br>
 **Username2**: woodtina@gmail.com <br>
 **Password2**: pass1
+<br>
+**DemoUsername**: tony.stark@mcu.com <br>
+**DemoPassword**: pass1
+
 
 ## Development Notes
 ### To run website locally:
@@ -26,6 +30,7 @@ Some useful commands:
 - Check table with SQL query: SELECT * FROM [TABLE_NAME]
 
 ### Links
+- **Milestone 2 Report**: https://docs.google.com/document/d/1sPQoiLw9mXILVjCTQzOSzXuBwGrz5qWqYeKRn_aJMYQ/edit?usp=sharing
 - **Database design**: https://lucid.app/lucidchart/b888d686-46d6-44e5-a180-3501dc886c98/edit?invitationId=inv_de774230-9b13-42ec-8b57-4c7cc1f3fb67&page=0_0#
 - **Website Figma**: https://www.figma.com/file/yUVon71jBbMF8h5J8P4IyM/Mini-Amazon?type=design&node-id=0%3A1&mode=design&t=4pAnItnrbubzwm4u-1
 - **Tutorial**: https://gitlab.oit.duke.edu/compsci316/mini-amazon-skeleton/-/blob/main/TUTORIAL.md
@@ -59,6 +64,7 @@ Some useful commands:
 - [] Change users's updateRole to PUT request
 - [] Deal with the case where page is out of range
 - [] Cartitems add a time field to sort it in cart
+- [] Cart: refine quantity condition + implement coupon, remove all, and submit
 
 ## Note on Hiding Credentials
 
