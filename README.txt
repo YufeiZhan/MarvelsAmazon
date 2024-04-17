@@ -61,12 +61,17 @@ Yanzheng Wu (yw609):
 3. Generated fake data of products and users, and helped debuged model components adapting to our database
 Code implemented: /models/product.py, /app/products.py, /templates/product.html, /app/index.py, /templates/index.html
 
------------ Milestone 3 ----------- 
+----------- Milestone 4 ----------- 
 Ethan Yang (qy46):
 1. Modified gen.py to generate large scale data that satisfied the relationship constraints; manually generated interesting demo data on top of the randomly generated large scale data for demo purposes
-3. Modified the template and API endpoint for social guru to adapt the pagination; Modified the template for social guru to match the web design
-4. Fixed base template to make toggle button real-time interactive
-5. Updated the database design and Figma for report
+2. Modified the template and API endpoint for social guru to adapt the pagination; Modified the template for social guru to match the web design
+3. Fixed base template to make toggle button real-time interactive
+4. Updated the database design and Figma for report
+
+Longtian Ye (qy46):
+1. Drafted gen.py to generate large scale data according to our database table design schema and debugged to pass our constraints.
+2. Implemented pagination for seller inventory page.
+3. Added a functionality for seller to add new product to its inventory.
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
 LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
