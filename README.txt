@@ -78,5 +78,9 @@ Yanzheng Wu (yw609):
 2. Added feature whereby a buyer can view all the sellers' information associated with each product listed on the main page
 3. Implemented functionality for buyers to add product to cart
 
+Honggang Min (hm246):
+1. Tested and finalized requirement no.3 of user balance topup and withdraw.
+2. Aligned the buttons with the designs from Figma.
+
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
 LINK to Milestone 3 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b16ddf97-2995-494e-9919-b140003e7ef2
