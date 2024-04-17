@@ -90,4 +90,4 @@ Yufei Zhan (yz858):
 3. Modified the template and API endpoint for cart guru to adapt the pagination and match Figma's design as well as functionalities
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
-LINK to Milestone 4 Video: +++
+LINK to Milestone 4 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5c07378e-cd40-4da1-bb05-b15500413b7b
