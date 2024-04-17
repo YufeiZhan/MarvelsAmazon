@@ -60,7 +60,7 @@ Some useful commands:
 - [] Change users's updateRole to PUT request
 - [] Deal with the case where page is out of range
 - [] Cartitems add a time field to sort it in cart
-- 
+- [] Cart: refine quantity condition + implement coupon, remove all, and submit
 
 ## Note on Hiding Credentials
 
