@@ -10,7 +10,7 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 **Username2**: woodtina@gmail.com <br>
 **Password2**: pass1
 <br>
-**DemoUsername**: woodtina@gmail.com <br>
+**DemoUsername**: tony.stark@mcu.com <br>
 **DemoPassword**: pass1
 
 
