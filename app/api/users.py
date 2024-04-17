@@ -35,7 +35,7 @@ def topup(id):
 
 @bp.route('/withdraws/<id>/<amount>', methods=['GET', 'POST'])
 def withdraws(id, amount):
-    withdrawAmount = int(amount)
+    withdrawAmount = float(amount)
     if withdrawAmount < 0:
         flash(f'Cannot withdraw an amount of {amount} smaller than 0!')
         return redirect(url_for('users.account'))
