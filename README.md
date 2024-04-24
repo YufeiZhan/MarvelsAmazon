@@ -11,7 +11,7 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 **Password2**: pass1
 <br>
 **DemoUsername**: tony.stark@mcu.com <br>
-**DemoPassword**: pass1
+**DemoPassword**: 123
 
 
 ## Development Notes
