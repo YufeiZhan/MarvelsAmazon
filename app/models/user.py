@@ -158,6 +158,35 @@ class User(UserMixin):
         return role
 
     @staticmethod
+    def getOrderHistory(uid):
+        rows = app.db.execute(
+            """
+            SELECT
+                o.oid AS order_id,
+                o.time_placed AS order_placing_time,
+                ROUND(CAST(SUM(oi.quantity_purchased * i.unit_price * o.discount) AS NUMERIC), 2) AS total_amount,
+                SUM(oi.quantity_purchased) AS total_items,
+            CASE
+                WHEN COUNT(CASE WHEN oi.item_status = 'fulfilled' THEN 1 END) = COUNT(*) THEN 'Fulfilled'
+                WHEN COUNT(CASE WHEN oi.item_status = 'canceled' THEN 1 END) = COUNT(*) THEN 'Canceled'
+                WHEN COUNT(CASE WHEN oi.item_status = 'placed' THEN 1 END) = COUNT(*) THEN 'Placed'
+                WHEN COUNT(CASE WHEN oi.item_status = 'in delivery' THEN 1 END) = COUNT(*) THEN 'In Delivery'
+                ELSE 'Pending'
+            END AS fulfillment_status
+            FROM Orders o
+            INNER JOIN
+                OrderItems oi ON o.oid = oi.oid
+            INNER JOIN
+                Inventory i ON oi.iid = i.iid
+            WHERE o.uid = :uid
+            GROUP BY o.oid
+            ORDER BY o.time_placed DESC;
+            """,
+            uid=uid)
+        
+        return rows
+
+    @staticmethod
     def update_user_role(id, role):
         app.db.execute(
                 """

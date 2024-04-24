@@ -22,6 +22,11 @@ def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
+@bp.route('/order_history')
+@login_required
+def order_history():
+    return render_template('order_history.html', title='Order History', rows=User.getOrderHistory(current_user.id), role=User.getRole(current_user.id))
+
 @bp.route('/topup/<id>')
 def topup(id):
     if User.topup(id):
