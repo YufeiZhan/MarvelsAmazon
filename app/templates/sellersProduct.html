@@ -11,6 +11,7 @@
       <tr>
         <th scope="col">Seller ID</th>
         <th scope="col">Seller Name</th>
+        <th scope="col"> Inventory ID</th>
         <th scope="col">Product Name</th>
         <th scope="col">Unit Price</th>
         <th scope="col">Quantity Available</th>
@@ -22,18 +23,40 @@
         <tr>
           <th scope="row">{{s.seller_id}}</th>
           <td>{{s.seller_name}}</td>
+          <td>{{s.inventory_id}}</td>
           <td>{{s.product_name}}</td>
           <td>${{s.unit_price}}</td>
           <td>{{ s.quantity_available }} units left</td>
-          <td>
+          <!-- <td>
             {% if s.quantity_available > 0 %}
               <button type="button" class="btn btn-primary">Add To Cart</button>
             {% else %}
               <button type="button" class="btn btn-secondary" disabled>Out Of Stock</button>
             {% endif %}
+          </td> -->
+          <td>
+            {% if s.quantity_available > 0 %}
+            <form action="{{ url_for('sellersProduct.increase_item') }}" method="post">
+              <input type="hidden" name="userid" value="{{ current_user.id }}">
+              <input type="hidden" name="inventoryid" value="{{ s.inventory_id }}">
+              <input type="number" name="quantity" min="1" max="{{ s.quantity_available }}" value="1" class="form-control">
+              <button type="submit" class="btn btn-primary">Add To Cart</button>
+            </form>
+            {% else %}
+            <button type="button" class="btn btn-secondary" disabled>Out Of Stock</button>
+            {% endif %}
           </td>
         </tr>
       {% endfor %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
     </tbody>
   </table>
 
