@@ -133,3 +133,54 @@ class Product:
             ''', n=Product.entry_per_page, start=offset)
 
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_page_with_type(n, product_type):
+        offset = (n-1)* Product.entry_per_page
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            WHERE 
+                p.type = :type
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                avg_unit_price DESC
+            LIMIT :n OFFSET :start;
+            ''', n=Product.entry_per_page, start=offset, type=product_type)
+
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_all_with_type(product_type):
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2)
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            WHERE 
+                p.type = :type
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                p.pid ASC;
+            ''', type=product_type)
+        return [Product(*row) for row in rows]

@@ -9,6 +9,15 @@
 
 <h2>Products for sale:</h2>
 
+<div class="mb-3">
+  <select id="typeSelect" class="form-select" onchange="updateProductType()">
+    <option value="" selected>Choose a Type...</option>
+    {% for type in types %}
+    <option value="{{ type }}">{{ type }}</option>
+    {% endfor %}
+  </select>
+</div>
+
 <style>
   form.search-form {
     display: flex;
@@ -65,11 +74,19 @@
 
 <nav aria-label="Page navigation example">
   <ul class="pagination">
-    <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=1)}}">Start</a></li>
-    <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=page-1)}}">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
-    <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=page+1)}}">Next</a></li>
-    <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index',page=max_page)}}">End</a></li>
+    {% if product_type %}
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=1)}}">Start</a></li>
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=page-1)}}">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
+      <li class="page-item {% if page >= max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=page+1)}}">Next</a></li>
+      <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=max_page)}}">End</a></li>
+    {% else %}
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=1)}}">Start</a></li>
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=page-1)}}">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
+      <li class="page-item {% if page >= max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=page+1)}}">Next</a></li>
+      <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=max_page)}}">End</a></li>
+    {% endif %}
   </ul>
 </nav>
 
@@ -84,4 +101,15 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
+
+
+<script>
+  function updateProductType() {
+      var typeSelect = document.getElementById('typeSelect');
+      var selectedType = typeSelect.value;
+      var url = "{{ url_for('index.products_by_type') }}?type=" + encodeURIComponent(selectedType);
+      window.location.href = url;
+  }
+</script>
+
 {% endblock %}
