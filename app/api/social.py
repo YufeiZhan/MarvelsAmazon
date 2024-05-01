@@ -59,6 +59,7 @@ def reviews_edit(buyer_id,target_id,target_type):
                             target_id=one_review[0].target_id,
                             content=one_review[0].content,
                             review_time=one_review[0].review_time,
+                            rating=one_review[0].rating,
                             target_type=target_type,
                             role=role)
 
@@ -68,8 +69,10 @@ def reviews_submit():
     target_id = request.args.get('target_id')
     target_type = request.args.get('target_type')
     new_content = request.args.get('content')
+    rating = request.args.get('rating')
+    last_edit = request.args.get('time')
     try:
-        success = Reviews.update_content(buyer_id, target_id, target_type, new_content)
+        success = Reviews.update_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
         if success:
             return jsonify({'message': 'Review updated successfully'}), 200
         else:
