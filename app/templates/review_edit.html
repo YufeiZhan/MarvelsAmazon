@@ -13,15 +13,28 @@
     <input type="hidden" id="target_id" value="{{ target_id }}">
     <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
     <input type="hidden" id="target_type" value="{{ target_type }}">
+    <input type="hidden" id="rating" value="{{ rating }}">
     
     <div>
         <label>Last edited:</label>
-        <time>{{review_time}}</time>
+        <time id="last_edited">{{review_time}}</time>
     </div>
     <!-- Textarea for editing review content -->
     <div>
         <textarea id="reviewContent" name="reviewContent" rows="6" cols="50" required>{{content}}</textarea>
     </div>
+    <div class="rating">
+        {% for i in range(1, 6) %}
+          <button type="button" class="star" data-index="{{ i }}">
+            {% if i - 1 < rating %}
+              <i class="bi {% if i <= rating %}bi-star-fill{% elif i - 0.5 == rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+            {% else %}
+              <i class="bi bi-star"></i>
+            {% endif %}
+          </button>
+        {% endfor %}
+    </div>
+      
     <button type="submit">Submit Review</button>
 </form>
 
@@ -32,14 +45,18 @@ function handleSubmit(event) {
     const targetType = document.getElementById('target_type').value;
     const buyerId = document.getElementById('buyer_id').value;
     const content = encodeURIComponent(document.getElementById('reviewContent').value);
+    const rating = document.getElementById('rating').value;
+    const now = new Date();
+    const formattedTime = formatDateTime(now);
 
-    const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&content=${content}`;
+    const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}`;
 
     fetch(url)
     .then(response => response.json())
     .then(data => {
         if (data.message) {
             alert('Review updated successfully!');
+            document.getElementById('last_edited').textContent = formattedTime;
             window.location.href = '/reviews';
         } else {
             alert('Failed to update review: ' + data.error);
@@ -51,5 +68,72 @@ function handleSubmit(event) {
     });
 
 };
+
+document.querySelectorAll('.rating .star').forEach((star, index) => {
+    star.addEventListener('click', function(event) {
+      const rect = this.getBoundingClientRect();
+      const clickX = event.clientX - rect.left; // Get horizontal click position
+      const isHalfStar = clickX < rect.width / 2; // Determine if click is on the left half
+      setRating(index + 0.5 + (isHalfStar ? 0 : 0.5));
+    });
+  
+    star.addEventListener('mouseover', function(event) {
+      const rect = this.getBoundingClientRect();
+      const hoverX = event.clientX - rect.left; // Get horizontal hover position
+      const isHalfStarHover = hoverX < rect.width / 2; // Determine if hover is on the left half
+      highlightStars(index + 0.5 + (isHalfStarHover ? 0 : 0.5));
+    });
+  
+    star.addEventListener('mouseout', function() {
+      highlightStars(currentRating);
+    });
+});
+  
+let currentRating = parseFloat(document.getElementById('rating').value);
+
+window.onload = function() {
+    updateStars(currentRating);
+    document.getElementById('rating').value = currentRating;
+};
+
+function setRating(rating) {
+    currentRating = rating;
+    updateStars(rating);
+    document.getElementById('rating').value = rating;
+}
+  
+function highlightStars(rating) {
+    const stars = document.querySelectorAll('.rating .star i');
+    stars.forEach((star, idx) => {
+      star.className = 'bi bi-star'; // Reset to empty
+      if (idx + 0.5 < rating) {
+        star.className = 'bi bi-star-fill';
+      } else if (idx + 0.5 === rating) {
+        star.className = 'bi bi-star-half';
+      }
+    });
+  }
+  
+function updateStars(rating) {
+    const stars = document.querySelectorAll('.rating .star i');
+    stars.forEach((star, idx) => {
+      star.className = 'bi bi-star';
+      if (idx + 0.5 < rating) {
+        star.className = 'bi bi-star-fill';
+      } else if (idx + 0.5 === rating) {
+        star.className = 'bi bi-star-half';
+      }
+    });
+  }
+  
+function formatDateTime(date) {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 </script>
 {% endblock %}

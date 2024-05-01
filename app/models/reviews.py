@@ -115,17 +115,17 @@ LIMIT :entry_per_page
 ''', seller_id=seller_id, offset=offset, entry_per_page=Reviews.entry_per_page)
         return [Reviews(*(r)) for r in rows] if rows else None
     
-    def update_content(buyer_id, target_id, target_type, new_content):
+    def update_content(buyer_id, target_id, target_type, new_content, new_rating, last_edit):
         if target_type=='1':
             rows = app.db.execute('''
 UPDATE SellerReview
-SET content = :new_content
+SET content = :new_content, rating =:new_rating, review_time =:last_edit
 WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
-''', seller_id=target_id, buyer_id=buyer_id, new_content=new_content)
+''', seller_id=target_id, buyer_id=buyer_id, new_content=new_content, new_rating=new_rating, last_edit=last_edit)
         else:
             rows = app.db.execute('''
 UPDATE ProductReview
-SET content = :new_content
+SET content = :new_content, rating =:new_rating, review_time =:last_edit
 WHERE iid = :iid AND buyer_id = :buyer_id;
-''', iid=target_id, buyer_id=buyer_id, new_content=new_content)
+''', iid=target_id, buyer_id=buyer_id, new_content=new_content, new_rating=new_rating, last_edit=last_edit)
         return rows
