@@ -1,0 +1,14 @@
+.rating {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc; /* Default empty star color */
+}
+
+.rating i {
+    color: #f5c518; /* Gold color for stars */
+}
+
+.rating i:hover,
+.rating i:hover ~ i {
+    color: #f5c518; /* Color changes when hovered */
+}
