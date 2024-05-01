@@ -25,7 +25,7 @@
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a class="btn btn-purple" id="edit_sr" href="#">Edit</a>
+              <a class="btn btn-purple" id="edit_sr" href="{{url_for('social.reviews_edit',buyer_id=r.buyer_id,target_id=r.target_id,target_type=1)}}">Edit</a>
               <a class="btn btn-purple" id="delete_sr" href="{{url_for('social.reviews_delete',buyer_id=r.buyer_id,target_id=r.target_id,target_type=1)}}">Delete</a>
             </div>
           {% endfor %}
@@ -62,7 +62,7 @@
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a class="btn btn-purple" id="edit_pr" href="#">Edit</a>
+              <a class="btn btn-purple" id="edit_sr" href="{{url_for('social.reviews_edit',buyer_id=r.buyer_id,target_id=r.target_id,target_type=0)}}">Edit</a>
               <a class="btn btn-purple" id="delete_pr" href="{{url_for('social.reviews_delete',buyer_id=r.buyer_id,target_id=r.target_id,target_type=0)}}">Delete</a>
             </div>
           {% endfor %}

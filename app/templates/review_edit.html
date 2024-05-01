@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
+
+{% block content %}
+<h1>Edit Your Review for:</h1>
+<form id="editReviewForm" onsubmit="handleSubmit(event)">
+    {% if target_type %}
+        (Seller) {{ target_id }} 
+    {%else%}
+        (Product) {{ target_id }} 
+    {%endif%}
+    <input type="hidden" id="target_id" value="{{ target_id }}">
+    <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
+    <input type="hidden" id="target_type" value="{{ target_type }}">
+    
+    <div>
+        <label>Last edited:</label>
+        <time>{{review_time}}</time>
+    </div>
+    <!-- Textarea for editing review content -->
+    <div>
+        <textarea id="reviewContent" name="reviewContent" rows="6" cols="50" required>{{content}}</textarea>
+    </div>
+    <button type="submit">Submit Review</button>
+</form>
+
+<script>
+function handleSubmit(event) {
+    event.preventDefault();
+    const targetId = document.getElementById('target_id').value;
+    const targetType = document.getElementById('target_type').value;
+    const buyerId = document.getElementById('buyer_id').value;
+    const content = encodeURIComponent(document.getElementById('reviewContent').value);
+
+    const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&content=${content}`;
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert('Review updated successfully!');
+            window.location.href = '/reviews';
+        } else {
+            alert('Failed to update review: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating review:', error);
+        alert('Error updating review. Please try again.');
+    });
+
+};
+</script>
+{% endblock %}
