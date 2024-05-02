@@ -1,4 +1,5 @@
 import math
+import json
 
 from flask_login import current_user, login_required
 from flask import render_template, redirect, url_for, flash, request, jsonify
@@ -78,6 +79,7 @@ def reviews_submit():
     try:
         if not isnew:
             success = Reviews.update_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
+            print(type(target_type))
             if success:
                 return jsonify({'message': 'Review updated successfully'}), 200
             else:
@@ -115,9 +117,16 @@ def reviews_create(buyer_id,target_id,target_type):
 def seller_reviews_summary(seller_id, page_rr=1):
     seller_reviews = Reviews.get_reviews_received_by_page(seller_id, page_rr)
     max_page_rr = math.ceil(Reviews.get_reviews_received_count(seller_id)/Reviews.entry_per_page)
+    summary = Reviews.get_summary_for_seller(seller_id)
     role = User.getRole(current_user.id)
+    data = summary["hist"]
+    ratings_data_dict = {k: v for k, v in data}
+    hist = json.dumps(ratings_data_dict)
     return render_template('seller_review.html',
                            reviews_received=seller_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           avg_rating=summary["avg_rating"],
+                           num_reviews=summary["num_reviews"],
+                           hist=hist,
                            role=role
                            )
 
@@ -126,8 +135,15 @@ def seller_reviews_summary(seller_id, page_rr=1):
 def product_reviews_summary(iid, page_rr=1):
     product_reviews = Reviews.get_all_reviews_for_some_product(iid, page_rr)
     max_page_rr = math.ceil(Reviews.get_all_reviews_for_some_product_count(iid)/Reviews.entry_per_page)
+    summary = Reviews.get_summary_for_product(iid)
     role = User.getRole(current_user.id)
+    data = summary["hist"]
+    ratings_data_dict = {k: v for k, v in data}
+    hist = json.dumps(ratings_data_dict)
     return render_template('product_review.html',
                            reviews_received=product_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           avg_rating=summary["avg_rating"],
+                           num_reviews=summary["num_reviews"],
+                           hist=hist,
                            role=role
                            )

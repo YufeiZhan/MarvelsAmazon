@@ -107,13 +107,25 @@ FROM ProductReview as pr
 WHERE pr.iid = :iid
 ''', iid=iid)
         return rows[0][0]
-#     def get_summary_for_some_product(iid):
-#         rows = app.db.execute('''
-# SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
-# FROM ProductReview as pr
-# WHERE pr.iid = :iid
-# ''', iid=iid)
-#         return rows[0]
+    
+    def get_summary_for_product(iid):
+        rows = app.db.execute('''
+SELECT AVG(pr.rating), COUNT(pr.rating)
+FROM ProductReview as pr
+WHERE pr.iid = :iid;
+''', iid=iid)
+        avg_rating = rows[0][0]
+        num_reviews = rows[0][1]
+        rows = app.db.execute('''
+SELECT pr.rating, COUNT(pr.rating)
+FROM ProductReview as pr
+WHERE pr.iid = :iid
+GROUP BY pr.rating;
+''', iid=iid)
+        return {"avg_rating":avg_rating,
+                "num_reviews":num_reviews,
+                "hist":rows}
+
     ########## Reviews received
     def get_reviews_received_count(seller_id):
         rows = app.db.execute('''
@@ -135,8 +147,27 @@ LIMIT :entry_per_page
 ''', seller_id=seller_id, offset=offset, entry_per_page=Reviews.entry_per_page)
         return [Reviews(*(r)) for r in rows] if rows else None
     
+    def get_summary_for_seller(seller_id):
+        rows = app.db.execute('''
+SELECT AVG(sr.rating), COUNT(sr.rating)
+FROM SellerReview as sr
+WHERE sr.seller_id = :seller_id;
+''', seller_id=seller_id)
+        avg_rating = rows[0][0]
+        num_reviews = rows[0][1]
+        rows = app.db.execute('''
+SELECT sr.rating, COUNT(sr.rating)
+FROM SellerReview as sr
+WHERE sr.seller_id = :seller_id
+GROUP BY sr.rating;
+''', seller_id=seller_id)
+        return {"avg_rating":avg_rating,
+                "num_reviews":num_reviews,
+                "hist":rows}
+
+    ########## Modify the reviews
     def update_content(buyer_id, target_id, target_type, new_content, new_rating, last_edit):
-        if target_type=='1':
+        if target_type:
             rows = app.db.execute('''
 UPDATE SellerReview
 SET content = :new_content, rating =:new_rating, review_time =:last_edit
