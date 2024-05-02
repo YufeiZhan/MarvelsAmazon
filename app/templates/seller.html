@@ -3,8 +3,28 @@
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
 {% block content %}
+<style>
+    .quantity-col { width: 150px; }
+    .btn-quantity {
+        border-color: #000000; 
+    }
+    .btn-quantity-decrease {
+        border-color: #000000;
+    }
+</style>
+
     <div class="container mt-5">
         <h2>Your Inventory</h2>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         <table class="table table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -13,7 +33,7 @@
                     <th scope="col"> Type</th>
                     <th scope="col">Description</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Quantity Available</th>
+                    <th scope="col" class="quantity-col">Quantity Available</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,11 +44,26 @@
                     <td>{{ item.type }}</td>
                     <td>{{ item.description }}</td>
                     <td>${{ item.unit_price }}</td>
-                    <td>{{ item.quantity_available }}</td>
+                    <td>
+                        <form action="{{ url_for('seller.update_quantity', iid=item.iid) }}" method="post">
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary btn-sm btn-quantity-decrease" type="submit" name="change" value="decrease">-</button>
+                                <input type="text" class="form-control text-center" name="quantity" value="{{ item.quantity_available }}" readonly>
+                                <button class="btn btn-outline-secondary btn-sm btn-quantity" type="submit" name="change" value="increase">+</button>
+                            </div>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{ url_for('seller.delete_inventory', iid=item.iid) }}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" title="Remove">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </form>
+                    </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="6">No inventory items found.</td>
+                    <td colspan="7">No inventory items found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -72,28 +107,11 @@
                 </button>
                 </div>
                 <div class="modal-body">
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <div class="alert alert-info">
-                        {% for message in messages %}
-                        <p>{{ message }}</p>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% endwith %}
                     <form action="{{ url_for('seller.add_inventory_item') }}" method="post">
                         <div class="form-group">
                             <label for="productName">Product Name:</label>
                             <input type="text" class="form-control" id="productName" name="product_name" required>
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="productType">Type:</label>
-                            <input type="text" class="form-control" id="productType" name="type" required>
-                        </div> -->
-                        <!-- <div class="form-group">
-                            <label for="description">Description:</label>
-                            <textarea class="form-control" id="description" name="description" required></textarea>
-                        </div> -->
                         <div class="form-group">
                             <label for="unitPrice">Unit Price:</label>
                             <input type="number" step="0.01" class="form-control" id="unitPrice" name="unit_price" required>
@@ -107,5 +125,18 @@
                 </div>
             </div>
         </div>
+        <!-- A phrase to prevent accidental button such as delete -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteButtons = document.querySelectorAll('.btn-danger');
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        if (!confirm('Are you sure you want to remove this product?')) {
+                            event.preventDefault();
+                        }
+                    });
+                });
+            });
+        </script>        
     </div>
 {% endblock %}

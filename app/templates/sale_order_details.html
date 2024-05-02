@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .order-details p {
+        font-size: 16px;
+        margin: 0;
+        padding: 3px 0;
+    }
+
+    .item-row {
+        border-top: 1px solid #ccc;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .total-amount h4, .total-amount h5 {
+        margin-top: 20px;
+    }
+
+    .badge {
+        padding: 5px 10px;
+        font-size: 100%;
+    }
+
+    .status {
+        font-weight: bold;
+    }
+
+    .right-corner {
+        position: fixed;
+        bottom: 100px;
+        right: 200px;
+    }
+</style>
+<div class="container mt-5">
+    {% for order in order_details %}
+    <h2>Order #{{ order.oid }}</h2>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="order-details">
+        {% if loop.first %}  <!-- Display user information only once -->
+            <p><strong>User:</strong> {{ order.firstname }} {{ order.lastname }}</p>
+            <p><strong>Contact:</strong> {{ order.email }}</p>
+            <p><strong>Location:</strong> {{ order.address }}</p>
+            <p><strong>Order Placed:</strong> {{ order.time_placed }}</p>
+            <p><strong>No. of Items:</strong> {{ order.total_items }}</p>
+        {% endif %}
+    </div>
+    <div class="mt-4">
+        <table class="table item-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ order.product_name }}</td>
+                    <td>${{ order.unit_price }}</td>
+                    <td>{{ order.quantity_purchased }}</td>
+                    <td>
+                        {% if order.item_status == 'fulfilled' %}
+                            <span class="badge bg-success">FULFILLED</span>
+                        {% elif order.item_status == 'cancelled' %}
+                            <span class="badge bg-danger">CANCELLED</span>
+                        {% else %}
+                            <span class="badge bg-warning">{{ order.item_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.item_status not in ['fulfilled', 'cancelled'] %}
+                            <form action="{{ url_for('seller.mark_as_fulfilled', oiid=order.oiid, oid = order.oid) }}" method="post">
+                                <!-- <button type="submit" class="btn btn-success">Fulfill</button> -->
+                                <input type="checkbox" name="fulfill" onchange="this.form.submit();" title="Tick to mark as fulfilled">
+                                <label for="fulfill" class="visually-hidden">Mark as fulfilled</label>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="right-corner">
+        <div class="total-amount">
+            <h4>Cart Total: ${{ order.total_amount }}</h4>
+            <h5>Order Status: <span class="badge {{ 'bg-success' if order.item_status == 'fulfilled' else 'bg-danger' }}">{{ order.item_status }}</span></h5>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
