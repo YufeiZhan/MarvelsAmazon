@@ -71,3 +71,11 @@ CREATE TABLE ProductReview (
     upvotes INT NOT NULL DEFAULT 0 CHECK (upvotes >=0),
     PRIMARY KEY (buyer_id, iid)
 );
+
+CREATE TABLE Upvotes (
+    target_id INT NOT NULL,
+    target_type INT NOT NULL,
+    buyer_id INT NOT NULL REFERENCES Users(uid),
+    user_id INT NOT NULL REFERENCES Users(uid),
+    upvote_status INT DEFAULT 0
+);

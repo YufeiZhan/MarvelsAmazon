@@ -79,7 +79,6 @@ def reviews_submit():
     try:
         if not isnew:
             success = Reviews.update_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
-            print(type(target_type))
             if success:
                 return jsonify({'message': 'Review updated successfully'}), 200
             else:
@@ -122,12 +121,23 @@ def seller_reviews_summary(seller_id, page_rr=1):
     data = summary["hist"]
     ratings_data_dict = {k: v for k, v in data}
     hist = json.dumps(ratings_data_dict)
+    lst_upvote_status = []
+    for r in seller_reviews:
+        upvote_status = Reviews.check_upvote(seller_id, 1, r.buyer_id, current_user.id)
+        if len(upvote_status) == 0:
+            upvote_status = 0
+        else:
+            upvote_status = upvote_status[0][0]
+        lst_upvote_status.append(upvote_status)
+    review_status_zip = zip(seller_reviews, lst_upvote_status)
     return render_template('seller_review.html',
-                           reviews_received=seller_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           reviews_received=seller_reviews,review_status_zip=review_status_zip,
+                           page_rr=page_rr, max_page_rr=max_page_rr,
                            avg_rating=summary["avg_rating"],
                            num_reviews=summary["num_reviews"],
                            hist=hist,
-                           role=role
+                           role=role,
+                           user_id=current_user.id,
                            )
 
 @bp.route('/product_review/<int:iid>/<int:page_rr>', methods=['GET','POST'])
@@ -140,10 +150,31 @@ def product_reviews_summary(iid, page_rr=1):
     data = summary["hist"]
     ratings_data_dict = {k: v for k, v in data}
     hist = json.dumps(ratings_data_dict)
+    lst_upvote_status = []
+    for r in product_reviews:
+        upvote_status = Reviews.check_upvote(iid, 0, r.buyer_id, current_user.id)
+        if len(upvote_status) == 0:
+            upvote_status = 0
+        else:
+            upvote_status = upvote_status[0][0]
+        lst_upvote_status.append(upvote_status)
+    review_status_zip = zip(product_reviews, lst_upvote_status)
     return render_template('product_review.html',
-                           reviews_received=product_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           reviews_received=product_reviews, review_status_zip=review_status_zip, page_rr=page_rr, max_page_rr=max_page_rr,
                            avg_rating=summary["avg_rating"],
                            num_reviews=summary["num_reviews"],
                            hist=hist,
-                           role=role
+                           role=role,
+                           user_id=current_user.id,
                            )
+
+@bp.route('/upvote', methods=['GET'])
+def upvote_action():
+    buyer_id = request.args.get('buyer_id')
+    target_id = request.args.get('target_id')
+    target_type = int(request.args.get('target_type'))
+    user_id = request.args.get('user_id')
+
+    status, new_upvotes = Reviews.upvote(target_id, target_type, buyer_id, user_id)
+    return jsonify(status=status, new_upvotes=new_upvotes)
+ 
