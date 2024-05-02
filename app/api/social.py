@@ -161,6 +161,8 @@ def product_reviews_summary(iid, page_rr=1):
                 upvote_status = upvote_status[0][0]
             lst_upvote_status.append(upvote_status)
         review_status_zip = zip(product_reviews, lst_upvote_status)
+    iscustomer=Reviews.iscustomer(iid, current_user.id, 0)
+    isexist = Reviews.isexist(current_user.id, iid, 0)
     return render_template('product_review.html',
                            reviews_received=product_reviews, review_status_zip=review_status_zip, page_rr=page_rr, max_page_rr=max_page_rr,
                            avg_rating=summary["avg_rating"],
@@ -168,6 +170,8 @@ def product_reviews_summary(iid, page_rr=1):
                            hist=hist,
                            role=role,
                            user_id=current_user.id,
+                           iscustomer=iscustomer,
+                           isexist=isexist
                            )
 
 @bp.route('/upvote', methods=['GET'])

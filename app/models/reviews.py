@@ -204,7 +204,7 @@ WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
         else:
             count = app.db.execute('''
 SELECT COUNT(*)
-FROM SellerReview                                   
+FROM ProductReview                                   
 WHERE iid = :iid AND buyer_id = :buyer_id;                 
 ''', iid=target_id, buyer_id=buyer_id)
         return count[0][0]
