@@ -238,27 +238,27 @@ VALUES (:target_id, :target_type, :buyer_id, :user_id, 1);
         if target_type==1:
             ## Update seller review table
             rows = app.db.execute('''
-    UPDATE SellerReview
-    SET upvotes = upvotes + (2 * :status-1)
-    WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
-    ''', seller_id=target_id, buyer_id=buyer_id, status=status)
+UPDATE SellerReview
+SET upvotes = upvotes + (2 * :status-1)
+WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
+''', seller_id=target_id, buyer_id=buyer_id, status=status)
             new_upvotes = app.db.execute('''
-    SELECT upvotes
-    FROM SellerReview
-    WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
-    ''', seller_id=target_id, buyer_id=buyer_id)
+SELECT upvotes
+FROM SellerReview
+WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
+''', seller_id=target_id, buyer_id=buyer_id)
         else:
             ## Update product review table
             rows = app.db.execute('''
-    UPDATE ProductReview
-    SET upvotes = upvotes + (2 * :status-1)
-    WHERE iid = :iid AND buyer_id = :buyer_id;
-    ''', iid=target_id, buyer_id=buyer_id, status=status)
+UPDATE ProductReview
+SET upvotes = upvotes + (2 * :status-1)
+WHERE iid = :iid AND buyer_id = :buyer_id;
+''', iid=target_id, buyer_id=buyer_id, status=status)
             new_upvotes = app.db.execute('''
-    SELECT upvotes
-    FROM ProductReview
-    WHERE iid = :iid AND buyer_id = :buyer_id;
-    ''', iid=target_id, buyer_id=buyer_id)
+SELECT upvotes
+FROM ProductReview
+WHERE iid = :iid AND buyer_id = :buyer_id;
+''', iid=target_id, buyer_id=buyer_id)
         return status, new_upvotes[0][0]
 
     def check_upvote(target_id, target_type, buyer_id, user_id):
@@ -269,3 +269,21 @@ WHERE target_id=:target_id AND target_type=:target_type
     AND buyer_id=:buyer_id AND user_id=:user_id;                                
 ''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
         return status
+    
+    def iscustomer(target_id, buyer_id, target_type):
+        if target_type:
+            count = app.db.execute('''
+SELECT COUNT(*)
+FROM Orders as o
+LEFT JOIN OrderItems as oi ON o.oid = oi.oid
+LEFT JOIN Inventory as i ON oi.iid = i.iid
+WHERE i.seller_id = :seller_id AND o.uid = :buyer_id;                                  
+''', seller_id=target_id, buyer_id=buyer_id)
+        else:
+            count = app.db.execute('''
+SELECT COUNT(*)
+FROM Orders as o
+LEFT JOIN OrderItems as oi ON o.oid = oi.oid
+WHERE oi.iid = :iid AND o.uid = :buyer_id;                                  
+''', iid=target_id, buyer_id=buyer_id)
+        return count[0][0] > 0

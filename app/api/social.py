@@ -95,21 +95,15 @@ def reviews_submit():
 @bp.route('/reviews/review_create/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
 def reviews_create(buyer_id,target_id,target_type):
     role = User.getRole(current_user.id)
-    count = Reviews.isexist(buyer_id,target_id,target_type)
-    if count > 0:
-        # WARN that the review already exists
-        # flash('A review already exists.', 'warning')
-        return redirect(url_for('social.reviews'))
-    else:
-        return render_template('review_edit.html',
-                                buyer_id=buyer_id,
-                                target_id=target_id,
-                                content="",
-                                review_time=None,
-                                rating=0,
-                                target_type=target_type,
-                                role=role,
-                                isnew=1)
+    return render_template('review_edit.html',
+                            buyer_id=buyer_id,
+                            target_id=target_id,
+                            content="",
+                            review_time=None,
+                            rating=0,
+                            target_type=target_type,
+                            role=role,
+                            isnew=1)
     
 @bp.route('/seller_review/<int:seller_id>/<int:page_rr>', methods=['GET','POST'])
 @bp.route('/seller_review/<int:seller_id>', methods=['GET','POST'])
@@ -132,6 +126,8 @@ def seller_reviews_summary(seller_id, page_rr=1):
                 upvote_status = upvote_status[0][0]
             lst_upvote_status.append(upvote_status)
         review_status_zip = zip(seller_reviews, lst_upvote_status)
+    iscustomer=Reviews.iscustomer(seller_id, current_user.id, 1)
+    isexist = Reviews.isexist(current_user.id, seller_id, 1)
     return render_template('seller_review.html',
                            reviews_received=seller_reviews,review_status_zip=review_status_zip,
                            page_rr=page_rr, max_page_rr=max_page_rr,
@@ -140,6 +136,8 @@ def seller_reviews_summary(seller_id, page_rr=1):
                            hist=hist,
                            role=role,
                            user_id=current_user.id,
+                           iscustomer=iscustomer,
+                           isexist=isexist
                            )
 
 @bp.route('/product_review/<int:iid>/<int:page_rr>', methods=['GET','POST'])

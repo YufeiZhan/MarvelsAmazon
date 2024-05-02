@@ -11,6 +11,15 @@
 {% block content %}
   <br><br>
   {% if role ==0 %}
+    {%if isexist%}
+      <a class="btn btn-purple" id="edit_review" href="{{url_for('social.reviews_edit',buyer_id=user_id,target_id=reviews_received[0].target_id,target_type=1)}}">Write a review!</a>
+    {%else%}
+      {%if iscustomer%}
+        <a class="btn btn-purple" id="create_review" href="{{url_for('social.reviews_create',buyer_id=user_id,target_id=reviews_received[0].target_id,target_type=1)}}">Write a review!</a>
+      {%else%}
+        <div class="btn btn-purple">Write a review after purchase from this seller!</div>
+      {%endif%}
+    {%endif%}
     {% if reviews_received %}
       <h2>All Reviews This Seller Received</h2>
       <div class='table table-hover table-bordered container'>
