@@ -29,11 +29,12 @@ def reviews(page_sr=1, page_pr=1, page_rr=1):
     max_page_pr = math.ceil(Reviews.get_reviews_for_products_count(current_user.id)/Reviews.entry_per_page)
     max_page_rr = math.ceil(Reviews.get_reviews_received_count(current_user.id)/Reviews.entry_per_page)
     role = User.getRole(current_user.id)
-    return render_template('review.html',
+    return render_template('myreview.html',
                             seller_reviews=seller_reviews, page_sr=page_sr, max_page_sr=max_page_sr,
                             product_reviews=product_reviews, page_pr=page_pr, max_page_pr=max_page_pr,
                             reviews_received=reviews_received, page_rr=page_rr, max_page_rr=max_page_rr,
                             role=role)
+
 @bp.route('/reviews/delete/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
 def reviews_delete(buyer_id, target_id, target_type):
     if target_type:
@@ -108,3 +109,25 @@ def reviews_create(buyer_id,target_id,target_type):
                                 target_type=target_type,
                                 role=role,
                                 isnew=1)
+    
+@bp.route('/seller_review/<int:seller_id>/<int:page_rr>', methods=['GET','POST'])
+@bp.route('/seller_review/<int:seller_id>', methods=['GET','POST'])
+def seller_reviews_summary(seller_id, page_rr=1):
+    seller_reviews = Reviews.get_reviews_received_by_page(seller_id, page_rr)
+    max_page_rr = math.ceil(Reviews.get_reviews_received_count(seller_id)/Reviews.entry_per_page)
+    role = User.getRole(current_user.id)
+    return render_template('seller_review.html',
+                           reviews_received=seller_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           role=role
+                           )
+
+@bp.route('/product_review/<int:iid>/<int:page_rr>', methods=['GET','POST'])
+@bp.route('/product_review/<int:iid>', methods=['GET','POST'])
+def product_reviews_summary(iid, page_rr=1):
+    product_reviews = Reviews.get_all_reviews_for_some_product(iid, page_rr)
+    max_page_rr = math.ceil(Reviews.get_all_reviews_for_some_product_count(iid)/Reviews.entry_per_page)
+    role = User.getRole(current_user.id)
+    return render_template('product_review.html',
+                           reviews_received=product_reviews, page_rr=page_rr, max_page_rr=max_page_rr,
+                           role=role
+                           )

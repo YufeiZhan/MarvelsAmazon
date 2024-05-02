@@ -12,6 +12,7 @@ class Reviews:
         self.content = content
         pass
 
+    ########## Seller reviews
     def get_reviews_for_some_seller(buyer_id, seller_id):
         rows = app.db.execute('''
 SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
@@ -49,6 +50,7 @@ WHERE sr.seller_id = :seller_id AND sr.buyer_id = :buyer_id;
 ''', seller_id=seller_id, buyer_id=buyer_id)
         return rows
 
+    ########## Product reviews
     def get_reviews_for_some_product(buyer_id, iid):
         rows = app.db.execute('''
 SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
@@ -86,15 +88,33 @@ WHERE pr.iid = :iid AND pr.buyer_id = :buyer_id;
 ''', iid=iid, buyer_id=buyer_id)
         return rows
 
-#     def get_reviews_received(seller_id):
+    def get_all_reviews_for_some_product(iid, page):
+        offset = (page-1)* Reviews.entry_per_page
+        rows = app.db.execute('''
+SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
+FROM ProductReview as pr
+WHERE pr.iid = :iid
+ORDER BY pr.review_time DESC
+OFFSET :offset                            
+LIMIT :entry_per_page
+''', iid=iid, offset=offset, entry_per_page=Reviews.entry_per_page)
+        return [Reviews(*(r)) for r in rows] if rows else None    
+
+    def get_all_reviews_for_some_product_count(iid):
+        rows = app.db.execute('''
+SELECT COUNT(*)
+FROM ProductReview as pr
+WHERE pr.iid = :iid
+''', iid=iid)
+        return rows[0][0]
+#     def get_summary_for_some_product(iid):
 #         rows = app.db.execute('''
-# SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
-# FROM SellerReview as sr
-# WHERE sr.seller_id = :seller_id
-# ORDER BY sr.review_time DESC
-# ''', seller_id=seller_id)
-#         return [Reviews(*(r)) for r in rows] if rows else None
-    
+# SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
+# FROM ProductReview as pr
+# WHERE pr.iid = :iid
+# ''', iid=iid)
+#         return rows[0]
+    ########## Reviews received
     def get_reviews_received_count(seller_id):
         rows = app.db.execute('''
 SELECT COUNT(*)
