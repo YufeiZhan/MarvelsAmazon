@@ -120,6 +120,7 @@ def seller_reviews_summary(seller_id, page_rr=1):
     hist = json.dumps(ratings_data_dict)
     lst_upvote_status = []
     review_status_zip = None
+    top_review_zip = None
     if seller_reviews:
         for r in seller_reviews:
             upvote_status = Reviews.check_upvote(seller_id, 1, r.buyer_id, current_user.id)
@@ -129,10 +130,13 @@ def seller_reviews_summary(seller_id, page_rr=1):
                 upvote_status = upvote_status[0][0]
             lst_upvote_status.append(upvote_status)
         review_status_zip = zip(seller_reviews, lst_upvote_status)
+        top_reviews = Reviews.get_top_for_seller(seller_id)
+        top_review_zip = zip(top_reviews, lst_upvote_status)
     iscustomer=Reviews.iscustomer(seller_id, current_user.id, 1)
     isexist = Reviews.isexist(current_user.id, seller_id, 1)
     return render_template('seller_review.html',
-                           reviews_received=seller_reviews,review_status_zip=review_status_zip,
+                           reviews_received=seller_reviews,
+                           review_status_zip=review_status_zip,top_review_zip=top_review_zip,
                            page_rr=page_rr, max_page_rr=max_page_rr,
                            avg_rating=summary["avg_rating"],
                            num_reviews=summary["num_reviews"],
@@ -157,6 +161,7 @@ def product_reviews_summary(iid, page_rr=1):
     hist = json.dumps(ratings_data_dict)
     lst_upvote_status = []
     review_status_zip = None
+    top_review_zip = None
     if product_reviews:
         for r in product_reviews:
             upvote_status = Reviews.check_upvote(iid, 0, r.buyer_id, current_user.id)
@@ -166,10 +171,14 @@ def product_reviews_summary(iid, page_rr=1):
                 upvote_status = upvote_status[0][0]
             lst_upvote_status.append(upvote_status)
         review_status_zip = zip(product_reviews, lst_upvote_status)
+        top_reviews = Reviews.get_top_for_product(iid)
+        top_review_zip = zip(top_reviews, lst_upvote_status)
     iscustomer=Reviews.iscustomer(iid, current_user.id, 0)
     isexist = Reviews.isexist(current_user.id, iid, 0)
     return render_template('product_review.html',
-                           reviews_received=product_reviews, review_status_zip=review_status_zip, page_rr=page_rr, max_page_rr=max_page_rr,
+                           reviews_received=product_reviews,
+                           review_status_zip=review_status_zip, top_review_zip=top_review_zip,
+                           page_rr=page_rr, max_page_rr=max_page_rr,
                            avg_rating=summary["avg_rating"],
                            num_reviews=summary["num_reviews"],
                            hist=hist,
