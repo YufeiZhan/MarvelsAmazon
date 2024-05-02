@@ -3,9 +3,11 @@ from flask import current_app as app
 class Reviews:
     entry_per_page = 5
 
-    def __init__(self, target_id, buyer_id, rating, review_time, upvotes, content):
+    def __init__(self, target_id, buyer_id, rating, review_time, upvotes, content, buyer_name, target_name):
         self.buyer_id = buyer_id
+        self.buyer_name = buyer_name
         self.target_id = target_id
+        self.target_name = target_name
         self.rating = rating
         self.review_time = review_time
         self.upvotes = upvotes
@@ -15,8 +17,13 @@ class Reviews:
     ########## Seller reviews
     def get_reviews_for_some_seller(buyer_id, seller_id):
         rows = app.db.execute('''
-SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
+SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content,
+    CONCAT(u1.firstname, ' ', u1.lastname), CONCAT(u2.firstname, ' ', u2.lastname)
 FROM SellerReview as sr
+LEFT JOIN Users as u1
+    ON sr.buyer_id = u1.uid
+LEFT JOIN Users as u2
+    ON sr.seller_id = u2.uid
 WHERE sr.buyer_id = :buyer_id
     AND sr.seller_id = :seller_id
 ORDER BY sr.review_time DESC
@@ -34,8 +41,13 @@ WHERE sr.buyer_id = :buyer_id
     def get_reviews_for_seller_by_page(buyer_id, page):
         offset = (page-1)* Reviews.entry_per_page
         rows = app.db.execute('''
-SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
+SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content, 
+    CONCAT(u1.firstname, ' ', u1.lastname), CONCAT(u2.firstname, ' ', u2.lastname)
 FROM SellerReview as sr
+LEFT JOIN Users as u1
+    ON sr.buyer_id = u1.uid
+LEFT JOIN Users as u2
+    ON sr.seller_id = u2.uid  
 WHERE sr.buyer_id = :buyer_id
 ORDER BY sr.review_time DESC
 OFFSET :offset                            
@@ -53,8 +65,15 @@ WHERE sr.seller_id = :seller_id AND sr.buyer_id = :buyer_id;
     ########## Product reviews
     def get_reviews_for_some_product(buyer_id, iid):
         rows = app.db.execute('''
-SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
+SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content,
+    CONCAT(u.firstname, ' ', u.lastname), p.name
 FROM ProductReview as pr
+LEFT JOIN Users as u
+    ON pr.buyer_id = u.uid
+LEFT JOIN Inventory as i
+    ON pr.iid = i.iid
+LEFT JOIN Products as p
+    ON i.pid = p.pid
 WHERE pr.buyer_id = :buyer_id
     AND pr.iid = :iid                              
 ORDER BY pr.review_time DESC
@@ -72,8 +91,15 @@ WHERE pr.buyer_id = :buyer_id
     def get_reviews_for_products_by_page(buyer_id, page):
         offset = (page-1)* Reviews.entry_per_page
         rows = app.db.execute('''
-SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
+SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content,
+    CONCAT(u.firstname, ' ', u.lastname), p.name
 FROM ProductReview as pr
+LEFT JOIN Users as u
+    ON pr.buyer_id = u.uid
+LEFT JOIN Inventory as i
+    ON pr.iid = i.iid
+LEFT JOIN Products as p
+    ON i.pid = p.pid
 WHERE pr.buyer_id = :buyer_id
 ORDER BY pr.review_time DESC
 OFFSET :offset                            
@@ -91,8 +117,15 @@ WHERE pr.iid = :iid AND pr.buyer_id = :buyer_id;
     def get_all_reviews_for_some_product(iid, page):
         offset = (page-1)* Reviews.entry_per_page
         rows = app.db.execute('''
-SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content
+SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content,
+    CONCAT(u.firstname, ' ', u.lastname), p.name
 FROM ProductReview as pr
+LEFT JOIN Users as u
+    ON pr.buyer_id = u.uid
+LEFT JOIN Inventory as i
+    ON pr.iid = i.iid
+LEFT JOIN Products as p
+    ON i.pid = p.pid
 WHERE pr.iid = :iid
 ORDER BY pr.review_time DESC
 OFFSET :offset                            
@@ -112,10 +145,18 @@ WHERE pr.iid = :iid
         rows = app.db.execute('''
 SELECT AVG(pr.rating), COUNT(pr.rating)
 FROM ProductReview as pr
-WHERE pr.iid = :iid;
+WHERE pr.iid = :iid
 ''', iid=iid)
         avg_rating = rows[0][0]
         num_reviews = rows[0][1]
+        target_name = app.db.execute('''
+SELECT p.name
+FROM Products as p
+LEFT JOIN Inventory as i
+    ON p.pid = i.pid
+WHERE i.iid = :iid
+''', iid=iid)
+        target_name = target_name[0][0]
         rows = app.db.execute('''
 SELECT pr.rating, COUNT(pr.rating)
 FROM ProductReview as pr
@@ -124,6 +165,8 @@ GROUP BY pr.rating;
 ''', iid=iid)
         return {"avg_rating":avg_rating,
                 "num_reviews":num_reviews,
+                "target_name":target_name,
+                "target_id": iid,
                 "hist":rows}
 
     ########## Reviews received
@@ -138,8 +181,13 @@ WHERE sr.seller_id = :seller_id
     def get_reviews_received_by_page(seller_id, page):
         offset = (page-1)* Reviews.entry_per_page
         rows = app.db.execute('''
-SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content
+SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content,
+    CONCAT(u1.firstname, ' ', u1.lastname), CONCAT(u2.firstname, ' ', u2.lastname)
 FROM SellerReview as sr
+LEFT JOIN Users as u1
+    ON sr.buyer_id = u1.uid
+LEFT JOIN Users as u2
+    ON sr.seller_id = u2.uid  
 WHERE sr.seller_id = :seller_id
 ORDER BY sr.review_time DESC
 OFFSET :offset
@@ -151,10 +199,18 @@ LIMIT :entry_per_page
         rows = app.db.execute('''
 SELECT AVG(sr.rating), COUNT(sr.rating)
 FROM SellerReview as sr
+LEFT JOIN Users as u
+    ON u.uid = sr.seller_id
 WHERE sr.seller_id = :seller_id;
 ''', seller_id=seller_id)
         avg_rating = rows[0][0]
         num_reviews = rows[0][1]
+        target_name = app.db.execute('''
+SELECT CONCAT(u.firstname, ' ', u.lastname)
+FROM Users as u
+WHERE u.uid = :seller_id                                     
+''', seller_id=seller_id)
+        target_name=target_name[0][0]
         rows = app.db.execute('''
 SELECT sr.rating, COUNT(sr.rating)
 FROM SellerReview as sr
@@ -163,6 +219,8 @@ GROUP BY sr.rating;
 ''', seller_id=seller_id)
         return {"avg_rating":avg_rating,
                 "num_reviews":num_reviews,
+                "target_name":target_name,
+                "target_id":seller_id,
                 "hist":rows}
 
     ########## Modify the reviews

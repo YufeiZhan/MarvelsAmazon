@@ -13,20 +13,19 @@
   <br><br>
   {% if role ==0 %}
     {%if isexist%}
-      <a class="btn btn-purple" id="edit_review" href="{{url_for('social.reviews_edit',buyer_id=user_id,target_id=reviews_received[0].target_id,target_type=0)}}">Write a review!</a>
+      <a class="btn btn-purple" id="edit_review" href="{{url_for('social.reviews_edit',buyer_id=user_id,target_id=target_id,target_type=0)}}">Edit your review!</a>
     {%else%}
       {%if iscustomer%}
-        <a class="btn btn-purple" id="create_review" href="{{url_for('social.reviews_create',buyer_id=user_id,target_id=reviews_received[0].target_id,target_type=0)}}">Write a review!</a>
+      <a class="btn btn-purple" id="create_review" href="{{url_for('social.reviews_create',buyer_id=user_id,target_id=target_id,target_type=0,target_name=target_name)}}">Write a review!</a>
       {%else%}
         <div class="btn btn-purple">Write a review after purchase of this product!</div>
       {%endif%}
     {%endif%}
     {% if reviews_received %}
       <h2>All Reviews This Product Received</h2>
-      <h2>{{reviews_received[0].iid}}</h2>
       <div class='table table-hover table-bordered container'>
         {% for r, status in review_status_zip%}
-          <strong>{{r.target_id}}</strong>
+        <strong>{{r.buyer_name}}[ID: {{r.buyer_id}}]</strong>
           <p>{{r.content}}</p>
           <div class="voting" data-inventory-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}" data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
             {%if status %}
@@ -58,7 +57,7 @@
         </nav> 
       </div>
       <h3>Reviews Summary</h3>
-      <div><strong>The average rating is {{avg_rating}}</strong></div>
+      <div><strong>The average rating is {{avg_rating|round(1)}}</strong></div>
       <div><strong>The number of reviews is {{num_reviews}}</strong></div>
       <canvas id="ratingChart"></canvas>
 

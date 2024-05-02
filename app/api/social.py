@@ -59,6 +59,7 @@ def reviews_edit(buyer_id,target_id,target_type):
     return render_template('review_edit.html',
                             buyer_id=one_review[0].buyer_id,
                             target_id=one_review[0].target_id,
+                            target_name=one_review[0].target_name,
                             content=one_review[0].content,
                             review_time=one_review[0].review_time,
                             rating=one_review[0].rating,
@@ -94,10 +95,12 @@ def reviews_submit():
     
 @bp.route('/reviews/review_create/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
 def reviews_create(buyer_id,target_id,target_type):
+    target_name = request.args.get('target_name')
     role = User.getRole(current_user.id)
     return render_template('review_edit.html',
                             buyer_id=buyer_id,
                             target_id=target_id,
+                            target_name=target_name,
                             content="",
                             review_time=None,
                             rating=0,
@@ -137,7 +140,9 @@ def seller_reviews_summary(seller_id, page_rr=1):
                            role=role,
                            user_id=current_user.id,
                            iscustomer=iscustomer,
-                           isexist=isexist
+                           isexist=isexist,
+                           target_id=summary["target_id"],
+                           target_name=summary["target_name"],
                            )
 
 @bp.route('/product_review/<int:iid>/<int:page_rr>', methods=['GET','POST'])
@@ -171,7 +176,9 @@ def product_reviews_summary(iid, page_rr=1):
                            role=role,
                            user_id=current_user.id,
                            iscustomer=iscustomer,
-                           isexist=isexist
+                           isexist=isexist,
+                           target_id=summary["target_id"],
+                           target_name=summary["target_name"]
                            )
 
 @bp.route('/upvote', methods=['GET'])
