@@ -208,3 +208,64 @@ FROM SellerReview
 WHERE iid = :iid AND buyer_id = :buyer_id;                 
 ''', iid=target_id, buyer_id=buyer_id)
         return count[0][0]
+    
+    def upvote(target_id, target_type, buyer_id, user_id):
+        count = app.db.execute('''
+SELECT COUNT(*)
+FROM Upvotes                                   
+WHERE target_id=:target_id AND target_type=:target_type 
+AND buyer_id=:buyer_id AND user_id=:user_id;                                
+''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
+        if count[0][0] > 0:
+            action = app.db.execute('''
+UPDATE Upvotes SET upvote_status = -1 * upvote_status + 1 
+WHERE target_id=:target_id AND target_type=:target_type 
+AND buyer_id=:buyer_id AND user_id=:user_id;
+''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
+            status = app.db.execute('''
+SELECT upvote_status
+FROM Upvotes                                   
+WHERE target_id=:target_id AND target_type=:target_type 
+AND buyer_id=:buyer_id AND user_id=:user_id;                                
+''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
+            status=status[0][0]
+        else:
+            action = app.db.execute('''
+INSERT INTO Upvotes (target_id, target_type, buyer_id, user_id, upvote_status) 
+VALUES (:target_id, :target_type, :buyer_id, :user_id, 1);
+''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
+            status = 1
+        if target_type==1:
+            ## Update seller review table
+            rows = app.db.execute('''
+    UPDATE SellerReview
+    SET upvotes = upvotes + (2 * :status-1)
+    WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
+    ''', seller_id=target_id, buyer_id=buyer_id, status=status)
+            new_upvotes = app.db.execute('''
+    SELECT upvotes
+    FROM SellerReview
+    WHERE seller_id = :seller_id AND buyer_id = :buyer_id;
+    ''', seller_id=target_id, buyer_id=buyer_id)
+        else:
+            ## Update product review table
+            rows = app.db.execute('''
+    UPDATE ProductReview
+    SET upvotes = upvotes + (2 * :status-1)
+    WHERE iid = :iid AND buyer_id = :buyer_id;
+    ''', iid=target_id, buyer_id=buyer_id, status=status)
+            new_upvotes = app.db.execute('''
+    SELECT upvotes
+    FROM ProductReview
+    WHERE iid = :iid AND buyer_id = :buyer_id;
+    ''', iid=target_id, buyer_id=buyer_id)
+        return status, new_upvotes[0][0]
+
+    def check_upvote(target_id, target_type, buyer_id, user_id):
+        status = app.db.execute('''
+SELECT upvote_status
+FROM Upvotes                                   
+WHERE target_id=:target_id AND target_type=:target_type 
+    AND buyer_id=:buyer_id AND user_id=:user_id;                                
+''', target_id=target_id, target_type=target_type, buyer_id=buyer_id, user_id=user_id)
+        return status

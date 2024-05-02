@@ -14,11 +14,18 @@
   {% if role ==0 %}
     {% if reviews_received %}
       <h2>All Reviews This Product Received</h2>
+      <h2>{{reviews_received[0].iid}}</h2>
       <div class='table table-hover table-bordered container'>
-        {% for r in reviews_received%}
-          <strong>{{r.iid}}</strong>
+        {% for r, status in review_status_zip%}
+          <strong>{{r.target_id}}</strong>
           <p>{{r.content}}</p>
-          <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
+          <div class="voting" data-inventory-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}" data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
+            {%if status %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
+            {% else %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
+            {%endif%}
+          </div>
           <div class="rating">
             {% for i in range(1,6) %}
               <button type="button" class="star" data-index="{{ i }}">
@@ -33,11 +40,11 @@
         {% endfor %}
         <nav aria-label="Page navigation example">
           <ul class="pagination">
-            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=1)}}">Start</a></li>
-            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr-1)}}" >Previous</a></li>
+            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.product_reviews_summary',iid=reviews_received[0].target_id,page_rr=1)}}">Start</a></li>
+            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.product_reviews_summary',iid=reviews_received[0].target_id,page_rr=page_rr-1)}}" >Previous</a></li>
             <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
-            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr+1)}}">Next</a></li>
-            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=max_page_rr)}}">End</a></li>
+            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.product_reviews_summary',iid=reviews_received[0].target_id,page_rr=page_rr+1)}}">Next</a></li>
+            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.product_reviews_summary',iid=reviews_received[0].target_id,page_rr=max_page_rr)}}">End</a></li>
           </ul>
         </nav> 
       </div>
@@ -90,5 +97,21 @@
           }
       });
     });
+
+    function upvoteReview(votingElement) {
+      const inventoryId = votingElement.getAttribute('data-inventory-id');
+      const buyerId = votingElement.getAttribute('data-buyer-id');
+      const userId = votingElement.getAttribute('data-user-id');
+      fetch(`/upvote?target_id=${inventoryId}&target_type=0&buyer_id=${buyerId}&user_id=${userId}`, { method: 'GET' })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status) {
+          votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up-fill"></i>`;
+        } else {
+          votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up"></i>`;
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
   </script>
 {% endblock %}
