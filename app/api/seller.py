@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user, login_user, login_required
 import datetime
 import math
@@ -83,7 +83,7 @@ def order_details(oid):
     if not order_details:
         flash('No order found or you do not have permission to view this order.', 'error')
         return redirect(url_for('seller.sale_history'))
-    return render_template('sale_order_details.html', order_details=order_details)
+    return render_template('sale_order_details.html', order_details=order_details, role=User.getRole(current_user.id))
 
 @bp.route('/mark_as_fulfilled/<int:oiid>/<int:oid>', methods=['POST'])
 @login_required
@@ -95,3 +95,16 @@ def mark_as_fulfilled(oiid,oid):
     else:
         flash('Failed to update the order item status.', 'error')
     return redirect(url_for('seller.order_details', oid=oid))
+
+@bp.route('/popularity')
+def get_product_popularity():
+    rows = InventoryItem.get_product_popularity(current_user.id)
+    results = []
+    for row in rows:
+        results.append({
+            'name': row[0],  
+            'total_sold': row[1],  
+            'unit_price': float(row[2]) 
+        })
+    # print(results)
+    return jsonify(results)

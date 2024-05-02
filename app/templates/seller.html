@@ -40,7 +40,7 @@
                 {% for item in inventory_items %}
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
-                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.product_name }} [ID:{{item.iid}}]</td>
                     <td>{{ item.type }}</td>
                     <td>{{ item.description }}</td>
                     <td>${{ item.unit_price }}</td>

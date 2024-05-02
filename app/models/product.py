@@ -3,15 +3,16 @@ from flask import current_app as app
 
 
 class Product:
-    entry_per_page = 10
+    entry_per_page = 8
     
-    def __init__(self, id, name, description, product_type, creator_id, avg_price):
+    def __init__(self, id, name, description, product_type, creator_id, avg_price, image_url):
         self.id = id
         self.name = name
         self.description = description
         self.type = product_type
         self.creator_id = creator_id
         self.avg_price = avg_price
+        self.image_url = image_url
 
     @staticmethod
     def get(id):
@@ -47,7 +48,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2)
+                ROUND(AVG(i.unit_price), 2),
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -96,7 +98,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -124,7 +127,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -149,7 +153,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -175,7 +180,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2)
+                ROUND(AVG(i.unit_price), 2),
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -201,7 +207,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
+                p.image_url
             FROM 
                 Products p
             JOIN 

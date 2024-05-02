@@ -11,9 +11,9 @@
   <h1>Edit Your Review for:</h1>
   <form id="editReviewForm" onsubmit="handleSubmit(event)">
       {% if target_type %}
-          (Seller) {{ target_id }} 
+          (Seller) {{target_name}}[ID: {{ target_id }}]
       {%else%}
-          (Product) {{ target_id }} 
+          (Product) {{target_name}}[ID: {{ target_id }}]
       {%endif%}
       <input type="hidden" id="target_id" value="{{ target_id }}">
       <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
@@ -42,9 +42,12 @@
             </div>
         
       <button type="submit">Submit Review</button>
+      {% if isnew==0 %}
+        <a class="btn btn-purple" id="delete" href="{{url_for('social.reviews_delete',buyer_id=buyer_id,target_id=target_id,target_type=target_type)}}">Delete</a>
+      {%endif%}
 
   </form>
-  <a href="/reviews" type="button" class="btn btn-primary">Back</a>
+  <!-- <a href="/reviews" type="button" class="btn btn-primary">Back</a> -->
 
   <script>
   function handleSubmit(event) {
@@ -58,18 +61,13 @@
       const now = new Date();
       const formattedTime = formatDateTime(now);
 
-      let url;
-      if (isnew==0) {
-          url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
-      } else {
-          url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
-      };
-
+      const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
+      
       fetch(url)
       .then(response => response.json())
       .then(data => {
           if (data.message) {
-              alert('Review updated successfully!');
+              alert('Review Submitted successfully!');
               document.getElementById('last_edited').textContent = formattedTime;
               window.location.href = '/reviews';
           } else {

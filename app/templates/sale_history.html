@@ -3,6 +3,12 @@
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
 {% block content %}
+<style>
+.btn-blue {
+    color:white;
+    background-color:rgb(18, 111, 111);
+}
+</style>
 <br><br>
 {% if current_user.is_authenticated %}
   {% if role == 1 %}
@@ -66,10 +72,61 @@
     {% else %}
       <h3>No sales history available. Get selling to see some activity here!</h3>
     {% endif %}
+    <button id="load-popularity" class="btn btn-blue">Load Product Popularity</button>
+    <!-- Analytics Section -->
+    <div class="row mt-4">
+        <div class="col-12" style="width: 800px; height: 500px;">
+            <canvas id="popularityChart"></canvas>
+        </div>
+    </div>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.getElementById('load-popularity').addEventListener('click', function() {
+            fetch('{{ url_for("seller.get_product_popularity") }}')
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('popularityChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    type: 'bar', 
+                    data: {
+                        labels: data.map(item => item.name),
+                        datasets: [{
+                            label: 'Total Sold',
+                            data: data.map(item => item.total_sold),
+                            backgroundColor: 'rgba(0, 123, 255, 0.5)',  // Blue with transparency
+                            borderColor: 'rgba(0, 123, 255, 1)',  // Solid blue
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Product Popularity',
+                                font: {
+                                    size: 24
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error loading the product popularity data:', error));
+        });
+        </script>
+        
   {% else %}
     <h3>This area is restricted to sellers only.</h3>
   {% endif %}
 {% else %}
     <p><a href="{{ url_for('users.login') }}">Log in</a> to manage your sales!</p>
-{% endif %}
+{% endif %} 
 {% endblock %}
