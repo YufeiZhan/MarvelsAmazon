@@ -30,13 +30,25 @@ def search():
 def post(id):
     form = ProductForm()
     if form.validate_on_submit():
-        if Product.post_product(id, form.product_name.data, form.description.data, form.type.data):
+        if Product.post_product(id, form.name.data, form.description.data, form.type.data):
             flash('Successfully Created!')
             return redirect(request.referrer)
     return render_template('postProduct.html', form=form, role=User.getRole(current_user.id))
 
 class ProductForm(FlaskForm):
-    product_name = StringField('Product Name', validators=[DataRequired()])
+    name = StringField('Product Name', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     type = StringField('Type', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+@bp.route('/edit_product/<int:pid>', methods=['GET', 'POST'])
+def edit_product(pid):
+    product = Product.get_product(pid)[0]
+
+    form = ProductForm(obj=product)
+    if form.validate_on_submit():
+        if Product.edit_product(pid, form.name.data, form.description.data, form.type.data):
+            flash('Successfully updated!')
+            return redirect(request.referrer)
+
+    return render_template('product_edit.html', form=form, product=product)

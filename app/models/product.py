@@ -236,3 +236,53 @@ class Product:
             id=id
         )
         return result
+
+    @staticmethod
+    def get_product(id):
+        # rows = app.db.execute(
+        #     '''
+        #     SELECT 
+        #         p.pid, 
+        #         p.name, 
+        #         p.description, 
+        #         p.type, 
+        #         p.creator_id, 
+        #         ROUND(AVG(i.unit_price), 2)
+        #     FROM 
+        #         Products p
+        #     JOIN 
+        #         Inventory i ON p.pid = i.pid
+        #     WHERE 
+        #         p.pid = :id
+        #     GROUP BY 
+        #         p.pid, p.name, p.description, p.type, p.creator_id;
+        #     ''', id=id)
+        # return [Product(*row) for row in rows]
+        row = app.db.execute(
+            '''
+            SELECT 
+                p.name, 
+                p.description, 
+                p.type
+            FROM 
+                Products p
+            WHERE 
+                p.pid = :id
+            ''', id=id)
+        return [*row]
+
+    @staticmethod
+    def edit_product(id, name, description, type):
+        result = app.db.execute(
+            '''
+            UPDATE Products
+            SET name = :name, 
+                description = :description, 
+                type = :type
+            WHERE pid = :id;
+            ''',
+            name=name, 
+            description=description, 
+            type=type,
+            id=id)
+        return result

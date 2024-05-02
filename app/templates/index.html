@@ -57,6 +57,11 @@
       <td>{{ product.description }}</td>
       <td>{{ product.type }}</td>
       <td>${{ product.avg_price }}</td>
+      <td>
+        {% if product.creator_id == current_user.id %}
+        <a href="{{ url_for('products.edit_product', pid=product.id) }}" class="btn btn-purple btn-warning">Edit</a>
+        {% endif %}
+    </td>
     </tr>
     {% endfor %}
   </tbody>
