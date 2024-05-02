@@ -51,12 +51,13 @@
             </div>
         </form>
         <h2 id="total-price" >Total Price: {{total_price}}</h2>
-        <button class="btn btn-danger"> Clean All </button>
+        <button class="btn btn-danger" onclick="removeAll({{user.id}})"> Clean All </button>
         <button class="btn btn-purple"> Submit </button>
     </div>
 </div>
 
 <script>
+    
     function removeRow(iid, row_index){
         fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
         .then(response => {
@@ -79,6 +80,13 @@
             window.location.reload();
         })
     };
+
+    function removeAll(uid){
+        fetch("/cart/remove/" + uid + "/all")
+        .then(response => {
+            window.location.reload();
+        })
+    }
 </script>
 
 
