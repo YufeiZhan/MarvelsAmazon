@@ -86,6 +86,8 @@ class Product:
 
     @staticmethod
     def get_search(query):
+        # Prepare the query string with wildcard characters for partial matching
+        search_query = f"%{query}%"
         rows = app.db.execute(
             '''
             SELECT 
@@ -100,13 +102,15 @@ class Product:
             JOIN 
                 Inventory i ON p.pid = i.pid
             WHERE
-                p.name = :query
+                p.name LIKE :query OR
+                p.description LIKE :query
             GROUP BY 
                 p.pid, p.name, p.description, p.type, p.creator_id
             ORDER BY 
                 p.pid ASC;
-            ''', query=query)
-
+            ''',
+            query=search_query  # Use the prepared search_query with wildcards
+        )
         return [Product(*row) for row in rows]
 
     @staticmethod
