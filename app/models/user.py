@@ -176,19 +176,6 @@ class User(UserMixin):
         )[0][0]
         return rows
 
-
-    @staticmethod
-    def getRole(uid):
-        role = app.db.execute(
-            """
-            SELECT role_indicator
-            FROM Users
-            WHERE uid = :uid
-            """,
-            uid=uid)[0][0]
-
-        return role
-
     @staticmethod
     def getOrderHistory(uid):
         rows = app.db.execute(
@@ -217,6 +204,17 @@ class User(UserMixin):
             uid=uid)
         
         return rows
+    
+    @staticmethod
+    def getRole(uid):
+        role = app.db.execute(
+            """
+            SELECT role_indicator
+            FROM Users
+            WHERE uid = :uid
+            """, uid=uid)[0][0]
+
+        return role
 
     @staticmethod
     def update_user_role(id, role):
@@ -225,5 +223,4 @@ class User(UserMixin):
                 UPDATE Users
                 SET role_indicator = :role
                 WHERE uid = :id
-                """,
-                role=role, id=id)
+                """, role=role, id=id)

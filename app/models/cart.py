@@ -1,5 +1,6 @@
 from flask import current_app as app
 
+from .seller import InventoryItem
 
 class Cart:
     entry_per_page = 10
@@ -20,7 +21,7 @@ class Cart:
             WHERE uid = :id
             ''',id=id)
         
-        return [CartWithPrice(*row) for row in rows] if rows else None
+        return [CartWithPrice(*row) for row in rows] if rows else []
 
     @staticmethod
     def get_page(id,n):
@@ -34,7 +35,7 @@ class Cart:
             LIMIT :n OFFSET :start;
             ''', id=id, n=Cart.entry_per_page, start=offset)
 
-        return [CartWithPrice(*row) for row in rows] if rows else None
+        return [CartWithPrice(*row) for row in rows] if rows else []
 
     @staticmethod
     def remove_item(userid,inventoryid):
@@ -55,12 +56,22 @@ class Cart:
 
     @staticmethod
     def increase_item(userid, inventoryid):
-        rows = app.db.execute(
+        rowsNo = app.db.execute(
             '''
             UPDATE CartItems
             SET quantity = quantity + 1
-            WHERE uid = :uid AND iid = :iid ;
+            WHERE uid = :uid AND iid = :iid AND (SELECT quantity_available FROM Inventory WHERE iid = :iid) > quantity;
             ''', uid=userid, iid=inventoryid)
+        
+        return rowsNo
+    
+    @staticmethod
+    def remove_all(userid):
+        rows = app.db.execute(
+            '''
+            DELETE FROM CartItems
+            WHERE uid = :uid
+            ''', uid=userid)
 
 
 class CartWithPrice:

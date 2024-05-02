@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
-from flask_login import current_user, login_user, login_required
-import math
+from flask_login import current_user, login_required
 
 from ..models.cart import Cart, CartWithPrice
 from ..models.user import User
+from ..models.seller import InventoryItem
 
 from flask import Blueprint
 bp = Blueprint('carts', __name__)
@@ -15,15 +15,12 @@ bp = Blueprint('carts', __name__)
 # flask_login's login_required decorator returns login page automatically if user not logged in
 # this saves long code to check if user is logged in and return
 def lookup(page=1):
-    # Get items on the specified page
-    # items = Cart.get_page(current_user.id,page)
-    # max_page = math.ceil(len(Cart.get_all_by_uid(current_user.id))/Cart.entry_per_page)
-
     # Get all carts items for the current user/seller
     cart_items = Cart.get_all_by_uid_with_price(current_user.id)
     total_price = CartWithPrice.get_total_price(cart_items)
-    # return render_template('cart.html', cart_items=items, role=User.getRole(current_user.id), page=page, max_page=max_page)
-    return render_template('cart.html', cart_items=cart_items, role=User.getRole(current_user.id), total_price=total_price)
+    return render_template('cart.html', cart_items=cart_items, role=User.getRole(current_user.id), total_price=total_price, user=current_user)
+
+
 
 
 @bp.route('/cart/remove/<int:inventoryid>')
@@ -41,5 +38,14 @@ def decrease_item(uid,iid):
 @bp.route('/cart/increase/<int:uid>/<int:iid>')
 @login_required
 def increase_item(uid,iid):
-    Cart.increase_item(uid, iid)
-    return jsonify({'message': 'Item increased successfully'})
+    rowsNo = Cart.increase_item(uid, iid)
+    if (rowsNo == 0):
+        return jsonify(max = True)
+    else:
+        return jsonify(max = False)
+    
+@bp.route('/cart/remove/<int:uid>/all')
+@login_required
+def remove_all(uid):
+    Cart.remove_all(uid)
+    return jsonify({'message':'Cart is cleaned.'})

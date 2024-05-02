@@ -24,9 +24,9 @@
                 <td>{{ item.uid }}</td>
                 <td>{{ item.iid }}</td>
                 <td>
-                    <button class="btn btn-purple" onclick="decreaseQuantity({{item.uid}}, {{item.iid}}, {{item.unit_price}}, {{loop.index}})"> - </button>
+                    <button class="btn btn-purple" onclick="decreaseQuantity({{item.uid}}, {{item.iid}}, {{item.unit_price}}, {{loop.index}})" {% if item.quantity < 1 %} disabled {% endif %}> - </button>
                     <i id="{{ loop.index }}-quantity">{{ item.quantity }}</i>
-                    <button class="btn btn-purple" onclick="increaseQuantity({{item.uid}}, {{item.iid}},{{item.unit_price}}, {{loop.index}})"> + </button>
+                    <button id="addButton" class="btn btn-purple" onclick="increaseQuantity({{item.uid}}, {{item.iid}},{{item.unit_price}}, {{loop.index}})"> + </button>
                 </td>
                 <td>{{ item.status }}</td>
                 <td id="{{ loop.index }}-price"> {{ item.unit_price }} * {{ item.quantity }} = {{item.unit_price * item.quantity}}</td>       
@@ -51,7 +51,7 @@
             </div>
         </form>
         <h2 id="total-price" >Total Price: {{total_price}}</h2>
-        <button class="btn btn-danger"> Clean All </button>
+        <button class="btn btn-danger" onclick="removeAll({{user.id}})"> Clean All </button>
         <button class="btn btn-purple"> Submit </button>
     </div>
 </div>
@@ -59,26 +59,34 @@
 <script>
     function removeRow(iid, row_index){
         fetch("/cart/remove/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
-        .then(response => {
-            window.location.reload();
-        })        
+        .then(response => { window.location.reload(); })        
     };
 
     function decreaseQuantity(uid,iid,price,row_index){
         var quantity = parseInt(document.getElementById(String(row_index+"-quantity")).innerHTML)
         fetch("/cart/decrease/" + uid + "/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
-        .then(response => {
-            window.location.reload();
-        })
+        .then(response => { window.location.reload();})
     };
 
     function increaseQuantity(uid,iid,price,row_index){
         var quantity = parseInt(document.getElementById(String(row_index+"-quantity")).innerHTML)
         fetch("/cart/increase/" + uid + "/" + iid, { method: 'GET', headers: {'Content-Type': 'application/json'} })
-        .then(response => {
-            window.location.reload();
+        .then(response => response.json())
+        .then(data => {
+            var maxReached = data.max
+            if (maxReached){ // no changes
+                alert("Reached inventory maximum. Quantity cannot be increased.");
+                document.getElementById("addButton").disabled = true
+            } else {
+                window.location.reload()
+            }
         })
     };
+
+    function removeAll(uid){
+        fetch("/cart/remove/" + uid + "/all")
+        .then(response => { window.location.reload(); })
+    }
 </script>
 
 

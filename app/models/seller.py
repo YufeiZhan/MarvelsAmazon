@@ -90,17 +90,17 @@ class InventoryItem:
             WHERE iid = :iid AND seller_id = :seller_id
             ''', iid= iid, seller_id= seller_id)
             return True
-        except Exception as e:
+        except Exception as e:  
             print(f"Error deleting inventory item: {str(e)}")
             return False
 
     @staticmethod
-    def get_current_quantity(iid, seller_id):
+    def get_current_quantity(iid):
         result = app.db.execute('''
         SELECT quantity_available
         FROM Inventory
         WHERE iid = :iid
-        ''', iid= iid, seller_id= seller_id)
+        ''', iid= iid)
         if result:
             return result[0][0]
         else:
