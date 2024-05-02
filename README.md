@@ -22,7 +22,7 @@ For development purpose, we have a dummy user that can be used to test newly-imp
 4. Run the flask server using **'flask run'** and enter **'localhost:8080'** in your browser 
 
 ### To interact with database:
-To change schema, modify 	‘db/create.sql’ and ‘db/load.sql’ and run ‘db/setup.sh’ to recreate the database from scratch. <br><br>
+To change schema, modify ‘db/create.sql’ and ‘db/load.sql’ and run ‘db/setup.sh’ to recreate the database from scratch. <br><br>
 Use **'psql amazon'** to enter the database. <br><br>
 Some useful commands:
 - List all tables in database: \dt

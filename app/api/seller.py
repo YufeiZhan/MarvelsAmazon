@@ -44,7 +44,7 @@ def add_inventory_item():
 @login_required
 def update_quantity(iid):
     action = request.form.get('change')
-    current_quantity = InventoryItem.get_current_quantity(iid, current_user.id)
+    current_quantity = InventoryItem.get_current_quantity(iid)
     if action == 'increase':
         new_quantity = current_quantity + 1
     elif action == 'decrease':
@@ -60,7 +60,6 @@ def delete_inventory(iid):
     InventoryItem.delete(iid, current_user.id)
     flash('Product removed successfully!')
     return redirect(url_for('seller.seller_inventory'))
-
 
 @bp.route('/sale_history')
 @bp.route('/sale_history/<int:page>')

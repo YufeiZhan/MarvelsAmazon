@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user, login_required
-import math
 
 from ..models.cart import Cart, CartWithPrice
 from ..models.user import User
+from ..models.seller import InventoryItem
 
 from flask import Blueprint
 bp = Blueprint('carts', __name__)
@@ -18,7 +18,6 @@ def lookup(page=1):
     # Get all carts items for the current user/seller
     cart_items = Cart.get_all_by_uid_with_price(current_user.id)
     total_price = CartWithPrice.get_total_price(cart_items)
-    # return render_template('cart.html', cart_items=items, role=User.getRole(current_user.id), page=page, max_page=max_page)
     return render_template('cart.html', cart_items=cart_items, role=User.getRole(current_user.id), total_price=total_price, user=current_user)
 
 
@@ -39,9 +38,12 @@ def decrease_item(uid,iid):
 @bp.route('/cart/increase/<int:uid>/<int:iid>')
 @login_required
 def increase_item(uid,iid):
-    Cart.increase_item(uid, iid)
-    return jsonify({'message': 'Item increased successfully'})
-
+    rowsNo = Cart.increase_item(uid, iid)
+    if (rowsNo == 0):
+        return jsonify(max = True)
+    else:
+        return jsonify(max = False)
+    
 @bp.route('/cart/remove/<int:uid>/all')
 @login_required
 def remove_all(uid):
