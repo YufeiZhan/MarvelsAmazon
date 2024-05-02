@@ -110,7 +110,7 @@ SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.cont
 FROM SellerReview as sr
 WHERE sr.seller_id = :seller_id
 ORDER BY sr.review_time DESC
-OFFSET :offset                            
+OFFSET :offset
 LIMIT :entry_per_page
 ''', seller_id=seller_id, offset=offset, entry_per_page=Reviews.entry_per_page)
         return [Reviews(*(r)) for r in rows] if rows else None
@@ -129,3 +129,31 @@ SET content = :new_content, rating =:new_rating, review_time =:last_edit
 WHERE iid = :iid AND buyer_id = :buyer_id;
 ''', iid=target_id, buyer_id=buyer_id, new_content=new_content, new_rating=new_rating, last_edit=last_edit)
         return rows
+    
+    def insert_content(buyer_id, target_id, target_type, new_content, new_rating, last_edit):
+        if target_type:
+            rows = app.db.execute('''
+INSERT INTO SellerReview (seller_id, buyer_id, content, rating, review_time, upvotes)
+VALUES (:seller_id, :buyer_id, :new_content, :new_rating, :last_edit, 0);
+''', seller_id=target_id, buyer_id=buyer_id, new_content=new_content, new_rating=new_rating, last_edit=last_edit)
+        else:
+            rows = app.db.execute('''
+INSERT INTO ProductReview (buyer_id, iid, content, rating, review_time, upvotes)
+VALUES (:buyer_id, :iid, :new_content, :new_rating, :last_edit, 0);
+''', iid=target_id, buyer_id=buyer_id, new_content=new_content, new_rating=new_rating, last_edit=last_edit)
+        return rows
+    
+    def isexist(buyer_id, target_id, target_type):
+        if target_type:
+            count = app.db.execute('''
+SELECT COUNT(*)
+FROM SellerReview                                   
+WHERE seller_id = :seller_id AND buyer_id = :buyer_id;                                  
+''', seller_id=target_id, buyer_id=buyer_id)
+        else:
+            count = app.db.execute('''
+SELECT COUNT(*)
+FROM SellerReview                                   
+WHERE iid = :iid AND buyer_id = :buyer_id;                 
+''', iid=target_id, buyer_id=buyer_id)
+        return count[0][0]
