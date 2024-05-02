@@ -32,3 +32,5 @@ SELECT pg_catalog.setval('public.OrderItems_oiid_seq',
 \COPY SellerReview FROM 'SellerReview.csv' WITH DELIMITER ',' NULL '' CSV;                                                                                                    
 
 \COPY ProductReview FROM 'ProductReview.csv' WITH DELIMITER ',' NULL '' CSV;                                                                                                    
+
+\COPY Upvotes FROM 'Upvotes.csv' WITH DELIMITER ',' NULL '' CSV;                                                                                                    

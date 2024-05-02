@@ -86,6 +86,8 @@ class Product:
 
     @staticmethod
     def get_search(query):
+        # Prepare the query string with wildcard characters for partial matching
+        search_query = f"%{query}%"
         rows = app.db.execute(
             '''
             SELECT 
@@ -100,13 +102,15 @@ class Product:
             JOIN 
                 Inventory i ON p.pid = i.pid
             WHERE
-                p.name = :query
+                p.name LIKE :query OR
+                p.description LIKE :query
             GROUP BY 
                 p.pid, p.name, p.description, p.type, p.creator_id
             ORDER BY 
                 p.pid ASC;
-            ''', query=query)
-
+            ''',
+            query=search_query  # Use the prepared search_query with wildcards
+        )
         return [Product(*row) for row in rows]
 
     @staticmethod
@@ -133,3 +137,152 @@ class Product:
             ''', n=Product.entry_per_page, start=offset)
 
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_page_with_type(n, product_type):
+        offset = (n-1)* Product.entry_per_page
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            WHERE 
+                p.type = :type
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                avg_unit_price DESC
+            LIMIT :n OFFSET :start;
+            ''', n=Product.entry_per_page, start=offset, type=product_type)
+
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_all_with_type(product_type):
+        rows = app.db.execute(
+            '''
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2)
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            WHERE 
+                p.type = :type
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+            ORDER BY 
+                p.pid ASC;
+            ''', type=product_type)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_page_with_sort(n, product_sort):
+        offset = (n-1) * Product.entry_per_page
+
+        # Define the base SQL query without the ORDER BY clause
+        base_sql = """
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+        """
+
+        # Determine the ORDER BY clause based on product_sort
+        if product_sort == 'Lowest Price':
+            order_clause = "ORDER BY avg_unit_price ASC"
+        else:
+            order_clause = "ORDER BY avg_unit_price DESC"
+
+        # Combine the base SQL with the ORDER BY clause and pagination
+        full_sql = f"{base_sql} {order_clause} LIMIT :n OFFSET :start"
+
+        # Execute the query
+        rows = app.db.execute(full_sql, n=Product.entry_per_page, start=offset)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def post_product(id, name, description, type):
+        result = app.db.execute(
+            '''
+            INSERT INTO Products (name, description, type, creator_id)
+            VALUES (:name, :description, :type, :id);
+            ''',
+            name=name, 
+            description=description, 
+            type=type,
+            id=id
+        )
+        return result
+
+    @staticmethod
+    def get_product(id):
+        # rows = app.db.execute(
+        #     '''
+        #     SELECT 
+        #         p.pid, 
+        #         p.name, 
+        #         p.description, 
+        #         p.type, 
+        #         p.creator_id, 
+        #         ROUND(AVG(i.unit_price), 2)
+        #     FROM 
+        #         Products p
+        #     JOIN 
+        #         Inventory i ON p.pid = i.pid
+        #     WHERE 
+        #         p.pid = :id
+        #     GROUP BY 
+        #         p.pid, p.name, p.description, p.type, p.creator_id;
+        #     ''', id=id)
+        # return [Product(*row) for row in rows]
+        row = app.db.execute(
+            '''
+            SELECT 
+                p.name, 
+                p.description, 
+                p.type
+            FROM 
+                Products p
+            WHERE 
+                p.pid = :id
+            ''', id=id)
+        return [*row]
+
+    @staticmethod
+    def edit_product(id, name, description, type):
+        result = app.db.execute(
+            '''
+            UPDATE Products
+            SET name = :name, 
+                description = :description, 
+                type = :type
+            WHERE pid = :id;
+            ''',
+            name=name, 
+            description=description, 
+            type=type,
+            id=id)
+        return result

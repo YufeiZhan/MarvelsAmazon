@@ -2,6 +2,9 @@
 <html lang="en">
 
 <head>
+  {% block head %}
+    <!-- Additional elements like CSS files, scripts can be placed here and can be overridden or extended -->
+  {% endblock %}
   <title>Mini Amazon</title>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -101,7 +104,7 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url_for('users.account') }}">Account Details</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Sale History</a>
+                <a class="dropdown-item" href="{{ url_for('seller.sale_history') }}">Sale History</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ url_for('social.reviews') }}">All Reviews</a>
                 <div class="dropdown-divider"></div>

@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
-
+{% block head %}
+    {{ super() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{% endblock %}
 {% block content %}
   <br><br>
   {% if current_user.is_authenticated %}
@@ -11,21 +15,24 @@
         <div class='table table-hover table-bordered container'>
           {% for r in seller_reviews%}
             <strong>{{r.target_id}}</strong>
+
+            <!-- <a href="{{url_for('social.seller_reviews_summary',seller_id=r.target_id)}}">check summary of this seller</a> -->
+            
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
-              {% for i in range(5) %}
-                {% if i <= r.rating %}
-                  <i class="bi bi-star-fill"></i>
-                {% elif i - 0.5 == r.rating%}
-                  <i class="bi bi-star-half"></i>
-                {% else %}
-                  <i class="bi bi-star"></i>
-                {% endif %}
+              {% for i in range(1,6) %}
+                <button type="button" class="star" data-index="{{ i }}">
+                  {% if i - 1 < r.rating %}
+                    <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                  {% else %}
+                    <i class="bi bi-star"></i>
+                  {% endif %}
+                </button>
               {% endfor %}
             </div>
             <div class="review-actions">
-              <a class="btn btn-purple" id="edit_sr" href="#">Edit</a>
+              <a class="btn btn-purple" id="edit_sr" href="{{url_for('social.reviews_edit',buyer_id=r.buyer_id,target_id=r.target_id,target_type=1)}}">Edit</a>
               <a class="btn btn-purple" id="delete_sr" href="{{url_for('social.reviews_delete',buyer_id=r.buyer_id,target_id=r.target_id,target_type=1)}}">Delete</a>
             </div>
           {% endfor %}
@@ -37,7 +44,7 @@
               <li class="page-item {% if page_sr == max_page_sr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=page_sr+1,page_pr=page_pr,page_rr=page_rr)}}">Next</a></li>
               <li class="page-item {% if page_sr == max_page_sr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.reviews',page_sr=max_page_sr,page_pr=page_pr,page_rr=page_rr)}}">End</a></li>
             </ul>
-          </nav>        
+          </nav>
         </div>
       {% else %}
         <h3>You have no reviews for any seller so far.</h2>
@@ -48,21 +55,26 @@
         <div class='table table-hover table-bordered container'>
           {% for r in product_reviews%}
             <strong>{{r.target_id}}</strong>
+
+            <!-- <a href="{{url_for('social.product_reviews_summary',iid=r.target_id)}}">check summary of this product</a> -->
+
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
+
             <div class="rating">
-              {% for i in range(5) %}
-                {% if i <= r.rating %}
-                  <i class="bi bi-star-fill"></i>
-                {% elif i - 0.5 == r.rating%}
-                  <i class="bi bi-star-half"></i>
-                {% else %}
-                  <i class="bi bi-star"></i>
-                {% endif %}
+              {% for i in range(1,6) %}
+                <button type="button" class="star" data-index="{{ i }}">
+                  {% if i - 1 < r.rating %}
+                    <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                  {% else %}
+                    <i class="bi bi-star"></i>
+                  {% endif %}
+                </button>
               {% endfor %}
             </div>
+            
             <div class="review-actions">
-              <a class="btn btn-purple" id="edit_pr" href="#">Edit</a>
+              <a class="btn btn-purple" id="edit_sr" href="{{url_for('social.reviews_edit',buyer_id=r.buyer_id,target_id=r.target_id,target_type=0)}}">Edit</a>
               <a class="btn btn-purple" id="delete_pr" href="{{url_for('social.reviews_delete',buyer_id=r.buyer_id,target_id=r.target_id,target_type=0)}}">Delete</a>
             </div>
           {% endfor %}
@@ -89,14 +101,14 @@
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
-              {% for i in range(5) %}
-                {% if i <= r.rating %}
-                  <i class="bi bi-star-fill"></i>
-                {% elif i - 0.5 == r.rating%}
-                  <i class="bi bi-star-half"></i>
-                {% else %}
-                  <i class="bi bi-star"></i>
-                {% endif %}
+              {% for i in range(1,6) %}
+                <button type="button" class="star" data-index="{{ i }}">
+                  {% if i - 1 < r.rating %}
+                    <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                  {% else %}
+                    <i class="bi bi-star"></i>
+                  {% endif %}
+                </button>
               {% endfor %}
             </div>
           {% endfor %}

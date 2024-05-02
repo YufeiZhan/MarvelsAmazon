@@ -1,0 +1,16 @@
+.rating .star {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.bi-star, .bi-star-fill, .bi-star-half {
+  font-size: 24px;
+  color: gold;
+}
+
+.rating .star {
+  width: 50px;
+  height: 50px;
+}
