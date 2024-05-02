@@ -99,8 +99,6 @@ class User(UserMixin):
 
     @staticmethod
     def update_user_info(id, email, password, firstname, lastname):
-        if User.email_exists(email):
-            return None
         try:
             rows = app.db.execute(
                 """
@@ -114,6 +112,18 @@ class User(UserMixin):
         except Exception as e:
             print(str(e))
             return None
+    
+    @staticmethod
+    def check_id_with_email(email):
+        rows = app.db.execute(
+            """
+            SELECT uid
+            FROM Users
+            WHERE email = :email
+            """,
+            email=email
+        )
+        return rows[0][0]
 
     @staticmethod
     def email_exists(email):
