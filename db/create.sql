@@ -13,7 +13,8 @@ CREATE TABLE Products (
     name VARCHAR(30) UNIQUE NOT NULL,
     description VARCHAR(255) NOT NULL,
     type VARCHAR(30) NOT NULL,
-    creator_id INT REFERENCES Users(uid)
+    creator_id INT REFERENCES Users(uid),
+    image_url VARCHAR(255)
 );
 
 CREATE TABLE Inventory (
