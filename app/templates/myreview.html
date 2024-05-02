@@ -14,11 +14,17 @@
         <h2>All Seller Reviews Left by You:</h2>
         <div class='table table-hover table-bordered container'>
           {% for r in seller_reviews%}
-            <strong>{{r.target_name}}[ID: {{r.target_id}}]</strong>
+            <label>Seller: {{r.target_name}}[ID: {{r.target_id}}]</label>
 
-            <!-- <a href="{{url_for('social.seller_reviews_summary',seller_id=r.target_id)}}">check summary of this seller</a> -->
+            <div>
+              <label>Last edited:</label>
+              <time id="last_edited">{{r.review_time}}</time>
+            </div>
+            <div>
+              <label>Comment:</label>
+              <p>{{r.content}}</p>
+            </div>
             
-            <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
               {% for i in range(1,6) %}
@@ -54,11 +60,17 @@
         <h2>All Product Reviews Left by You:</h2>
         <div class='table table-hover table-bordered container'>
           {% for r in product_reviews%}
-            <strong>{{r.target_name}}[ID: {{r.target_id}}]</strong>
+            <label>Product: {{r.target_name}}[ID: {{r.target_id}}]</label>
 
-            <!-- <a href="{{url_for('social.product_reviews_summary',iid=r.target_id)}}">check summary of this product</a> -->
+            <div>
+              <label>Last edited:</label>
+              <time id="last_edited">{{r.review_time}}</time>
+            </div>
 
-            <p>{{r.content}}</p>
+            <div>
+              <label>Comment:</label>
+              <p>{{r.content}}</p>
+            </div>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
 
             <div class="rating">
@@ -97,8 +109,17 @@
         <h2>All Reviews You Received</h2>
         <div class='table table-hover table-bordered container'>
           {% for r in reviews_received%}
-            <strong>{{r.buyer_name}}[ID: {{r.buyer_id}}]</strong>
-            <p>{{r.content}}</p>
+            <label>Buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</label>
+
+            <div>
+              <label>Last edited:</label>
+              <time id="last_edited">{{r.review_time}}</time>
+            </div>
+
+            <div>
+              <label>Comment:</label>
+              <p>{{r.content}}</p>
+            </div>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
               {% for i in range(1,6) %}

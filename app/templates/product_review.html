@@ -21,7 +21,45 @@
         <div class="btn btn-purple">Write a review after purchase of this product!</div>
       {%endif%}
     {%endif%}
+    
     {% if reviews_received %}
+      <h3>Reviews Summary</h3>
+      <div><strong>The average rating is {{avg_rating|round(1)}}</strong></div>
+      <div><strong>The number of reviews is {{num_reviews}}</strong></div>
+      <div> 
+        <h3>Top Rated Reviews</h3>
+        {% for r, status in top_review_zip%}
+          <label>{{r.buyer_name}}[ID: {{r.buyer_id}}]</label>
+          <div>
+            <label>Time posted:</label>
+            <time id="last_edited">{{r.review_time}}</time>
+          </div>
+          <div>
+            <label>Comment:</label>
+            <p>{{r.content}}</p>
+          </div>
+          <div class="voting" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}" data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
+            {%if status %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
+            {% else %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
+            {%endif%}
+          </div>
+          <div class="rating">
+            {% for i in range(1,6) %}
+              <button type="button" class="star" data-index="{{ i }}">
+                {% if i - 1 < r.rating %}
+                  <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+              </button>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <h3>Rating Chart</h3>
+      <canvas id="ratingChart"></canvas>
       <h2>All Reviews This Product Received</h2>
       <div class='table table-hover table-bordered container'>
         {% for r, status in review_status_zip%}
@@ -56,10 +94,6 @@
           </ul>
         </nav> 
       </div>
-      <h3>Reviews Summary</h3>
-      <div><strong>The average rating is {{avg_rating|round(1)}}</strong></div>
-      <div><strong>The number of reviews is {{num_reviews}}</strong></div>
-      <canvas id="ratingChart"></canvas>
 
     {% else %}
       <h3>No one has left review for this Product.</h2>
