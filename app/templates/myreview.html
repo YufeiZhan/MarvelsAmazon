@@ -11,6 +11,9 @@
         <div class='table table-hover table-bordered container'>
           {% for r in seller_reviews%}
             <strong>{{r.target_id}}</strong>
+
+            <a href="{{url_for('social.seller_reviews_summary',seller_id=r.target_id)}}">check summary of this seller</a>
+            
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
@@ -48,6 +51,9 @@
         <div class='table table-hover table-bordered container'>
           {% for r in product_reviews%}
             <strong>{{r.target_id}}</strong>
+
+            <a href="{{url_for('social.product_reviews_summary',iid=r.target_id)}}">check summary of this product</a>
+
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
 
