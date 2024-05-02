@@ -22,9 +22,11 @@
       {% for s in avail_products %}
         <tr>
           <th scope="row">{{s.seller_id}}</th>
-          <td>{{s.seller_name}}</td>
+          <!-- <td>{{s.seller_name}}</td> -->
+          <td><a href="{{url_for('social.seller_reviews_summary',seller_id=s.seller_id)}}">{{s.seller_name}}</a></td>
           <td>{{s.inventory_id}}</td>
-          <td>{{s.product_name}}</td>
+          <!-- <td>{{s.product_name}}</td> -->
+          <td><a href="{{url_for('social.product_reviews_summary',iid=s.inventory_id)}}">{{s.product_name}}</a></td>
           <td>${{s.unit_price}}</td>
           <td>{{ s.quantity_available }} units left</td>
           <!-- <td>
