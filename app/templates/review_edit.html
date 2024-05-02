@@ -67,7 +67,7 @@
       .then(response => response.json())
       .then(data => {
           if (data.message) {
-              alert('Review updated successfully!');
+              alert('Review Submitted successfully!');
               document.getElementById('last_edited').textContent = formattedTime;
               window.location.href = '/reviews';
           } else {
