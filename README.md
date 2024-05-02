@@ -65,6 +65,7 @@ Some useful commands:
 - [] Deal with the case where page is out of range
 - [] Cartitems add a time field to sort it in cart
 - [] Cart: refine quantity condition + implement coupon, remove all, and submit
+- [] Seller's sale history's redirection is not consistent for now
 
 ## Note on Hiding Credentials
 

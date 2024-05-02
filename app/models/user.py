@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .. import login
 
 class User(UserMixin):
-    entry_per_page = 5
+    entry_per_page = 10
 
     def __init__(self, uid, email, firstname, lastname, password, balance=0, role_indicator=0):
         self.id = uid

@@ -36,19 +36,19 @@
       <nav aria-label="Buyer Order History Pagination">
         <ul class="pagination">
             <li class="page-item {% if page_bo == 1 %} disabled {% endif %}">
-                <a class="page-link" href="{{ url_for('users.order_history', page=1) }}">Start</a>
+                <a class="page-link" href="{{ url_for('users.order_history', page_bo=1, page_so=page_so) }}">Start</a>
             </li>
             <li class="page-item {% if page_bo == 1 %} disabled {% endif %}">
-                <a class="page-link" href="{{ url_for('users.order_history', page=page_bo-1) }}">Previous</a>
+                <a class="page-link" href="{{ url_for('users.order_history', page_bo=page_bo-1, page_so=page_so) }}">Previous</a>
             </li>
             <li class="page-item">
                 <a class="page-link" href="#">{{ page_bo }}</a>
             </li>
             <li class="page-item {% if page_bo == max_page_bo %} disabled {% endif %}">
-                <a class="page-link" href="{{ url_for('users.order_history', page=page_bo+1) }}">Next</a>
+                <a class="page-link" href="{{ url_for('users.order_history', page_bo=page_bo+1, page_so=page_so) }}">Next</a>
             </li>
             <li class="page-item {% if page_bo == max_page_bo %} disabled {% endif %}">
-                <a class="page-link" href="{{ url_for('users.order_history', page=max_page_bo) }}">End</a>
+                <a class="page-link" href="{{ url_for('users.order_history', page_bo=max_page_bo, page_so=page_so) }}">End</a>
             </li>
         </ul>
       </nav>
@@ -57,8 +57,65 @@
       {% endif %}
     <!-- SELLER VIEW -->
     {% else %}
-    
-      <h3>You are seeing this because you are in Seller view. Switch to Buyer view to view your order history.</h2>
+      {% if sellerOrders %}
+        <h2>Your Sale History:</h2>
+        <table class='table table-hover table-bordered container'>
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Order Number</th>
+              <th scope="col">Date Placed</th>
+              <th scope="col">Total Amount</th>
+              <th scope="col">Total Items</th>
+              <th scope="col">Fulfillment Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in sellerOrders %}
+            <tr>
+              <td><a href="{{ url_for('seller.order_details', oid=order.oid) }}">{{ order.oid }}</a></td>
+              <td>{{ order.time_placed}}</td>
+              <td>{{ order.total_amount }}</td>
+              <td>{{ order.total_items }}</td>
+              <!-- <td>{{ order.fulfillment_status }}</td> -->
+              <td>
+                  {% if order.fulfillment_status == 'Fulfilled' %}
+                      <span class="badge bg-success" style="font-size: 1.05rem;">FULFILLED</span>
+                  {% elif order.fulfillment_status == 'Canceled' %}
+                      <span class="badge bg-danger" style="font-size: 1.05rem;">CANCELLED</span>
+                  {% elif order.fulfillment_status == 'Placed' %}
+                      <span class="badge bg-warning" style="font-size: 1.05rem;">PLACED</span>
+                  {% else %}
+                      <span class="badge bg-warning" style="font-size: 1.05rem;">IN DELIVERY</span>
+                  {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Pagination Links -->
+        <nav aria-label="Inventory navigation">
+          <ul class="pagination">
+              <li class="page-item {% if page_so == 1 %} disabled {% endif %}">
+                  <a class="page-link" href="{{ url_for('users.order_history', page_so=1, page_bo=page_bo) }}">Start</a>
+              </li>
+              <li class="page-item {% if page_so == 1 %} disabled {% endif %}">
+                  <a class="page-link" href="{{ url_for('users.order_history', page_so=page_so-1, page_bo=page_bo) }}">Previous</a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="#">{{ page_so }}</a>
+              </li>
+              <li class="page-item {% if page_so == max_page_so %} disabled {% endif %}">
+                  <a class="page-link" href="{{ url_for('users.order_history', page_so=page_so+1, page_bo=page_bo) }}">Next</a>
+              </li>
+              <li class="page-item {% if page_so == max_page_so %} disabled {% endif %}">
+                  <a class="page-link" href="{{ url_for('users.order_history', page_so=max_page_so, page_bo=page_bo) }}">End</a>
+              </li>
+          </ul>
+        </nav>
+      {% else %}
+        <h3>No sales history available. Get selling to see some activity here!</h3>
+      {% endif %}
     {% endif %}
   {% else %}
       <p><a href="{{ url_for('users.login') }}">Log in</a> to see your review history!</p>

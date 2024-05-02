@@ -7,6 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import math
 
 from ..models.user import User
+from ..models.seller import InventoryItem
 
 from flask import Blueprint
 bp = Blueprint('users', __name__)
@@ -23,16 +24,19 @@ def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
-@bp.route('/order_history/<int:page>')
+@bp.route('/order_history/<int:page_bo>/<int:page_so>')
 @bp.route('/order_history')
 @login_required
-def order_history(page=1):
-    buyerOrders = User.get_order_page(current_user.id, page)
+def order_history(page_bo=1,page_so=1):
+    buyerOrders = User.get_order_page(current_user.id, page_bo)
     max_page_bo = math.ceil(len(User.get_all_order(current_user.id)) / User.entry_per_page)
-    print(len(buyerOrders),len(User.get_all_order(current_user.id)),max_page_bo)
 
+    per_page = 6
+    sellerOrders = InventoryItem.get_sale_orders(current_user.id, page_so, InventoryItem.entry_per_page)
+    max_page_so = math.ceil(InventoryItem.count_sale_orders(current_user.id) / InventoryItem.entry_per_page)
     return render_template('order_history.html', title='Order History', role=User.getRole(current_user.id),
-                           buyerOrders=buyerOrders, page_bo=page, max_page_bo=max_page_bo)
+                           buyerOrders=buyerOrders, page_bo=page_bo, max_page_bo=max_page_bo,
+                           sellerOrders=sellerOrders, page_so=page_so, max_page_so=max_page_so)
 
 @bp.route('/topup/<id>')
 def topup(id):
