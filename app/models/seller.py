@@ -177,4 +177,19 @@ class InventoryItem:
             return False
 
         
+    def get_product_popularity(seller_id):
+        rows = app.db.execute("""
+        SELECT Products.name, 
+        SUM(OrderItems.quantity_purchased) AS total_sold,
+        Inventory.unit_price
+        FROM OrderItems
+        JOIN Orders ON OrderItems.oid = Orders.oid
+        JOIN Inventory ON OrderItems.iid = Inventory.iid
+        JOIN Products ON Inventory.pid = Products.pid
+        WHERE Inventory.seller_id = :seller_id
+        GROUP BY Products.name, Inventory.unit_price
+        ORDER BY total_sold DESC
+        """, seller_id = seller_id)
+
+        return rows
         

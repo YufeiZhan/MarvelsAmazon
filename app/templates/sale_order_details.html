@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 {% block content %}
 <style>
     .order-details p {
@@ -32,8 +32,16 @@
         bottom: 100px;
         right: 200px;
     }
+    .back-button {
+        position: fixed;
+        bottom: 100px; 
+        left: 200px;  
+    }
 </style>
 <div class="container mt-5">
+    <div class="back-button">
+        <a href="{{ url_for('seller.sale_history') }}" class="btn btn-secondary">Back</a>
+    </div>
     {% for order in order_details %}
     <h2>Order #{{ order.oid }}</h2>
     <!-- Flash Messages -->
