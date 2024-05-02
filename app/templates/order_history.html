@@ -5,8 +5,9 @@
 {% block content %}
 <br><br>
   {% if current_user.is_authenticated %}
-    {% if role == 1 %}
-      {% if rows %}
+  <!-- BUYER VIEW -->
+    {% if role == 0 %}
+      {% if buyerOrders %}
         <h2>Your Order History So Far:</h2>
         <table class='table table-hover table-bordered container'>
           <thead class="thead-dark">
@@ -19,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for row in rows %}
+            {% for row in buyerOrders %}
             <tr>
               <td>{{ row.order_id }}</td>
               <td>{{ row.order_placing_time }}</td>
@@ -30,10 +31,33 @@
             {% endfor %}
           </tbody>
         </table>
+
+      <!-- Pagination Links -->
+      <nav aria-label="Buyer Order History Pagination">
+        <ul class="pagination">
+            <li class="page-item {% if page_bo == 1 %} disabled {% endif %}">
+                <a class="page-link" href="{{ url_for('users.order_history', page=1) }}">Start</a>
+            </li>
+            <li class="page-item {% if page_bo == 1 %} disabled {% endif %}">
+                <a class="page-link" href="{{ url_for('users.order_history', page=page_bo-1) }}">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">{{ page_bo }}</a>
+            </li>
+            <li class="page-item {% if page_bo == max_page_bo %} disabled {% endif %}">
+                <a class="page-link" href="{{ url_for('users.order_history', page=page_bo+1) }}">Next</a>
+            </li>
+            <li class="page-item {% if page_bo == max_page_bo %} disabled {% endif %}">
+                <a class="page-link" href="{{ url_for('users.order_history', page=max_page_bo) }}">End</a>
+            </li>
+        </ul>
+      </nav>
       {% else %}
         <h3>No order history so far. Try buy something first.</h2>
       {% endif %}
+    <!-- SELLER VIEW -->
     {% else %}
+    
       <h3>You are seeing this because you are in Seller view. Switch to Buyer view to view your order history.</h2>
     {% endif %}
   {% else %}

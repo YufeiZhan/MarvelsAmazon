@@ -4,6 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+import math
 
 from ..models.user import User
 
@@ -22,10 +23,16 @@ def account():
     user_info = User.get(current_user.id)
     return render_template('account.html', title='Account Detail', user_info=user_info, role=User.getRole(current_user.id))
 
+@bp.route('/order_history/<int:page>')
 @bp.route('/order_history')
 @login_required
-def order_history():
-    return render_template('order_history.html', title='Order History', rows=User.getOrderHistory(current_user.id), role=User.getRole(current_user.id))
+def order_history(page=1):
+    buyerOrders = User.get_order_page(current_user.id, page)
+    max_page_bo = math.ceil(len(User.get_all_order(current_user.id)) / User.entry_per_page)
+    print(len(buyerOrders),len(User.get_all_order(current_user.id)),max_page_bo)
+
+    return render_template('order_history.html', title='Order History', role=User.getRole(current_user.id),
+                           buyerOrders=buyerOrders, page_bo=page, max_page_bo=max_page_bo)
 
 @bp.route('/topup/<id>')
 def topup(id):

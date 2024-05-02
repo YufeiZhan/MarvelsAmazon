@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .. import login
 
 class User(UserMixin):
+    entry_per_page = 5
+
     def __init__(self, uid, email, firstname, lastname, password, balance=0, role_indicator=0):
         self.id = uid
         self.email = email
@@ -177,7 +179,8 @@ class User(UserMixin):
         return rows
 
     @staticmethod
-    def getOrderHistory(uid):
+    def get_order_page(uid, n):
+        offset = (n-1)* User.entry_per_page
         rows = app.db.execute(
             """
             SELECT
@@ -199,12 +202,24 @@ class User(UserMixin):
                 Inventory i ON oi.iid = i.iid
             WHERE o.uid = :uid
             GROUP BY o.oid
-            ORDER BY o.time_placed DESC;
+            ORDER BY o.time_placed DESC
+            LIMIT :n OFFSET :start;
             """,
-            uid=uid)
+            uid=uid, n=User.entry_per_page, start=offset)
         
         return rows
     
+    @staticmethod
+    def get_all_order(uid):
+        rows = app.db.execute(
+            """
+            SELECT *
+            FROM Orders o
+            WHERE o.uid = :uid
+            """, uid=uid)
+    
+        return rows
+
     @staticmethod
     def getRole(uid):
         role = app.db.execute(

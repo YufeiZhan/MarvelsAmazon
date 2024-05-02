@@ -1,7 +1,5 @@
 from flask import current_app as app
 
-from .seller import InventoryItem
-
 class Cart:
     entry_per_page = 10
 
