@@ -91,14 +91,14 @@
             <p>{{r.content}}</p>
             <div class="voting">{{r.upvotes}}<i class="bi bi-hand-thumbs-up-fill"></i></div>
             <div class="rating">
-              {% for i in range(5) %}
-                {% if i <= r.rating %}
-                  <i class="bi bi-star-fill"></i>
-                {% elif i - 0.5 == r.rating%}
-                  <i class="bi bi-star-half"></i>
-                {% else %}
-                  <i class="bi bi-star"></i>
-                {% endif %}
+              {% for i in range(1,6) %}
+                <button type="button" class="star" data-index="{{ i }}">
+                  {% if i - 1 < r.rating %}
+                    <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                  {% else %}
+                    <i class="bi bi-star"></i>
+                  {% endif %}
+                </button>
               {% endfor %}
             </div>
           {% endfor %}

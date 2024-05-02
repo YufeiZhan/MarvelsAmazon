@@ -61,21 +61,50 @@ def reviews_edit(buyer_id,target_id,target_type):
                             review_time=one_review[0].review_time,
                             rating=one_review[0].rating,
                             target_type=target_type,
-                            role=role)
+                            role=role,
+                            isnew=0)
 
 @bp.route('/update-review', methods=['GET'])
 def reviews_submit():
     buyer_id = request.args.get('buyer_id')
     target_id = request.args.get('target_id')
-    target_type = request.args.get('target_type')
+    target_type = int(request.args.get('target_type'))
     new_content = request.args.get('content')
     rating = request.args.get('rating')
     last_edit = request.args.get('time')
+    isnew = int(request.args.get('isnew'))
+
     try:
-        success = Reviews.update_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
-        if success:
-            return jsonify({'message': 'Review updated successfully'}), 200
+        if not isnew:
+            success = Reviews.update_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
+            if success:
+                return jsonify({'message': 'Review updated successfully'}), 200
+            else:
+                return jsonify({'error': 'Update failed'}), 400
         else:
-            return jsonify({'error': 'Update failed'}), 400
+            success = Reviews.insert_content(buyer_id, target_id, target_type, new_content, rating, last_edit)
+            if success:
+                return jsonify({'message': 'New review created successfully'}), 200
+            else:
+                return jsonify({'error': 'Create failed'}), 400
     except Exception as e:
         return jsonify({'error': 'Server error', 'details': str(e)}), 500
+    
+@bp.route('/reviews/review_create/<int:buyer_id>/<int:target_id>/<int:target_type>', methods=['GET','POST'])
+def reviews_create(buyer_id,target_id,target_type):
+    role = User.getRole(current_user.id)
+    count = Reviews.isexist(buyer_id,target_id,target_type)
+    if count > 0:
+        # WARN that the review already exists
+        # flash('A review already exists.', 'warning')
+        return redirect(url_for('social.reviews'))
+    else:
+        return render_template('review_edit.html',
+                                buyer_id=buyer_id,
+                                target_id=target_id,
+                                content="",
+                                review_time=None,
+                                rating=0,
+                                target_type=target_type,
+                                role=role,
+                                isnew=1)

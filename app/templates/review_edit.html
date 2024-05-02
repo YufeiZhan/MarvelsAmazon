@@ -14,6 +14,7 @@
     <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
     <input type="hidden" id="target_type" value="{{ target_type }}">
     <input type="hidden" id="rating" value="{{ rating }}">
+    <input type="hidden" id="isnew" value="{{ isnew }}">
     
     <div>
         <label>Last edited:</label>
@@ -36,7 +37,9 @@
     </div>
       
     <button type="submit">Submit Review</button>
+
 </form>
+<a href="/reviews" type="button" class="btn btn-primary">Back</a>
 
 <script>
 function handleSubmit(event) {
@@ -46,10 +49,16 @@ function handleSubmit(event) {
     const buyerId = document.getElementById('buyer_id').value;
     const content = encodeURIComponent(document.getElementById('reviewContent').value);
     const rating = document.getElementById('rating').value;
+    const isnew = document.getElementById('isnew').value;
     const now = new Date();
     const formattedTime = formatDateTime(now);
 
-    const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}`;
+    let url;
+    if (isnew==0) {
+        url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
+    } else {
+        url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
+    };
 
     fetch(url)
     .then(response => response.json())
