@@ -184,3 +184,51 @@ class Product:
                 p.pid ASC;
             ''', type=product_type)
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_page_with_sort(n, product_sort):
+        offset = (n-1) * Product.entry_per_page
+
+        # Define the base SQL query without the ORDER BY clause
+        base_sql = """
+            SELECT 
+                p.pid, 
+                p.name, 
+                p.description, 
+                p.type, 
+                p.creator_id, 
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+            FROM 
+                Products p
+            JOIN 
+                Inventory i ON p.pid = i.pid
+            GROUP BY 
+                p.pid, p.name, p.description, p.type, p.creator_id
+        """
+
+        # Determine the ORDER BY clause based on product_sort
+        if product_sort == 'Lowest Price':
+            order_clause = "ORDER BY avg_unit_price ASC"
+        else:
+            order_clause = "ORDER BY avg_unit_price DESC"
+
+        # Combine the base SQL with the ORDER BY clause and pagination
+        full_sql = f"{base_sql} {order_clause} LIMIT :n OFFSET :start"
+
+        # Execute the query
+        rows = app.db.execute(full_sql, n=Product.entry_per_page, start=offset)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def post_product(id, name, description, type):
+        result = app.db.execute(
+            '''
+            INSERT INTO Products (name, description, type, creator_id)
+            VALUES (:name, :description, :type, :id);
+            ''',
+            name=name, 
+            description=description, 
+            type=type,
+            id=id
+        )
+        return result

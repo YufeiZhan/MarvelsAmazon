@@ -16,16 +16,27 @@
     <input class="form-control" type="search" aria-label="Search" name="query">
   </form>
   
-  <div class="filter-by-category">
+  <div class="filter-by">
     <label for="typeSelect" class="visually-hidden style="margin-right: 10px;">Filter By</label>
     <select id="typeSelect" class="form-select" onchange="updateProductType()">
-      <option value="" selected>Category</option>
+      <option value="" disabled selected style="display: none;">Category</option>
       {% for type in types %}
       <option value="{{ type }}" {{ 'selected' if type == product_type }}>{{ type }}</option>
       {% endfor %}
     </select>
   </div>
+
+  <div class="sort-by">
+    <label for="sortSelect" class="visually-hidden" style="margin-right: 10px;">Sort By</label>
+    <select id="sortSelect" class="form-select" onchange="updateProductPrice()">
+      <option value="" disabled selected style="display: none;">Highest Price</option>
+      {% for sort in sorts %}
+      <option value="{{ sort }}" {{ 'selected' if sort == product_sort }}>{{ sort }}</option>
+      {% endfor %}
+    </select>
+  </div>
 </div>
+
 
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -59,6 +70,12 @@
       <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
       <li class="page-item {% if page >= max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=page+1)}}">Next</a></li>
       <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_by_type', type=product_type, page=max_page)}}">End</a></li>
+    {% elif product_sort %}
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_sort_by_price', sort=product_sort, page=1)}}">Start</a></li>
+      <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_sort_by_price', sort=product_sort, page=page-1)}}">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="#">{{page}}</a></li>
+      <li class="page-item {% if page >= max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_sort_by_price', sort=product_sort, page=page+1)}}">Next</a></li>
+      <li class="page-item {% if page == max_page %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.products_sort_by_price', sort=product_sort, page=max_page)}}">End</a></li>
     {% else %}
       <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=1)}}">Start</a></li>
       <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('index.index', type=product_type, page=page-1)}}">Previous</a></li>
@@ -71,6 +88,11 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
+<a type="button" id="editButton" href="{{ url_for('products.post', id=current_user.id) }}" class="btn btn-purple">
+  <i class="bi bi-patch-plus-fill"></i>
+  Create a New Product?
+</a>
+
 <form action="{{ url_for('products.k_items') }}" method="get">
   <label for="k">Enter number of top expensive products to display:</label>
   <input type="number" id="k" name="k" min="1" required>
@@ -87,6 +109,13 @@
       var typeSelect = document.getElementById('typeSelect');
       var selectedType = typeSelect.value;
       var url = "{{ url_for('index.products_by_type') }}?type=" + encodeURIComponent(selectedType);
+      window.location.href = url;
+  }
+
+  function updateProductPrice() {
+      var sortSelect = document.getElementById('sortSelect');
+      var selectedSort = sortSelect.value;
+      var url = "{{ url_for('index.products_sort_by_price') }}?sort=" + encodeURIComponent(selectedSort);
       window.location.href = url;
   }
 </script>
