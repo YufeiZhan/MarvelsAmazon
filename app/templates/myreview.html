@@ -106,9 +106,9 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item bg-transparent">
-                <a href="{{ url_for('social.reviews_edit', buyer_id=r.buyer_id, target_id=r.target_id, target_type=1) }}"
+                <a href="{{ url_for('social.reviews_edit', buyer_id=r.buyer_id, target_id=r.target_id, target_type=0) }}"
                   class="btn btn-purple">Edit</a>
-                <a href="{{ url_for('social.reviews_delete', buyer_id=r.buyer_id, target_id=r.target_id, target_type=1) }}"
+                <a href="{{ url_for('social.reviews_delete', buyer_id=r.buyer_id, target_id=r.target_id, target_type=0) }}"
                   class="btn btn-purple">Delete</a>
               </li>
             </ul>
