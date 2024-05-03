@@ -177,7 +177,7 @@ class User(UserMixin):
     def get_all_public_info_by(role):
         rows = app.db.execute(
             f"""
-            SELECT email, firstname, lastname
+            SELECT uid, email, firstname, lastname
             FROM Users
             WHERE role_indicator = :role
             """,

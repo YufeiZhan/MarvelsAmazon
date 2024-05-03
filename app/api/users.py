@@ -22,7 +22,10 @@ def display_all_buyers(roleType):
         user_info = User.get_all_public_info_by(role=0)
     elif roleType == "sellers":
         user_info = User.get_all_public_info_by(role=1)
-    return render_template('public_view.html', title="Public View for All Buyers", user_info=user_info)
+    else:
+        flash("Looks like you have entered an invalid URL. Please try '/all_users' or '/all_buyers'.")
+        return redirect(url_for('users.account'))
+    return render_template('public_view.html', title="Public View for All Users", user_info=user_info, role_type=roleType)
 
 @bp.route('/account')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
