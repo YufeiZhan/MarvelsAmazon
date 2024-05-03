@@ -8,7 +8,18 @@
     color:white;
     background-color:rgb(18, 111, 111);
 }
+.chart-container {
+    text-align: center;
+    padding: 20px;
+        /* display: none; */
+}
+.center-block {
+        margin-left: auto;
+        margin-right: auto;
+}
 </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_3.css') }}">
+
 <br><br>
 {% if current_user.is_authenticated %}
   {% if role == 1 %}
@@ -39,8 +50,10 @@
                     <span class="badge bg-danger" style="font-size: 1.05rem;">CANCELLED</span>
                 {% elif order.fulfillment_status == 'Placed' %}
                     <span class="badge bg-warning" style="font-size: 1.05rem;">PLACED</span>
-                {% else %}
+                    {% elif order.fulfillment_status == 'In Delivery' %}
                     <span class="badge bg-warning" style="font-size: 1.05rem;">IN DELIVERY</span>
+                {% else %}
+                    <span class="badge bg-danger" style="font-size: 1.05rem;">PENDING</span>
                 {% endif %}
             </td>
           </tr>
@@ -50,7 +63,7 @@
 
       <!-- Pagination Links -->
       <nav aria-label="Inventory navigation">
-        <ul class="pagination">
+        <ul class="pagination justify-content-center">
             <li class="page-item {% if page == 1 %} disabled {% endif %}">
                 <a class="page-link" href="{{ url_for('seller.sale_history', page=1) }}">Start</a>
             </li>
@@ -72,11 +85,11 @@
     {% else %}
       <h3>No sales history available. Get selling to see some activity here!</h3>
     {% endif %}
-    <button id="load-popularity" class="btn btn-blue">Load Product Popularity</button>
+    <button id="load-popularity" class="btn btn-blue">View Product Popularity</button>
     <!-- Analytics Section -->
     <div class="row mt-4">
         <div class="col-12" style="width: 800px; height: 500px;">
-            <canvas id="popularityChart"></canvas>
+            <canvas id="popularityChart" class="center-block" style="width: 80%; height: 300px;"></canvas>
         </div>
     </div>
     <!-- Include Chart.js -->
@@ -94,8 +107,8 @@
                         datasets: [{
                             label: 'Total Sold',
                             data: data.map(item => item.total_sold),
-                            backgroundColor: 'rgba(0, 123, 255, 0.5)',  // Blue with transparency
-                            borderColor: 'rgba(0, 123, 255, 1)',  // Solid blue
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',  // Blue with transparency
+                            borderColor: 'rgba(54, 162, 235, 1)',  // Solid blue
                             borderWidth: 1
                         }]
                     },
@@ -113,13 +126,22 @@
                         },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                title: {
+                                        display: true,
+                                        text: 'Number of Items Sold',
+                                        font: {
+                                            size: 14
+                                        }
+                                        }
+                                        
                             }
                         }
                     }
                 });
             })
             .catch(error => console.error('Error loading the product popularity data:', error));
+            
         });
         </script>
         

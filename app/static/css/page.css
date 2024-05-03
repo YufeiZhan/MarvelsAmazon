@@ -1,0 +1,17 @@
+.main {
+    background-image: url('../images/background.avif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px 5px;
+    opacity: 0.9;
+    color:black;
+    min-height: 170vh;
+}
+
+.card {
+    background-color: rgba(12, 6, 36, 0.546);
+    color:rgb(215, 219, 221);
+    border: 1px solid #734db8;
+    box-shadow: 4px 4px 5px rgba(0,0,0,0.8);
+}

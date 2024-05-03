@@ -3,149 +3,168 @@
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
 {% endblock %}
 
 {% block content %}
-  <h1>Edit Your Review for:</h1>
-  <form id="editReviewForm" onsubmit="handleSubmit(event)">
-      {% if target_type %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
+<style>
+  .card {
+    background-color: rgba(255, 255, 255, 0.301);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+<br>
+<div class="less-transparent">
+  <form id="editReviewForm" class="card mb-3" onsubmit="handleSubmit(event)">
+    <h3>Edit Your Review for:</h3>
+      <div class="card-body">
+        {% if target_type %}
+        <p class="card-title">
           (Seller) {{target_name}}[ID: {{ target_id }}]
-      {%else%}
+        </p>
+        {%else%}
+        <p class="card-title">
           (Product) {{target_name}}[ID: {{ target_id }}]
-      {%endif%}
-      <input type="hidden" id="target_id" value="{{ target_id }}">
-      <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
-      <input type="hidden" id="target_type" value="{{ target_type }}">
-      <input type="hidden" id="rating" value="{{ rating }}">
-      <input type="hidden" id="isnew" value="{{ isnew }}">
-      
-      <div>
-          <label>Last edited:</label>
-          <time id="last_edited">{{review_time}}</time>
+        </p>
+        {%endif%}
+        <input type="hidden" id="target_id" value="{{ target_id }}">
+        <input type="hidden" id="buyer_id" value="{{ buyer_id }}">
+        <input type="hidden" id="target_type" value="{{ target_type }}">
+        <input type="hidden" id="rating" value="{{ rating }}">
+        <input type="hidden" id="isnew" value="{{ isnew }}">
+        <!-- Textarea for editing review content -->
+        <textarea class="form-control bg-transparent" style="color: rgb(0, 0, 0);" id="reviewContent" rows="6"
+          cols="100" required>{{content}}</textarea>
+        <div class="rating">
+          {% for i in range(1,6) %}
+          <button type="button" class="star" data-index="{{ i }}">
+            {% if i - 1 < rating %} <i
+              class="bi {% if i <= rating %}bi-star-fill{% elif i - 0.5 == rating %}bi-star-half{% else %}bi-star{% endif %}">
+              </i>
+              {% else %}
+              <i class="bi bi-star"></i>
+              {% endif %}
+          </button>
+          {% endfor %}
+        </div>
       </div>
-      <!-- Textarea for editing review content -->
-      <div>
-          <textarea id="reviewContent" name="reviewContent" rows="6" cols="50" required>{{content}}</textarea>
-      </div>
-      <div class="rating">
-              {% for i in range(1,6) %}
-                <button type="button" class="star" data-index="{{ i }}">
-                  {% if i - 1 < rating %}
-                    <i class="bi {% if i <= rating %}bi-star-fill{% elif i - 0.5 == rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
-                  {% else %}
-                    <i class="bi bi-star"></i>
-                  {% endif %}
-                </button>
-              {% endfor %}
-            </div>
-        
-      <button type="submit">Submit Review</button>
-      {% if isnew==0 %}
-        <a class="btn btn-purple" id="delete" href="{{url_for('social.reviews_delete',buyer_id=buyer_id,target_id=target_id,target_type=target_type)}}">Delete</a>
-      {%endif%}
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-transparent">
+          <button class="btn btn-purple" type="submit">Submit Review</button>
+          {% if isnew==0 %}
+          <a class="btn btn-purple" id="delete"
+            href="{{url_for('social.reviews_delete',buyer_id=buyer_id,target_id=target_id,target_type=target_type)}}">Delete</a>
+          {%endif%}
+        </li>
+        <div class="card-footer">
+          Last edited: <time id="last_edited">{{ review_time }}</time>
+        </div>
 
+      </ul>
   </form>
-  <!-- <a href="/reviews" type="button" class="btn btn-primary">Back</a> -->
+</div>
+<!-- <a href="/reviews" type="button" class="btn btn-primary">Back</a> -->
 
-  <script>
+<script>
   function handleSubmit(event) {
-      event.preventDefault();
-      const targetId = document.getElementById('target_id').value;
-      const targetType = document.getElementById('target_type').value;
-      const buyerId = document.getElementById('buyer_id').value;
-      const content = encodeURIComponent(document.getElementById('reviewContent').value);
-      const rating = document.getElementById('rating').value;
-      const isnew = document.getElementById('isnew').value;
-      const now = new Date();
-      const formattedTime = formatDateTime(now);
+    event.preventDefault();
+    const targetId = document.getElementById('target_id').value;
+    const targetType = document.getElementById('target_type').value;
+    const buyerId = document.getElementById('buyer_id').value;
+    const content = encodeURIComponent(document.getElementById('reviewContent').value);
+    const rating = document.getElementById('rating').value;
+    const isnew = document.getElementById('isnew').value;
+    const now = new Date();
+    const formattedTime = formatDateTime(now);
 
-      const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
-      
-      fetch(url)
+    const url = `/update-review?target_id=${targetId}&target_type=${targetType}&buyer_id=${buyerId}&rating=${rating}&content=${content}&time=${formattedTime}&isnew=${isnew}`;
+
+    fetch(url)
       .then(response => response.json())
       .then(data => {
-          if (data.message) {
-              alert('Review Submitted successfully!');
-              document.getElementById('last_edited').textContent = formattedTime;
-              window.location.href = '/reviews';
-          } else {
-              alert('Failed to update review: ' + data.error);
-          }
+        if (data.message) {
+          alert('Review Submitted successfully!');
+          document.getElementById('last_edited').textContent = formattedTime;
+          window.location.href = '/reviews';
+        } else {
+          alert('Failed to update review: ' + data.error);
+        }
       })
       .catch(error => {
-          console.error('Error updating review:', error);
-          alert('Error updating review. Please try again.');
+        console.error('Error updating review:', error);
+        alert('Error updating review. Please try again.');
       });
 
   };
 
   document.querySelectorAll('.rating .star').forEach((star, index) => {
-      star.addEventListener('click', function(event) {
-        const rect = this.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const isHalfStar = clickX < rect.width / 2;
-        setRating(index + 0.5 + (isHalfStar ? 0 : 0.5));
-      });
-    
-      star.addEventListener('mouseover', function(event) {
-        const rect = this.getBoundingClientRect();
-        const hoverX = event.clientX - rect.left;
-        const isHalfStarHover = hoverX < rect.width / 2;
-        highlightStars(index + 0.5 + (isHalfStarHover ? 0 : 0.5));
-      });
-    
-      star.addEventListener('mouseout', function() {
-        highlightStars(currentRating);
-      });
+    star.addEventListener('click', function (event) {
+      const rect = this.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const isHalfStar = clickX < rect.width / 2;
+      setRating(index + 0.5 + (isHalfStar ? 0 : 0.5));
+    });
+
+    star.addEventListener('mouseover', function (event) {
+      const rect = this.getBoundingClientRect();
+      const hoverX = event.clientX - rect.left;
+      const isHalfStarHover = hoverX < rect.width / 2;
+      highlightStars(index + 0.5 + (isHalfStarHover ? 0 : 0.5));
+    });
+
+    star.addEventListener('mouseout', function () {
+      highlightStars(currentRating);
+    });
   });
-    
+
   let currentRating = parseFloat(document.getElementById('rating').value);
 
-  window.onload = function() {
-      updateStars(currentRating);
-      document.getElementById('rating').value = currentRating;
+  window.onload = function () {
+    updateStars(currentRating);
+    document.getElementById('rating').value = currentRating;
   };
 
   function setRating(rating) {
-      currentRating = rating;
-      updateStars(rating);
-      document.getElementById('rating').value = rating;
+    currentRating = rating;
+    updateStars(rating);
+    document.getElementById('rating').value = rating;
   }
-    
+
   function highlightStars(rating) {
-      const stars = document.querySelectorAll('.rating .star i');
-      stars.forEach((star, idx) => {
-        star.className = 'bi bi-star';
-        if (idx + 0.5 < rating) {
-          star.className = 'bi bi-star-fill';
-        } else if (idx + 0.5 === rating) {
-          star.className = 'bi bi-star-half';
-        }
-      });
-    }
-    
-  function updateStars(rating) {
-      const stars = document.querySelectorAll('.rating .star i');
-      stars.forEach((star, idx) => {
-        star.className = 'bi bi-star';
-        if (idx + 0.5 < rating) {
-          star.className = 'bi bi-star-fill';
-        } else if (idx + 0.5 === rating) {
-          star.className = 'bi bi-star-half';
-        }
-      });
-    }
-    
-  function formatDateTime(date) {
-      const year = date.getFullYear();
-      const month = ('0' + (date.getMonth() + 1)).slice(-2);
-      const day = ('0' + date.getDate()).slice(-2);
-      const hours = ('0' + date.getHours()).slice(-2);
-      const minutes = ('0' + date.getMinutes()).slice(-2);
-      const seconds = ('0' + date.getSeconds()).slice(-2);
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    const stars = document.querySelectorAll('.rating .star i');
+    stars.forEach((star, idx) => {
+      star.className = 'bi bi-star';
+      if (idx + 0.5 < rating) {
+        star.className = 'bi bi-star-fill';
+      } else if (idx + 0.5 === rating) {
+        star.className = 'bi bi-star-half';
+      }
+    });
   }
-  </script>
+
+  function updateStars(rating) {
+    const stars = document.querySelectorAll('.rating .star i');
+    stars.forEach((star, idx) => {
+      star.className = 'bi bi-star';
+      if (idx + 0.5 < rating) {
+        star.className = 'bi bi-star-fill';
+      } else if (idx + 0.5 === rating) {
+        star.className = 'bi bi-star-half';
+      }
+    });
+  }
+
+  function formatDateTime(date) {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+</script>
 {% endblock %}

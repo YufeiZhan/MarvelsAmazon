@@ -80,3 +80,9 @@ CREATE TABLE Upvotes (
     user_id INT NOT NULL REFERENCES Users(uid),
     upvote_status INT DEFAULT 0
 );
+
+CREATE TABLE BalanceHistory (
+    uid INT NOT NULL REFERENCES Users(uid),
+    balance DECIMAL(12,2) NOT NULL DEFAULT 0 CHECK (balance >=0),
+    balance_timestamp timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+);

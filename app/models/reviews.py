@@ -2,6 +2,7 @@ from flask import current_app as app
 
 class Reviews:
     entry_per_page = 5
+    top_rated = 3
 
     def __init__(self, target_id, buyer_id, rating, review_time, upvotes, content, buyer_name, target_name):
         self.buyer_id = buyer_id
@@ -169,6 +170,23 @@ GROUP BY pr.rating;
                 "target_id": iid,
                 "hist":rows}
 
+    def get_top_for_product(iid):
+        rows = app.db.execute('''
+SELECT pr.iid, pr.buyer_id, pr.rating, pr.review_time, pr.upvotes, pr.content,
+    CONCAT(u.firstname, ' ', u.lastname), p.name
+FROM ProductReview as pr
+LEFT JOIN Users as u
+    ON pr.buyer_id = u.uid
+LEFT JOIN Inventory as i
+    ON pr.iid = i.iid
+LEFT JOIN Products as p
+    ON i.pid = p.pid
+WHERE pr.iid = :iid
+ORDER BY pr.upvotes DESC                        
+LIMIT :top_rated
+''', iid=iid, top_rated=Reviews.top_rated)
+        return [Reviews(*(r)) for r in rows] if rows else None    
+
     ########## Reviews received
     def get_reviews_received_count(seller_id):
         rows = app.db.execute('''
@@ -222,6 +240,21 @@ GROUP BY sr.rating;
                 "target_name":target_name,
                 "target_id":seller_id,
                 "hist":rows}
+    
+    def get_top_for_seller(seller_id):
+        rows = app.db.execute('''
+SELECT sr.seller_id, sr.buyer_id, sr.rating, sr.review_time, sr.upvotes, sr.content,
+    CONCAT(u1.firstname, ' ', u1.lastname), CONCAT(u2.firstname, ' ', u2.lastname)
+FROM SellerReview as sr
+LEFT JOIN Users as u1
+    ON sr.buyer_id = u1.uid
+LEFT JOIN Users as u2
+    ON sr.seller_id = u2.uid  
+WHERE sr.seller_id = :seller_id
+ORDER BY sr.upvotes DESC
+LIMIT :top_rated
+''', seller_id=seller_id, top_rated=Reviews.top_rated)
+        return [Reviews(*(r)) for r in rows] if rows else None
 
     ########## Modify the reviews
     def update_content(buyer_id, target_id, target_type, new_content, new_rating, last_edit):

@@ -1,0 +1,62 @@
+/* .main{
+    background-image: url('../images/5.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px 5px;
+    opacity: 0.85;
+    color:black;
+    min-height: 100vh;
+}  */
+.main {
+    position: relative;
+    color: black;
+    padding: 0px 5px;
+    min-height: 100vh;
+}
+.main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/5.jpeg') center center/cover no-repeat;
+    opacity: 0.8;
+    z-index: -1;
+}
+.order-details p {
+    font-size: 16px;
+    margin: 0;
+    padding: 3px 0;
+}
+
+.item-row {
+    border-top: 1px solid #ccc;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+.total-amount h4, .total-amount h5 {
+    margin-top: 20px;
+}
+
+.badge {
+    padding: 5px 10px;
+    font-size: 100%;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.right-corner {
+    position: fixed;
+    bottom: 10px;
+    right: 200px;
+}
+.back-button {
+    position: fixed;
+    bottom: 50px; 
+    left: 200px;  
+}

@@ -1,9 +1,7 @@
 from flask import current_app as app
 
 class InventoryItem:
-    entry_per_page = 6 
-    
-    def __init__(self, iid, pid, seller_id, product_name, unit_price, quantity_available, description, type):
+    def __init__(self, iid, pid, seller_id, product_name, unit_price, quantity_available, description, type, image_url):
         self.iid = iid
         self.pid = pid
         self.seller_id = seller_id
@@ -12,6 +10,7 @@ class InventoryItem:
         self.quantity_available = quantity_available
         self.description = description
         self.type = type
+        self.image_url = image_url
 
 #     @staticmethod
 #     def get_all_by_seller_id(seller_id):
@@ -29,7 +28,7 @@ class InventoryItem:
         offset = (page - 1) * per_page
         rows = app.db.execute('''
     SELECT Inventory.iid, Inventory.pid, Inventory.seller_id, Products.name, 
-    Inventory.unit_price, Inventory.quantity_available, Products.description, Products.type
+    Inventory.unit_price, Inventory.quantity_available, Products.description, Products.type, Products.image_url
     FROM Inventory
     JOIN Products ON Inventory.pid = Products.pid
     WHERE Inventory.seller_id = :seller_id
@@ -87,6 +86,21 @@ class InventoryItem:
     @staticmethod
     def delete(iid, seller_id):
         try:
+            app.db.execute('''
+            DELETE FROM Cartitems
+            WHERE iid = :iid
+            ''', iid=iid)
+
+            app.db.execute('''
+            DELETE FROM OrderItems
+            WHERE iid = :iid
+            ''', iid= iid)
+
+            app.db.execute('''
+            DELETE FROM ProductReview
+            WHERE iid = :iid
+            ''', iid= iid)
+
             app.db.execute('''
             DELETE FROM Inventory
             WHERE iid = :iid AND seller_id = :seller_id
@@ -154,7 +168,8 @@ class InventoryItem:
             unit_price,
             item_status,
             ROUND(CAST(SUM(OrderItems.quantity_purchased * Inventory.unit_price * Orders.discount) OVER (PARTITION BY Orders.oid) AS NUMERIC), 2) as total_amount,
-            SUM(OrderItems.quantity_purchased) OVER (PARTITION BY Orders.oid) as total_items
+            SUM(OrderItems.quantity_purchased) OVER (PARTITION BY Orders.oid) as total_items,
+            image_url
         FROM Orders
         INNER JOIN OrderItems ON Orders.oid = OrderItems.oid
         INNER JOIN Inventory ON OrderItems.iid = Inventory.iid

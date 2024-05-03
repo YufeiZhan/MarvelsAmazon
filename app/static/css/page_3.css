@@ -1,0 +1,17 @@
+.main {
+    position: relative;
+    color: black;
+    padding: 0px 5px;
+    min-height: 100vh;
+}
+.main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/3.jpeg') center center/cover no-repeat;
+    opacity: 0.2;
+    z-index: -1;
+}

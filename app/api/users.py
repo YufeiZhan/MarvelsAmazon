@@ -1,10 +1,14 @@
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, send_file
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-import math
+
+from io import BytesIO
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from ..models.user import User
 from ..models.seller import InventoryItem
@@ -17,6 +21,17 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+@bp.route('/all_<roleType>')
+def display_all_buyers(roleType):
+    if roleType == "buyers":
+        user_info = User.get_all_public_info_by(role=0)
+    elif roleType == "sellers":
+        user_info = User.get_all_public_info_by(role=1)
+    else:
+        flash("Looks like you have entered an invalid URL. Please try '/all_users' or '/all_buyers'.")
+        return redirect(url_for('users.account'))
+    return render_template('public_view.html', title="Public View for All Users", user_info=user_info, role_type=roleType)
 
 @bp.route('/account')
 @login_required # Requires a user to be logged in to access this page otherwise redirect to defined login page automatically
@@ -41,9 +56,29 @@ def order_history(page_bo=1,page_so=1):
 @bp.route('/topup/<id>')
 def topup(id):
     if User.topup(id):
+        User.update_balance_history(id)
         flash('Congratulations. You have increased your account balance by $100.')
     return redirect(url_for('users.account'))
 
+@bp.route('/balance_history/<id>/')
+@login_required
+def show_balance_history(id):
+    balance_history = User.get_balance_history(id)
+    df = pd.DataFrame(balance_history, columns=['balance', 'timestamp'])
+    df = df.sort_values(by='timestamp')
+    fig, ax = plt.subplots()
+    plt.plot(df['timestamp'], df['balance'], color='blue')
+    plt.xlabel('Time')
+    plt.xticks(rotation=45)
+    plt.ylabel('Account Balance ($)')
+    plt.title('Balance History for Current User')
+    plt.grid(True)
+    plt.tight_layout()
+    canvas = FigureCanvas(fig)
+    img = BytesIO()
+    fig.savefig(img)
+    img.seek(0)
+    return send_file(img, mimetype='image/png')
 
 @bp.route('/withdraws/<id>/<amount>', methods=['GET', 'POST'])
 def withdraws(id, amount):
@@ -56,6 +91,7 @@ def withdraws(id, amount):
             flash(f'Insufficient balance. Cannot withdraw the specified amount of ${withdrawAmount}!')
             return redirect(url_for('users.account'))
         elif User.withdraw(id, withdrawAmount):
+            User.update_balance_history(id)
             flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
             return redirect(url_for('users.account'))
 
@@ -129,6 +165,9 @@ def register():
                          form.firstname.data,
                          form.lastname.data):
             flash('Congratulations, you are now a registered user!')
+            return redirect(url_for('users.login'))
+        else:
+            flash('Illegal input in your information. Please try again.')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
