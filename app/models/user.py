@@ -96,6 +96,10 @@ class User(UserMixin):
 
     @staticmethod
     def update_user_info(id, email, password, firstname, lastname):
+        if any(not c.isalnum()for word in firstname.split() for c in word ) or any(not c.isalnum() for word in lastname.split() for c in word)\
+            or any(keyword in firstname.lower() for keyword in ['select', 'update', 'delete', 'insert'])\
+            or any(keyword in lastname.lower() for keyword in ['select', 'update', 'delete', 'insert']):
+            return None
         try:
             rows = app.db.execute(
                 """
