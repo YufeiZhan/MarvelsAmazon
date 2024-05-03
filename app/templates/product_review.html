@@ -119,7 +119,7 @@
     </div>
     {% endfor %}
     <nav aria-label="Page navigation example">
-      <ul class="pagination ml-2">
+      <ul class="pagination ml-2 justify-content-center">
         <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
             href="{{url_for('social.product_reviews_summary',iid=reviews_received[0].target_id,page_rr=1)}}#reviews">Start</a>
         </li>

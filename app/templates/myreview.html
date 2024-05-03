@@ -58,7 +58,7 @@
             </div>
           {% endfor %}
           <nav aria-label="Page navigation example">
-            <ul class="pagination ml-2">
+            <ul class="pagination ml-2 justify-content-center">
               <li class="page-item {% if page_sr == 1 %} disabled {% endif %}"><a class="page-link"
                   href="{{url_for('social.reviews',page_sr=1,page_pr=page_pr,page_rr=page_rr)}}">Start</a></li>
               <li class="page-item {% if page_sr == 1 %} disabled {% endif %}"><a class="page-link"
@@ -118,7 +118,7 @@
           </div>
         {% endfor %}
         <nav aria-label="Page navigation example">
-          <ul class="pagination ml-2 mb-2">
+          <ul class="pagination ml-2 mb-2 justify-content-center">
             <li class="page-item {% if page_pr == 1 %} disabled {% endif %}"><a class="page-link"
                 href="{{url_for('social.reviews',page_pr=1,page_sr=page_sr,page_rr=page_rr)}}#reviews">Start</a></li>
             <li class="page-item {% if page_pr == 1 %} disabled {% endif %}"><a class="page-link"
@@ -173,7 +173,7 @@
           </div>
         {% endfor %}
         <nav aria-label="Page navigation example">
-          <ul class="pagination ml-2 mb-2">
+          <ul class="pagination ml-2 mb-2 justify-content-center">
             <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
                 href="{{url_for('social.reviews',page_rr=1,page_sr=page_sr,page_pr=page_pr)}}">Start</a></li>
             <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
