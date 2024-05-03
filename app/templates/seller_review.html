@@ -9,7 +9,16 @@
 {% endblock %}
 
 {% block content %}
-<br><br>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
+<style>
+  .card {
+    background-color: rgba(255, 255, 255, 0.469);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<br>
 {% if role ==0 %}
 {%if isexist%}
 <a class="btn btn-purple" id="edit_review"
@@ -28,24 +37,28 @@
 {% if reviews_received %}
 <div class="card mt-3">
   <h4 class="card-title">For {{target_name}}[ID: {{target_id}}]</h4>
-    <div class="card-body ml-3 mr-3">
+    <div class="card-body ml-3 mr-3 less-transparent">
       <p class="card-subtitle mb-3">The average rating is <span class="review-number">{{avg_rating|round(1)}}</span></p>
       <p class="card-subtitle">The number of reviews is <span class="review-number">{{ num_reviews }}</span></p>
     </div>
 
-    <div>
-      <h5 class="ml-3">Top Rated Reviews</h5>
+    <div class="ml-3 mr-3 mt-4 less-transparent">
+      <h5>Top Rated Reviews</h5>
       {% for r, status in top_review_zip%}
-      <div class="card bg-light mb-3 ml-3 mr-3">
+      <div class="card mb-3 ml-3 mr-3">
         <div class="card-body">
-          <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+          <p class="card-title">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
           <p class="card-subtitle">{{ r.content }}</p>
           <div class="review-footer">
             <div class="rating">
               {% for i in range(1,6) %}
               <button type="button" class="star btn btn-light btn-sm" data-index="{{ i }}">
-                <i
-                  class="bi {% if i - 1 < r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                {% if i - 1 < r.rating %}
+                  <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+
               </button>
               {% endfor %}
             </div>
@@ -59,74 +72,76 @@
             </div>
           </div>
         </div>
-        <div class="card-footer text-muted">
+        <div class="card-footer">
           Last edited: <time>{{ r.review_time }}</time>
         </div>
       </div>
       {% endfor %}
     </div>
-    <div class="ml-3 mr-3 mt-4">
+    <div class="ml-3 mr-3 mt-4 less-transparent">
       <h5>Rating Chart</h5>
       <canvas id="ratingChart"></canvas>
     </div>
 
-    <div id="reviews">
+    <div id="reviews" class="ml-3 mr-3 mt-4 less-transparent">
       <h5>All Reviews This Seller Received</h5>
-    </div>
-    {% for r, status in review_status_zip%}
-    <div class="card bg-light mb-3 ml-3 mr-3">
-      <div class="card-body">
-        <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
-        <p class="card-subtitle">{{ r.content }}</p>
-        <div class="review-footer">
-          <div class="rating">
-            {% for i in range(1,6) %}
-            <button type="button" class="star btn btn-light btn-sm" data-index="{{ i }}">
-              <i
-                class="bi {% if i - 1 < r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
-            </button>
-            {% endfor %}
-          </div>
-          <div class="num-thumb" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}"
-            data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
-            {%if status %}
-            {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
-            {% else %}
-            {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
-            {%endif%}
+    
+      {% for r, status in review_status_zip%}
+      <div class="card mb-3 ml-3 mr-3">
+        <div class="card-body">
+          <p class="card-title">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+          <p class="card-subtitle">{{ r.content }}</p>
+          <div class="review-footer">
+            <div class="rating">
+              {% for i in range(1,6) %}
+              <button type="button" class="star btn btn-light btn-sm" data-index="{{ i }}">
+                {% if i - 1 < r.rating %}
+                  <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+                {% else %}
+                  <i class="bi bi-star"></i>
+                {% endif %}
+              </button>
+              {% endfor %}
+            </div>
+            <div class="num-thumb" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}"
+              data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
+              {%if status %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
+              {% else %}
+              {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
+              {%endif%}
+            </div>
           </div>
         </div>
+        <div class="card-footer">
+          Last edited: <time>{{ r.review_time }}</time>
+        </div>
       </div>
-      <div class="card-footer text-muted">
-        Last edited: <time>{{ r.review_time }}</time>
-      </div>
+      {% endfor %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination ml-2">
+          <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
+              href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=1)}}#reviews">Start</a>
+          </li>
+          <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
+              href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr-1)}}#reviews">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
+          <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
+              href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr+1)}}#reviews">Next</a>
+          </li>
+          <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
+              href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=max_page_rr)}}#reviews">End</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-    {% endfor %}
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
-            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=1)}}#reviews">Start</a>
-        </li>
-        <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
-            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr-1)}}#reviews">Previous</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
-        <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
-            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr+1)}}#reviews">Next</a>
-        </li>
-        <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
-            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=max_page_rr)}}#reviews">End</a>
-        </li>
-      </ul>
-    </nav>
-
     {% else %}
-    <h3>No one has left review for this seller.
-  </h2>
+    <h3 style="color: white;">No one has left review for this seller.
   {% endif %}
 </div>
 {%else%}
-<h3>Please view this page as a buyer.</h2>
+<h3 style="color: white;">Please view this page as a buyer.</h3>
   {% endif %}
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -145,19 +160,20 @@
           label: 'Counts of Ratings',
           data: counts,
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)'
+              'rgba(205, 50, 75, 0.8)',  // Darker red
+              'rgba(25, 118, 210, 0.8)',  // Darker blue
+              'rgba(204, 159, 42, 0.8)',  // Darker yellow
+              'rgba(30, 144, 145, 0.8)',  // Darker cyan
+              'rgba(102, 51, 204, 0.8)'   // Darker purple
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)'
+              'rgba(205, 50, 75, 1)',     // Darker red
+              'rgba(25, 118, 210, 1)',    // Darker blue
+              'rgba(204, 159, 42, 1)',    // Darker yellow
+              'rgba(30, 144, 145, 1)',    // Darker cyan
+              'rgba(102, 51, 204, 1)'     // Darker purple
           ],
+      
           borderWidth: 1
         }]
       },

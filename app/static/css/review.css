@@ -2,18 +2,16 @@
   background: none;
   border: none;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  display:inline;
-  scale: 1.5;
-  margin: 0 5px;
-  margin-top: 10px;
+  position: relative;
+  width: 50px;
+  height: 50px;
 }
 
 .bi-star, .bi-star-fill, .bi-star-half {
-  font-size: 20;
-  color: gold;
+font-size: 24px;
+color: gold;
 }
+
 
 .review-footer {
   display: flex;  /* Enable Flexbox */
@@ -27,7 +25,7 @@
 }
 
 .num-thumb {
-  color: rgb(41, 98, 242);
+  color: rgb(0, 17, 255);
   display: flex;  /* Ensure voting content is inline */
   align-items: center;  /* Align upvotes count and icon vertically */
   font-size: 20px;  /* Font size for upvotes count */
@@ -35,10 +33,14 @@
 
 .num-thumb i {
   margin-left: 5px;  /* Space between number of upvotes and the icon */
-  color: rgb(41, 98, 242);  /* Color for the thumbs-up icon */
+  color: rgb(0, 17, 255);  /* Color for the thumbs-up icon */
 }
 
 .review-number {
   font-size: 24px;  /* Larger font size for emphasis */
   font-weight: bold; /* Bold for additional emphasis */
+}
+
+.less-transparent {
+  background-color: #ffffff8d;  /* White with less transparency */
 }
