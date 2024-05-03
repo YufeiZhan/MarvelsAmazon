@@ -7,6 +7,7 @@
 <br>
         <div class="container mt-5" style="color:rgba(240, 248, 255, 0.854)">
         <h2>Your Inventory</h2>
+        <br>
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -22,7 +23,7 @@
             {% for item in inventory_items %}
               <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="{{ item.image_url }}"  style="max-height:260px; max-width:12rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
+                    <img src="{{ item.image_url }}"  style="max-height:260px; max-width:12rem; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
                     <div class="card-body">
                     <h5 class="card-title">{{ item.product_name }} [#{{item.iid}}]</h5>
                     <p class="card-text">{{ item.description }}</p>
