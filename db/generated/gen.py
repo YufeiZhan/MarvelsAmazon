@@ -42,6 +42,14 @@ def gen_users(num_users):
         print(f'{num_users} generated')
     return available_uids
 
+def gen_balance_history(num_users):
+    with open('BalanceHistory.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        for uid in range(num_users):
+            balance = fake.random_int(min=0.0, max=0.0)
+            balance_timestamp = fake.date_time()
+            writer.writerow([uid, balance, balance_timestamp])
+    return
 
 def gen_products(num_products, available_uids):
     available_uids2 = available_uids.copy()
@@ -219,6 +227,7 @@ available_uids = gen_users(num_users)
 available_pids = gen_products(num_products, available_uids)
 orders_data = gen_orders(num_purchases, available_pids)
 gen_coupons(num_coupons)
+gen_balance_history(num_users)
 inventory_data = gen_inventories(num_inventories, available_pids, available_uids)
 gen_cart_items(num_cart_items, available_uids, inventory_data)
 seller_buyer_pairs, buyer_product_pairs = gen_order_items(num_order_items, inventory_data, orders_data)

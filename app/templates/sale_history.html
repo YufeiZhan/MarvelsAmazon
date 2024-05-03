@@ -18,6 +18,8 @@
         margin-right: auto;
 }
 </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_3.css') }}">
+
 <br><br>
 {% if current_user.is_authenticated %}
   {% if role == 1 %}
