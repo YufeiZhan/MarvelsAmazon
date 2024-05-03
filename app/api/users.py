@@ -41,6 +41,7 @@ def order_history():
 @bp.route('/topup/<id>')
 def topup(id):
     if User.topup(id):
+        User.update_balance_history(id)
         flash('Congratulations. You have increased your account balance by $100.')
     return redirect(url_for('users.account'))
 
@@ -56,6 +57,7 @@ def withdraws(id, amount):
             flash(f'Insufficient balance. Cannot withdraw the specified amount of ${withdrawAmount}!')
             return redirect(url_for('users.account'))
         elif User.withdraw(id, withdrawAmount):
+            User.update_balance_history(id)
             flash(f'You successfully withdrew an amount of {withdrawAmount}. Your new balance is {User.get_balance(id)}')
             return redirect(url_for('users.account'))
 

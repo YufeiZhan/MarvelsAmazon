@@ -1,6 +1,7 @@
 from flask_login import UserMixin, login_required
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 from .. import login
 
@@ -66,33 +67,18 @@ class User(UserMixin):
             return None
 
     @staticmethod
-    def topup(id):
+    def update_balance_history(id):
         try:
-            rows = app.db.execute(
+            new_balance = app.db.execute("""SELECT balance FROM Users WHERE uid = :id""", id=id)[0][0]
+            curr_timestamp = datetime.now()
+            result = app.db.execute(
                 """
-                UPDATE Users
-                SET balance = balance + 100
-                WHERE uid = :id
+                INSERT INTO BalanceHistory (uid, balance, balance_timestamp)
+                VALUES (:uid, :new_balance, :curr_timestamp)
                 """,
-                id=id
+                uid=id, new_balance=new_balance, curr_timestamp=curr_timestamp
             )
-            return rows
-        except Exception as e:
-            print(str(e))
-            return None
-    
-    @staticmethod
-    def withdraw(id, amount):
-        try:
-            rows = app.db.execute(
-                """
-                UPDATE Users
-                SET balance = balance - :amount
-                WHERE uid = :id
-                """,
-                id=id, amount=amount
-            )
-            return rows
+            return result
         except Exception as e:
             print(str(e))
             return None

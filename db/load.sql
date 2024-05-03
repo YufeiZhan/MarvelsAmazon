@@ -27,6 +27,8 @@ SELECT pg_catalog.setval('public.OrderItems_oiid_seq',
                          (SELECT MAX(OrderItems.oiid)+1 FROM OrderItems),
                          false);
 
+\COPY BalanceHistory FROM 'BalanceHistory.csv' WITH DELIMITER ',' NULL '' CSV;
+
 \COPY Coupon FROM 'Coupon.csv' WITH DELIMITER ',' NULL '' CSV;
 
 \COPY SellerReview FROM 'SellerReview.csv' WITH DELIMITER ',' NULL '' CSV;                                                                                                    
