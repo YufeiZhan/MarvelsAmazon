@@ -7,26 +7,23 @@
     <div class="back-button">
         <a href="{{ url_for('seller.sale_history') }}" class="btn btn-secondary btn-purple" style="color:black">Back</a>
     </div>
-    {% for order in order_details %}
-    <h2>Order #{{ order.oid }}</h2>
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="alert alert-info">
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-    {% endwith %}
-    <div class="order-details">
-        {% if loop.first %}  <!-- Display user information only once -->
-            <p><strong>User:</strong> {{ order.firstname }} {{ order.lastname }}</p>
-            <p><strong>Contact:</strong> {{ order.email }}</p>
-            <p><strong>Location:</strong> {{ order.address }}</p>
-            <p><strong>Order Placed:</strong> {{ order.time_placed }}</p>
-            <p><strong>No. of Items:</strong> {{ order.total_items }}</p>
+    <h2>Order #{{ order_details[0].oid }}</h2>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
         {% endif %}
+        {% endwith %}
+    <div class="order-details">
+            <p><strong>User:</strong> {{ order_details[0].firstname }} {{ order_details[0].lastname }}</p>
+            <p><strong>Contact:</strong> {{ order_details[0].email }}</p>
+            <p><strong>Location:</strong> {{ order_details[0].address }}</p>
+            <p><strong>Order Placed:</strong> {{ order_details[0].time_placed }}</p>
+            <p><strong>No. of Items:</strong> {{ order_details[0].total_items }}</p>
     </div>
     <div class="mt-4">
         <table class="table item-table">
@@ -41,6 +38,7 @@
                 </tr>
             </thead>
             <tbody>
+                {% for order in order_details %}
                 <tr>
                     <td style="font-weight: bold; color: black;">{{ order.product_name }}</td>
                     <td><img src="{{ order.image_url }}"  style="max-height:150px; max-width:10rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ order.product_name }}">
@@ -66,16 +64,19 @@
                         {% endif %}
                     </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 
     <div class="right-corner">
         <div class="total-amount">
-            <h4>Cart Total: ${{ order.total_amount }}</h4>
-            <h5>Order Status: <span class="badge {{ 'bg-success' if order.item_status == 'fulfilled' else 'bg-danger' }}">{{ order.item_status }}</span></h5>
+            <h4>Cart Total: ${{ order_details[0].total_amount }}</h4>
+            <h5>Order Status: 
+                <span class="badge {{ 'bg-success' if fulfillment_status == 'FULFILLED' else 'bg-danger' }}">{{ fulfillment_status }}
+                </span>
+            </h5>
         </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

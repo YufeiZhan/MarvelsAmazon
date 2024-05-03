@@ -50,8 +50,10 @@
                     <span class="badge bg-danger" style="font-size: 1.05rem;">CANCELLED</span>
                 {% elif order.fulfillment_status == 'Placed' %}
                     <span class="badge bg-warning" style="font-size: 1.05rem;">PLACED</span>
-                {% else %}
+                    {% elif order.fulfillment_status == 'In Delivery' %}
                     <span class="badge bg-warning" style="font-size: 1.05rem;">IN DELIVERY</span>
+                {% else %}
+                    <span class="badge bg-danger" style="font-size: 1.05rem;">PENDING</span>
                 {% endif %}
             </td>
           </tr>

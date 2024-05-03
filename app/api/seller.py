@@ -70,6 +70,7 @@ def sale_history(page = 1):
     per_page = 6
     orders = InventoryItem.get_sale_orders(current_user.id, page, per_page)
     # print(orders)
+    # print(orders)
     total_items = InventoryItem.count_sale_orders(current_user.id)
     max_page = math.ceil(total_items / per_page)
     return render_template('sale_history.html', title='Sale History', orders=orders, 
@@ -81,11 +82,20 @@ def sale_history(page = 1):
 def order_details(oid):
     order_details= InventoryItem.get_order_details(oid, current_user.id)
     # order_details = [dict(rows) for row in rows]
-
+    if all(item[10] == 'fulfilled' for item in order_details):
+        fulfillment_status = 'FULFILLED'
+    elif all(item[10] == 'cancelled' for item in order_details):
+        fulfillment_status = 'CANCELLED'
+    elif all(item[10] == 'placed' for item in order_details):
+        fulfillment_status = 'PLACED'
+    elif all(item[10] == 'in delivery' for item in order_details):
+        fulfillment_status = 'IN DELIVERY'
+    else: 
+        fulfillment_status = 'PENDING'
     if not order_details:
         flash('No order found or you do not have permission to view this order.', 'error')
         return redirect(url_for('seller.sale_history'))
-    return render_template('sale_order_details.html', order_details=order_details, role=User.getRole(current_user.id))
+    return render_template('sale_order_details.html', order_details=order_details, fulfillment_status = fulfillment_status, role=User.getRole(current_user.id))
 
 @bp.route('/mark_as_fulfilled/<int:oiid>/<int:oid>', methods=['POST'])
 @login_required
