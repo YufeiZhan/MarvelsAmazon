@@ -155,6 +155,9 @@ def register():
                          form.lastname.data):
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
+        else:
+            flash('Illegal input in your information. Please try again.')
+            return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
 
