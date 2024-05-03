@@ -53,6 +53,14 @@
   Withdraw (No Overdraft)
 </a>
 <input type="number" id="withdrawAmount" name="withdrawAmount" value="{{ user_info.balance }}" class="number-input">
+<a type="button" id="viewBuyer" href="{{ url_for('users.display_all_buyers', roleType='buyers') }}" class="btn btn-purple">
+  <i class="bi bi-eye-fill"></i>
+  Show All Buyers
+</a>
+<a type="button" id="viewSeller" href="{{ url_for('users.display_all_buyers', roleType='sellers') }}" class="btn btn-purple">
+  <i class="bi bi-eye-fill"></i>
+  Show All Sellers
+</a>
 
 <br>
 <br>
