@@ -53,3 +53,18 @@ class SellersProduct:
             quantity=quantity
         )
         return rows
+    
+    @staticmethod
+    def get_product_inventory(iid):
+        quantity = app.db.execute(
+            '''
+            SELECT 
+                i.quantity_available,
+            FROM
+                Inventory i 
+            WHERE 
+                i.iid = :iid;
+            ''', iid=iid)[0][0]
+
+        return quantity
+        

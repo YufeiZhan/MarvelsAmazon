@@ -66,6 +66,7 @@ Some useful commands:
 - [] Cartitems add a time field to sort it in cart
 - [] Cart: refine quantity condition + implement coupon, remove all, and submit
 - [] Seller's sale history's redirection is not consistent for now
+- [] SellerProduct used name but should use pid
 
 ## Note on Hiding Credentials
 

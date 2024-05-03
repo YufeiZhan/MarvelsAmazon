@@ -1,12 +1,8 @@
-from flask import render_template, request, flash, redirect, url_for
-from flask_login import current_user, login_user, login_required
+from flask import render_template, request, flash, redirect, jsonify
+from flask_login import current_user, login_required
 
-import datetime
-
-from ..models.product import Product
 from ..models.user import User
 from ..models.sellersProduct import SellersProduct
-from ..models.cart import Cart
 
 from flask import Blueprint
 bp = Blueprint('sellersProduct', __name__)
@@ -31,3 +27,10 @@ def increase_item():
     except Exception as e:
         flash(f'Failed to add product: {str(e)}')
     return redirect(request.referrer)
+
+@bp.route('/sellersProduct/check_availability/<int:iid>')
+@login_required
+def check_availability(iid):
+    quantity_left = SellersProduct.get_product_inventory(iid)
+
+    return jsonify(quantity_left = quantity_left)

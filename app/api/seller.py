@@ -1,6 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user, login_user, login_required
-import datetime
 import math
 from ..models.seller import InventoryItem
 from ..models.user import User

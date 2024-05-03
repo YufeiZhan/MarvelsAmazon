@@ -2,7 +2,6 @@
 
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
-
 {% block content %}
 <div class="container mt-5">
     <h2>Your Cart Items</h2>
@@ -52,7 +51,7 @@
         </form>
         <h2 id="total-price" >Total Price: {{total_price}}</h2>
         <button class="btn btn-danger" onclick="removeAll({{user.id}})"> Clean All </button>
-        <button class="btn btn-purple"> Submit </button>
+        <button class="btn btn-purple" onclick="submitOrder({{user.id}},{{total_price}},{{user.balance}})"> Submit </button>
     </div>
 </div>
 
@@ -86,6 +85,41 @@
     function removeAll(uid){
         fetch("/cart/remove/" + uid + "/all")
         .then(response => { window.location.reload(); })
+    }
+
+    // function submitOrder(cart_items, total_price, balance){
+    async function submitOrder(uid,total,balance){
+        console.log("Submit button is clicked.")
+        // console.log("cart item:",{{cart_items}})
+
+        // Check inventories
+        var response = await fetch("/cart/check_inventories/"+ uid)
+        var data = await response.json()
+        console.log("check inventories validity:",data.good)
+        if (!(data.good)){ alert("Cart items exceed inventories. Please remove some items.") }
+
+        // Check balances
+        const outOfBalance = total > balance
+        console.log("check out of balance:",outOfBalance)
+        if (outOfBalance){
+            alert("Balance is low. Please top up or remove some items from the cart.")
+        }
+
+        // Update inventories and balances
+        if (data.good && !outOfBalance){
+            await fetch("/cart/submit_inventories/" + uid)
+            await fetch("/cart/update_balance/" + uid + "/" + total)
+
+            // Create new order
+            await fetch("/cart/create_order/" + uid + "/" + "Dummy Address")
+
+            // Empty the cart
+            await fetch("/cart/remove/" + uid + "/all")
+            alert("Order submitted")
+            window.location.reload()
+        }
+
+        
     }
 </script>
 

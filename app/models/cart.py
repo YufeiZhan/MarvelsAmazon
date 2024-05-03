@@ -71,9 +71,67 @@ class Cart:
             WHERE uid = :uid
             ''', uid=userid)
 
+    @staticmethod
+    def get_inventories(userid):
+        rows = app.db.execute(
+            '''
+            SELECT c.iid, c.quantity, i.quantity_available
+            FROM CartItems c
+            INNER JOIN Inventory i ON c.iid = i.iid
+            WHERE c.uid = :uid
+            ''', uid = userid
+        )
+
+        return [*rows]
+    
+    @staticmethod
+    def decrease_inventories(iid,amount):
+        app.db.execute(
+            '''
+            UPDATE Inventory
+            SET quantity_available = quantity_available - :reduction
+            WHERE iid = :iid;
+            ''', iid=iid, reduction=amount)
+    
+    @staticmethod
+    def create_order(uid,address):
+        app.db.execute(
+            '''
+            INSERT INTO Orders(uid, address)
+            VALUES (:uid, :address);
+            ''', uid = uid, address = address)
+        
+        oid = app.db.execute(
+            '''
+            SELECT oid FROM Orders
+            WHERE uid = :uid
+            ORDER BY time_placed DESC
+            LIMIT 1;
+            ''', uid=uid
+        )[0][0]
+        return oid
+    
+    @staticmethod
+    def create_orderitem(oid,iid,quantity):
+        result = app.db.execute(
+            '''
+            INSERT INTO OrderItems(oid,iid,quantity_purchased)
+            VALUES (:oid, :iid, :quantity)
+            ''', oid=oid, iid=iid, quantity=quantity)
+        return result
+    
+    @staticmethod
+    def get_all(uid):
+        rows = app.db.execute(
+            '''
+            SELECT iid, quantity
+            FROM CartItems
+            WHERE uid=:uid AND status=1
+            ''', uid=uid)
+
+        return ([*rows])
 
 class CartWithPrice:
-
     def __init__(self, uid, iid, quantity, status, unit_price):
         self.uid = uid
         self.iid = iid
