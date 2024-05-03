@@ -72,7 +72,8 @@ class Product:
                 p.description, 
                 p.type, 
                 p.creator_id, 
-                ROUND(AVG(i.unit_price), 2) AS avg_unit_price
+                ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
+                 p.image_url
             FROM 
                 Products p
             JOIN 

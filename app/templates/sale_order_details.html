@@ -1,46 +1,11 @@
 {% extends "base.html" %}
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 {% block content %}
-<style>
-    .order-details p {
-        font-size: 16px;
-        margin: 0;
-        padding: 3px 0;
-    }
-
-    .item-row {
-        border-top: 1px solid #ccc;
-        margin-top: 15px;
-        padding-top: 15px;
-    }
-
-    .total-amount h4, .total-amount h5 {
-        margin-top: 20px;
-    }
-
-    .badge {
-        padding: 5px 10px;
-        font-size: 100%;
-    }
-
-    .status {
-        font-weight: bold;
-    }
-
-    .right-corner {
-        position: fixed;
-        bottom: 100px;
-        right: 200px;
-    }
-    .back-button {
-        position: fixed;
-        bottom: 100px; 
-        left: 200px;  
-    }
-</style>
+<br>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_2.css') }}">
 <div class="container mt-5">
     <div class="back-button">
-        <a href="{{ url_for('seller.sale_history') }}" class="btn btn-secondary">Back</a>
+        <a href="{{ url_for('seller.sale_history') }}" class="btn btn-secondary btn-purple" style="color:black">Back</a>
     </div>
     {% for order in order_details %}
     <h2>Order #{{ order.oid }}</h2>
@@ -68,6 +33,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">Product Name</th>
+                    <th scope="col">Image</th>
                     <th scope="col">Unit Price</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Status</th>
@@ -76,10 +42,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ order.product_name }}</td>
-                    <td>${{ order.unit_price }}</td>
-                    <td>{{ order.quantity_purchased }}</td>
-                    <td>
+                    <td style="font-weight: bold; color: black;">{{ order.product_name }}</td>
+                    <td><img src="{{ order.image_url }}"  style="max-height:150px; max-width:10rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ order.product_name }}">
+                    </td>
+                    <td style="font-weight: bold; color: black;">${{ order.unit_price }}</td>
+                    <td style="font-weight: bold; color: black;">{{ order.quantity_purchased }}</td>
+                    <td style="font-weight: bold; color: black;">
                         {% if order.item_status == 'fulfilled' %}
                             <span class="badge bg-success">FULFILLED</span>
                         {% elif order.item_status == 'cancelled' %}

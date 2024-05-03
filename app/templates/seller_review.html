@@ -3,125 +3,198 @@
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
 {% block head %}
-    {{ super() }}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/review.css') }}">
 {% endblock %}
 
 {% block content %}
-  <br><br>
-  {% if role ==0 %}
-    {%if isexist%}
-      <a class="btn btn-purple" id="edit_review" href="{{url_for('social.reviews_edit',buyer_id=user_id,target_id=target_id,target_type=1)}}">Edit your review!</a>
-    {%else%}
-      {%if iscustomer%}
-        <a class="btn btn-purple" id="create_review" href="{{url_for('social.reviews_create',buyer_id=user_id,target_id=target_id,target_type=1,target_name=target_name)}}">Write a review!</a>
-      {%else%}
-        <div class="btn btn-purple">Write a review after purchase from this seller!</div>
-      {%endif%}
-    {%endif%}
-    {% if reviews_received %}
-      <h2>All Reviews This Seller Received</h2>
-      <div class='table table-hover table-bordered container'>
-        {% for r, status in review_status_zip%}
-        <strong>{{r.buyer_name}}[ID: {{r.buyer_id}}]</strong>
-        <p>{{r.content}}</p>
-          <div class="voting" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}" data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
-            {%if status %}
+<br><br>
+{% if role ==0 %}
+{%if isexist%}
+<a class="btn btn-purple" id="edit_review"
+  href="{{url_for('social.reviews_edit',buyer_id=user_id,target_id=target_id,target_type=1)}}">Edit your review!</a>
+{%else%}
+{%if iscustomer%}
+<a class="btn btn-purple" id="create_review"
+  href="{{url_for('social.reviews_create',buyer_id=user_id,target_id=target_id,target_type=1,target_name=target_name)}}">Write
+  a review!</a>
+{%else%}
+<div class="btn btn-purple">Write a review after purchase from this seller!</div>
+{%endif%}
+{%endif%}
+
+
+{% if reviews_received %}
+<div class="card mt-3">
+  <h4 class="card-title">For {{target_name}}[ID: {{target_id}}]</h4>
+    <div class="card-body ml-3 mr-3">
+      <p class="card-subtitle mb-3">The average rating is <span class="review-number">{{avg_rating|round(1)}}</span></p>
+      <p class="card-subtitle">The number of reviews is <span class="review-number">{{ num_reviews }}</span></p>
+    </div>
+
+    <div>
+      <h5 class="ml-3">Top Rated Reviews</h5>
+      {% for r, status in top_review_zip%}
+      <div class="card bg-light mb-3 ml-3 mr-3">
+        <div class="card-body">
+          <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+          <p class="card-subtitle">{{ r.content }}</p>
+          <div class="review-footer">
+            <div class="rating">
+              {% for i in range(1,6) %}
+              <button type="button" class="star btn btn-light btn-sm" data-index="{{ i }}">
+                <i
+                  class="bi {% if i - 1 < r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+              </button>
+              {% endfor %}
+            </div>
+            <div class="num-thumb" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}"
+              data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
+              {%if status %}
               {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
-            {% else %}
+              {% else %}
               {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
-            {%endif%}
+              {%endif%}
+            </div>
           </div>
+        </div>
+        <div class="card-footer text-muted">
+          Last edited: <time>{{ r.review_time }}</time>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="ml-3 mr-3 mt-4">
+      <h5>Rating Chart</h5>
+      <canvas id="ratingChart"></canvas>
+    </div>
+
+    <div id="reviews">
+      <h5>All Reviews This Seller Received</h5>
+    </div>
+    {% for r, status in review_status_zip%}
+    <div class="card bg-light mb-3 ml-3 mr-3">
+      <div class="card-body">
+        <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+        <p class="card-subtitle">{{ r.content }}</p>
+        <div class="review-footer">
           <div class="rating">
             {% for i in range(1,6) %}
-              <button type="button" class="star" data-index="{{ i }}">
-                {% if i - 1 < r.rating %}
-                  <i class="bi {% if i <= r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
-                {% else %}
-                  <i class="bi bi-star"></i>
-                {% endif %}
-              </button>
+            <button type="button" class="star btn btn-light btn-sm" data-index="{{ i }}">
+              <i
+                class="bi {% if i - 1 < r.rating %}bi-star-fill{% elif i - 0.5 == r.rating %}bi-star-half{% else %}bi-star{% endif %}"></i>
+            </button>
             {% endfor %}
           </div>
-        {% endfor %}
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=1)}}">Start</a></li>
-            <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr-1)}}" >Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
-            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr+1)}}">Next</a></li>
-            <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link" href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=max_page_rr)}}">End</a></li>
-          </ul>
-        </nav> 
+          <div class="num-thumb" data-seller-id="{{ r.target_id }}" data-buyer-id="{{ r.buyer_id }}"
+            data-user-id="{{ user_id }}" onclick="upvoteReview(this)">
+            {%if status %}
+            {{ r.upvotes }} <i class="bi bi-hand-thumbs-up-fill"></i>
+            {% else %}
+            {{ r.upvotes }} <i class="bi bi-hand-thumbs-up"></i>
+            {%endif%}
+          </div>
+        </div>
       </div>
-      <h3>Reviews Summary</h3>
-      <div><strong>The average rating is {{avg_rating|round(1)}}</strong></div>
-      <div><strong>The number of reviews is {{num_reviews}}</strong></div>
-      <canvas id="ratingChart"></canvas>
+      <div class="card-footer text-muted">
+        Last edited: <time>{{ r.review_time }}</time>
+      </div>
+    </div>
+    {% endfor %}
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
+            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=1)}}#reviews">Start</a>
+        </li>
+        <li class="page-item {% if page_rr == 1 %} disabled {% endif %}"><a class="page-link"
+            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr-1)}}#reviews">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">{{page_rr}}</a></li>
+        <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
+            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=page_rr+1)}}#reviews">Next</a>
+        </li>
+        <li class="page-item {% if page_rr == max_page_rr %} disabled {% endif %}"><a class="page-link"
+            href="{{url_for('social.seller_reviews_summary',seller_id=reviews_received[0].target_id,page_rr=max_page_rr)}}#reviews">End</a>
+        </li>
+      </ul>
+    </nav>
 
     {% else %}
-      <h3>No one has left review for this seller.</h2>
-    {% endif %}
-  {%else%}
-    <h3>Please view this page as a buyer.</h2>
+    <h3>No one has left review for this seller.
+  </h2>
+  {% endif %}
+</div>
+{%else%}
+<h3>Please view this page as a buyer.</h2>
   {% endif %}
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const ctx = document.getElementById('ratingChart').getContext('2d');
-      const data = {{ hist | safe }};
-      const labels = Object.keys(data);
-      const counts = Object.values(data);
+      const data = {{ hist | safe
+    }};
+    const labels = Object.keys(data);
+    const counts = Object.values(data);
 
 
-      const myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-              labels: labels,
-              datasets: [{
-                  label: 'Counts of Ratings',
-                  data: counts,
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)'
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)'
-                  ],
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              scales: {
-                  y: {
-                      beginAtZero: true
-                  }
-              }
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Counts of Ratings',
+          data: counts,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
           }
-      });
+        }
+      }
     });
-  
+    });
+
     function upvoteReview(votingElement) {
       const sellerId = votingElement.getAttribute('data-seller-id');
       const buyerId = votingElement.getAttribute('data-buyer-id');
       const userId = votingElement.getAttribute('data-user-id');
       fetch(`/upvote?target_id=${sellerId}&target_type=1&buyer_id=${buyerId}&user_id=${userId}`, { method: 'GET' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status) {
-          votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up-fill"></i>`;
-        } else {
-          votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up"></i>`;
-        }
-      })
-      .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+          if (data.status) {
+            votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up-fill"></i>`;
+          } else {
+            votingElement.innerHTML = `${data.new_upvotes} <i class="bi bi-hand-thumbs-up"></i>`;
+          }
+        })
+        .catch(error => console.error('Error:', error));
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.location.hash) {
+        const reviewsSection = document.getElementById(window.location.hash.substring(1));
+        if (reviewsSection) {
+          reviewsSection.scrollIntoView();
+        }
+      }
+    });
+
   </script>
-{% endblock %}
+  {% endblock %}

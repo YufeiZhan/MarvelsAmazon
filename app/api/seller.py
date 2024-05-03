@@ -12,7 +12,7 @@ bp = Blueprint('seller', __name__)
 @bp.route('/seller_inventory/<int:page>')
 @login_required
 def seller_inventory(page = 1):    
-    per_page = 6
+    per_page = 8
     total_items = InventoryItem.count_by_seller_id(current_user.id)
     inventory_items = InventoryItem.get_page_by_seller_id(current_user.id, page, per_page)
     max_page = math.ceil(total_items / per_page)
@@ -57,7 +57,8 @@ def update_quantity(iid):
 @bp.route('/delete_inventory/<int:iid>', methods=['POST'])
 @login_required
 def delete_inventory(iid):
-    InventoryItem.delete(iid, current_user.id)
+    status = InventoryItem.delete(iid, current_user.id)
+    # print(status)
     flash('Product removed successfully!')
     return redirect(url_for('seller.seller_inventory'))
 
