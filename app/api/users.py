@@ -47,12 +47,21 @@ def order_history(page_bo=1,page_so=1):
     buyerOrders = User.get_order_page(current_user.id, page_bo)
     max_page_bo = math.ceil(len(User.get_all_order(current_user.id)) / User.entry_per_page)
 
-    per_page = 6
     sellerOrders = InventoryItem.get_sale_orders(current_user.id, page_so, InventoryItem.entry_per_page)
     max_page_so = math.ceil(InventoryItem.count_sale_orders(current_user.id) / InventoryItem.entry_per_page)
     return render_template('order_history.html', title='Order History', role=User.getRole(current_user.id),
                            buyerOrders=buyerOrders, page_bo=page_bo, max_page_bo=max_page_bo,
                            sellerOrders=sellerOrders, page_so=page_so, max_page_so=max_page_so)
+
+@bp.route('/order_detail/<int:oid>')
+@login_required
+def order_details(oid):
+    items = User.get_order_detail(oid)
+    total_price = User.get_order_total(oid)
+
+    return render_template('buyer_order_details.html', role = User.getRole(current_user.id),
+                           items = items, orderId = oid, total_price=total_price)
+
 
 @bp.route('/topup/<id>')
 def topup(id):

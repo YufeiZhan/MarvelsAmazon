@@ -264,3 +264,27 @@ class User(UserMixin):
                 SET role_indicator = :role
                 WHERE uid = :id
                 """, role=role, id=id)
+
+    @staticmethod
+    def get_order_detail(oid):
+        rows = app.db.execute(
+            '''
+            SELECT oiid, iid, quantity_purchased, item_status
+            FROM OrderItems
+            WHERE oid=:oid;
+            ''', oid=oid)
+        
+        return ([*rows])
+    
+    @staticmethod
+    def get_order_total(oid):
+        total = app.db.execute(
+            '''
+            SELECT ROUND(CAST(SUM(i.unit_price * oi.quantity_purchased) AS NUMERIC))
+            FROM OrderItems oi
+            INNER JOIN Inventory i ON oi.iid=i.iid
+            WHERE oid = :oid;
+            ''', oid = oid
+        )[0][0]
+
+        return total

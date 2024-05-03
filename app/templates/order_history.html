@@ -23,7 +23,7 @@
           <tbody>
             {% for row in buyerOrders %}
             <tr>
-              <td><a href="{{ url_for('seller.order_details', oid=row.order_id) }}">{{ row.order_id }}</a></td>
+              <td><a href="{{ url_for('users.order_details', oid=row.order_id) }}">{{ row.order_id }}</a></td>
               <td>{{ row.order_placing_time }}</td>
               <td>{{ row.total_amount }}</td>
               <td>{{ row.total_items }}</td>
