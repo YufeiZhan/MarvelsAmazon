@@ -65,6 +65,15 @@ class User(UserMixin):
         except Exception as e:
             print(str(e))
             return None
+        
+    @staticmethod
+    def get_balance_history(id):
+        try:
+            records = app.db.execute("""SELECT balance, balance_timestamp FROM BalanceHistory WHERE uid = :id""", id=id)
+            return records
+        except Exception as e:
+            print(str(e))
+            return None
 
     @staticmethod
     def update_balance_history(id):
