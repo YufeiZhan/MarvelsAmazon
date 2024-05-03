@@ -46,44 +46,45 @@ width: 50%;
     margin-bottom: 20px;
   }
 
-  .search-form {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    border: 1px solid #1f6141b6;
-    padding: 5px 20px;
-    border-radius: 30px;
-    margin-right: 50px;
-  }
+.search-form {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 5px 4px;
+  border-radius: 30px;
+  margin-right: 300px;
+}
 
-  input[type="search"] {
-    border: none;
-    margin-left: 20px;
-    outline: none;
-    width: 100%;
-    background-color: #e8d5d5ca;
-  }
+.search-form input[type="search"] {
+  border: none;
+  margin-left: 20px;
+  outline: none;
+  width: 100%;
+  background-color: #232121a8;
+  color: #1640e4;
+}
 
-  .form-select {
-    border: 1px solid #1f6141b6;
-    border-radius: 30px;
-    padding: 10px 20px;
-    color: #ffffffcf;
-    background-color: #000000b5;
-    cursor: pointer;
-    -webkit-appearance: none; /* Removes default chrome and safari styling */
-    -moz-appearance: none;    /* Removes default Firefox styling */
-    appearance: none;         /* Removes default styling for other browsers */
-  }
+.form-select {
+  border: 1px solid #1f6141b6;
+  border-radius: 30px;
+  padding: 10px 20px;
+  color: #1640e4;
+  background-color: #000000;
+  cursor: pointer;
+  -webkit-appearance: none; /* Removes default chrome and safari styling */
+  -moz-appearance: none;    /* Removes default Firefox styling */
+  appearance: none;         /* Removes default styling for other browsers */
+}
 
-  .form-select:focus {
-    outline: none;
-  }
+.form-select:focus {
+  outline: none;
+}
 
-  .filter-by {
-    width: 550px;
-  }
+.filter-by {
+  width: 550px;
+}
 
-  .sort-by {
-    width: 500px;
-  }
+.sort-by {
+  width: 500px;
+}
