@@ -114,7 +114,12 @@ def seller_reviews_summary(seller_id, page_rr=1):
     seller_reviews = Reviews.get_reviews_received_by_page(seller_id, page_rr)
     max_page_rr = math.ceil(Reviews.get_reviews_received_count(seller_id)/Reviews.entry_per_page)
     summary = Reviews.get_summary_for_seller(seller_id)
-    role = User.getRole(current_user.id)
+    if current_user.is_authenticated:
+        role = User.getRole(current_user.id)
+        uid = current_user.id
+    else:
+        role = 0
+        uid = -1
     data = summary["hist"]
     ratings_data_dict = {k: v for k, v in data}
     hist = json.dumps(ratings_data_dict)
@@ -123,7 +128,7 @@ def seller_reviews_summary(seller_id, page_rr=1):
     top_review_zip = None
     if seller_reviews:
         for r in seller_reviews:
-            upvote_status = Reviews.check_upvote(seller_id, 1, r.buyer_id, current_user.id)
+            upvote_status = Reviews.check_upvote(seller_id, 1, r.buyer_id, uid)
             if len(upvote_status) == 0:
                 upvote_status = 0
             else:
@@ -132,22 +137,22 @@ def seller_reviews_summary(seller_id, page_rr=1):
         review_status_zip = zip(seller_reviews, lst_upvote_status)
         top_reviews = Reviews.get_top_for_seller(seller_id)
         top_review_zip = zip(top_reviews, lst_upvote_status)
-    iscustomer=Reviews.iscustomer(seller_id, current_user.id, 1)
-    isexist = Reviews.isexist(current_user.id, seller_id, 1)
+    iscustomer=Reviews.iscustomer(seller_id, uid, 1)
+    isexist = Reviews.isexist(uid, seller_id, 1)
     return render_template('seller_review.html',
-                           reviews_received=seller_reviews,
-                           review_status_zip=review_status_zip,top_review_zip=top_review_zip,
-                           page_rr=page_rr, max_page_rr=max_page_rr,
-                           avg_rating=summary["avg_rating"],
-                           num_reviews=summary["num_reviews"],
-                           hist=hist,
-                           role=role,
-                           user_id=current_user.id,
-                           iscustomer=iscustomer,
-                           isexist=isexist,
-                           target_id=summary["target_id"],
-                           target_name=summary["target_name"],
-                           )
+                        reviews_received=seller_reviews,
+                        review_status_zip=review_status_zip,top_review_zip=top_review_zip,
+                        page_rr=page_rr, max_page_rr=max_page_rr,
+                        avg_rating=summary["avg_rating"],
+                        num_reviews=summary["num_reviews"],
+                        hist=hist,
+                        role=role,
+                        user_id=uid,
+                        iscustomer=iscustomer,
+                        isexist=isexist,
+                        target_id=summary["target_id"],
+                        target_name=summary["target_name"],
+                        )
 
 @bp.route('/product_review/<int:iid>/<int:page_rr>', methods=['GET','POST'])
 @bp.route('/product_review/<int:iid>', methods=['GET','POST'])
@@ -155,7 +160,12 @@ def product_reviews_summary(iid, page_rr=1):
     product_reviews = Reviews.get_all_reviews_for_some_product(iid, page_rr)
     max_page_rr = math.ceil(Reviews.get_all_reviews_for_some_product_count(iid)/Reviews.entry_per_page)
     summary = Reviews.get_summary_for_product(iid)
-    role = User.getRole(current_user.id)
+    if current_user.is_authenticated:
+        role = User.getRole(current_user.id)
+        uid = current_user.id
+    else:
+        role = 0
+        uid = -1
     data = summary["hist"]
     ratings_data_dict = {k: v for k, v in data}
     hist = json.dumps(ratings_data_dict)
@@ -164,7 +174,7 @@ def product_reviews_summary(iid, page_rr=1):
     top_review_zip = None
     if product_reviews:
         for r in product_reviews:
-            upvote_status = Reviews.check_upvote(iid, 0, r.buyer_id, current_user.id)
+            upvote_status = Reviews.check_upvote(iid, 0, r.buyer_id, uid)
             if len(upvote_status) == 0:
                 upvote_status = 0
             else:
@@ -173,8 +183,8 @@ def product_reviews_summary(iid, page_rr=1):
         review_status_zip = zip(product_reviews, lst_upvote_status)
         top_reviews = Reviews.get_top_for_product(iid)
         top_review_zip = zip(top_reviews, lst_upvote_status)
-    iscustomer=Reviews.iscustomer(iid, current_user.id, 0)
-    isexist = Reviews.isexist(current_user.id, iid, 0)
+    iscustomer=Reviews.iscustomer(iid, uid, 0)
+    isexist = Reviews.isexist(uid, iid, 0)
     return render_template('product_review.html',
                            reviews_received=product_reviews,
                            review_status_zip=review_status_zip, top_review_zip=top_review_zip,
@@ -183,7 +193,7 @@ def product_reviews_summary(iid, page_rr=1):
                            num_reviews=summary["num_reviews"],
                            hist=hist,
                            role=role,
-                           user_id=current_user.id,
+                           user_id=uid,
                            iscustomer=iscustomer,
                            isexist=isexist,
                            target_id=summary["target_id"],

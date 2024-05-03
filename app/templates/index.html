@@ -82,6 +82,9 @@
   <i class="bi bi-patch-plus-fill"></i>
   Create a New Product?
 </a>
+{% else %}
+<p><a href=" 'users.login') }}">Log in</a > to see your purchase history!</p >
+{% endif %}
 
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">
@@ -107,9 +110,6 @@
   </ul>
 </nav>
 
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
-{% endif %}
 
 <script>
   function updateProductType() {
