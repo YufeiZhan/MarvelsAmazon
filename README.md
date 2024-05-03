@@ -1,7 +1,7 @@
 # Mini-Amazon
 Based on  [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](https://www.linkedin.com/in/yihaoh/)'s code, we implemented a mini-amazon website where people can buy things from us.
 
-**PANOPTO DEMO LINK**: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=dfb6b722-d29f-482f-b302-b1650117b26e
+**PANOPTO DEMO LINK**: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=69a6ee32-92c2-451e-bdd3-b16501255dfe
 
 ## Dummy User
 For development purpose, we have a dummy user that can be used to test newly-implemented functionalities.
