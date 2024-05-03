@@ -46,7 +46,7 @@
     {% for r, status in top_review_zip%}
     <div class="card bg-light mb-3 ml-3 mr-3">
       <div class="card-body">
-        <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+        <p class="card-title text-muted">From buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
         <p class="card-subtitle">{{ r.content }}</p>
         <div class="review-footer">
           <div class="rating">
@@ -88,7 +88,7 @@
     {% for r, status in review_status_zip%}
     <div class="card bg-light mb-3 ml-3 mr-3">
       <div class="card-body">
-        <p class="card-title text-muted">For buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
+        <p class="card-title text-muted">From buyer: {{r.buyer_name}}[ID: {{r.buyer_id}}]</p>
         <p class="card-subtitle">{{ r.content }}</p>
         <div class="review-footer">
           <div class="rating">
