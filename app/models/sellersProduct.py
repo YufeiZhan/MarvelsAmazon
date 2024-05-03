@@ -2,7 +2,7 @@ from flask import current_app as app
 
 
 class SellersProduct:
-    def __init__(self, seller_id, seller_name, inventory_id, product_name, unit_price, quantity_available, description, type):
+    def __init__(self, seller_id, seller_name, inventory_id, product_name, unit_price, quantity_available, description, type, image_url):
         self.seller_id = seller_id
         self.seller_name = seller_name
         self.inventory_id = inventory_id
@@ -11,6 +11,7 @@ class SellersProduct:
         self.quantity_available = quantity_available
         self.description = description
         self.type = type
+        self.image_url = image_url
 
     @staticmethod
     def get_seller_products(product_name):
@@ -24,7 +25,8 @@ class SellersProduct:
                 i.unit_price,
                 i.quantity_available,
                 p.description,
-                p.type
+                p.type,
+                p.image_url
             FROM
                 Products p
             JOIN
