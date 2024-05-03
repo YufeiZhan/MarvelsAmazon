@@ -5,7 +5,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_sale.css') }}">
 <br>
-        <div class="container mt-5">
+        <div class="container mt-5" style="color:rgba(240, 248, 255, 0.854)">
         <h2>Your Inventory</h2>
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages() %}
@@ -22,7 +22,7 @@
             {% for item in inventory_items %}
               <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="{{ item.image_url }}"  style="max-height:300px; max-width:12rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
+                    <img src="{{ item.image_url }}"  style="max-height:260px; max-width:12rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
                     <div class="card-body">
                     <h5 class="card-title">{{ item.product_name }} [#{{item.iid}}]</h5>
                     <p class="card-text">{{ item.description }}</p>
@@ -122,12 +122,13 @@
         <!-- <div style="position: fixed; bottom: 20px; right: 20px;">
             <a href="{{ url_for('seller.add_inventory_item') }}" class="btn btn-black">Add New Product</a>
         </div> -->
-        <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#addProductModal">
-            Add New Product
+        <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#addProductModal" style="font-size: 20px;">
+            <i class="bi bi-patch-plus-fill"></i>
+            Add New Product?
           </button>
         <!-- Modal -->
         <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="color:black">
             <div class="modal-content">
                 <div class="modal-header">
                 <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
