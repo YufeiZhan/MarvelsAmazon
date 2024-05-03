@@ -280,7 +280,7 @@ class User(UserMixin):
     def get_order_total(oid):
         total = app.db.execute(
             '''
-            SELECT ROUND(CAST(SUM(i.unit_price * oi.quantity_purchased) AS NUMERIC))
+            SELECT ROUND(CAST(SUM(i.unit_price * oi.quantity_purchased) AS NUMERIC),2)
             FROM OrderItems oi
             INNER JOIN Inventory i ON oi.iid=i.iid
             WHERE oid = :oid;
