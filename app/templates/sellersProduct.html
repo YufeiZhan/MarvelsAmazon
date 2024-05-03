@@ -5,7 +5,14 @@
 {% block content %}
   <br><br>
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/page.css') }}">
+  <div class="section" style="color:aliceblue">
   <h2>All Sellers</h2>
+
+  <div class="container ml-0 mb-3">
+    <img src="{{ avail_products[0].image_url }}" alt="{{ avail_products[0].product_name }}" style="width:auto; max-width:30%; height:auto;">
+  </div>
+
   <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
       <tr>
@@ -22,27 +29,18 @@
       {% for s in avail_products %}
         <tr>
           <th scope="row">{{s.seller_id}}</th>
-          <!-- <td>{{s.seller_name}}</td> -->
           <td><a href="{{url_for('social.seller_reviews_summary',seller_id=s.seller_id)}}">{{s.seller_name}}</a></td>
           <td>{{s.inventory_id}}</td>
-          <!-- <td>{{s.product_name}}</td> -->
           <td><a href="{{url_for('social.product_reviews_summary',iid=s.inventory_id)}}">{{s.product_name}}</a></td>
           <td>${{s.unit_price}}</td>
           <td>{{ s.quantity_available }} units left</td>
-          <!-- <td>
-            {% if s.quantity_available > 0 %}
-              <button type="button" class="btn btn-primary">Add To Cart</button>
-            {% else %}
-              <button type="button" class="btn btn-secondary" disabled>Out Of Stock</button>
-            {% endif %}
-          </td> -->
           <td>
             {% if s.quantity_available > 0 %}
             <form action="{{ url_for('sellersProduct.increase_item') }}" method="post">
               <input type="hidden" name="userid" value="{{ current_user.id }}">
               <input type="hidden" name="inventoryid" value="{{ s.inventory_id }}">
               <input type="number" name="quantity" min="1" max="{{ s.quantity_available }}" value="1" class="form-control">
-              <button type="submit" class="btn btn-primary">Add To Cart</button>
+              <button type="submit" class="btn btn-primary" style="background-color: #060606; color: #1640e4;">Add To Cart</button>
             </form>
             {% else %}
             <button type="button" class="btn btn-secondary" disabled>Out Of Stock</button>
@@ -64,5 +62,5 @@
 
 
   <br><br>
-  <a href="{{ url_for('index.index') }}" type="button" class="btn btn-primary">Back</a>
+  <a href="{{ url_for('index.index') }}" type="button" class="btn btn-primary" style="background-color: #060606; color: #1640e4;">Back</a>
 {% endblock %}

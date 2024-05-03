@@ -73,7 +73,7 @@ class Product:
                 p.type, 
                 p.creator_id, 
                 ROUND(AVG(i.unit_price), 2) AS avg_unit_price,
-                 p.image_url
+                p.image_url
             FROM 
                 Products p
             JOIN 
@@ -232,40 +232,22 @@ class Product:
         return [Product(*row) for row in rows]
 
     @staticmethod
-    def post_product(id, name, description, type):
+    def post_product(id, name, description, type, image_url):
         result = app.db.execute(
             '''
-            INSERT INTO Products (name, description, type, creator_id)
-            VALUES (:name, :description, :type, :id);
+            INSERT INTO Products (name, description, type, creator_id, image_url)
+            VALUES (:name, :description, :type, :id, :image_url);
             ''',
             name=name, 
             description=description, 
             type=type,
-            id=id
+            id=id,
+            image_url=image_url
         )
         return result
 
     @staticmethod
     def get_product(id):
-        # rows = app.db.execute(
-        #     '''
-        #     SELECT 
-        #         p.pid, 
-        #         p.name, 
-        #         p.description, 
-        #         p.type, 
-        #         p.creator_id, 
-        #         ROUND(AVG(i.unit_price), 2)
-        #     FROM 
-        #         Products p
-        #     JOIN 
-        #         Inventory i ON p.pid = i.pid
-        #     WHERE 
-        #         p.pid = :id
-        #     GROUP BY 
-        #         p.pid, p.name, p.description, p.type, p.creator_id;
-        #     ''', id=id)
-        # return [Product(*row) for row in rows]
         row = app.db.execute(
             '''
             SELECT 
@@ -280,17 +262,19 @@ class Product:
         return [*row]
 
     @staticmethod
-    def edit_product(id, name, description, type):
+    def edit_product(id, name, description, type, image_url):
         result = app.db.execute(
             '''
             UPDATE Products
             SET name = :name, 
                 description = :description, 
-                type = :type
+                type = :type,
+                image_url = :image_url
             WHERE pid = :id;
             ''',
             name=name, 
             description=description, 
             type=type,
-            id=id)
+            id=id,
+            image_url=image_url)
         return result
