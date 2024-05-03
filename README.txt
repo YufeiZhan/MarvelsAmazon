@@ -99,4 +99,9 @@ Ethan Yang (qy46):
 3. Fixed bugs in product, user, order pages
 4. Updated the database design for report
 
+Yufei Zhan (yz858):
+1. Order submission
+2. Order details
+
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
+LINK to demo: Please find the demo link in our Gitlab README.md
