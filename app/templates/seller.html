@@ -22,7 +22,7 @@
             {% for item in inventory_items %}
               <div class="col-md-3 mb-3">
                 <div class="card">
-                    <img src="{{ item.image_url }}"  style="max-height:300px; max-width:16rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
+                    <img src="{{ item.image_url }}"  style="max-height:300px; max-width:12rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
                     <div class="card-body">
                     <h5 class="card-title">{{ item.product_name }} [#{{item.iid}}]</h5>
                     <p class="card-text">{{ item.description }}</p>
