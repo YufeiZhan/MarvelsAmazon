@@ -1,16 +1,44 @@
 .rating .star {
-    background: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display:inline;
+  scale: 1.5;
+  margin: 0 5px;
+  margin-top: 10px;
 }
 
 .bi-star, .bi-star-fill, .bi-star-half {
-  font-size: 24px;
+  font-size: 20;
   color: gold;
 }
 
-.rating .star {
-  width: 50px;
-  height: 50px;
+.review-footer {
+  display: flex;  /* Enable Flexbox */
+  justify-content: space-between;  /* Space between items pushes them to opposite ends */
+  align-items: center;  /* Align items vertically in the center */
+}
+
+.rating {
+  display: flex;  /* Also enable Flexbox for the rating to keep stars inline */
+  align-items: center;  /* Align stars vertically */
+}
+
+.num-thumb {
+  color: rgb(41, 98, 242);
+  display: flex;  /* Ensure voting content is inline */
+  align-items: center;  /* Align upvotes count and icon vertically */
+  font-size: 20px;  /* Font size for upvotes count */
+}
+
+.num-thumb i {
+  margin-left: 5px;  /* Space between number of upvotes and the icon */
+  color: rgb(41, 98, 242);  /* Color for the thumbs-up icon */
+}
+
+.review-number {
+  font-size: 24px;  /* Larger font size for emphasis */
+  font-weight: bold; /* Bold for additional emphasis */
 }
