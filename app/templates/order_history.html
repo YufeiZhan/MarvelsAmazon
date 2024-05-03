@@ -16,6 +16,7 @@
               <th scope="col">Total Amount</th>
               <th scope="col">Total Items</th>
               <th scope="col">Fulfillment Status</th>
+              <th scope="col">More Details</th>
             </tr>
           </thead>
           <tbody>
@@ -26,6 +27,9 @@
               <td>{{ row.total_amount }}</td>
               <td>{{ row.total_items }}</td>
               <td>{{ row.fulfillment_status }}</td>
+              <td>
+                <a href="{{ url_for('seller.order_details', oid=row.order_id) }}">Order Details</a>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
