@@ -103,5 +103,10 @@ Yufei Zhan (yz858):
 1. Order submission
 2. Order details
 
+Longtian Ye (ly186):
+1. Seller inventory page
+2. Sale history
+3. Modified background
+
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
 LINK to demo: Please find the demo link in our Gitlab README.md
