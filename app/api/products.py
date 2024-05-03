@@ -16,9 +16,14 @@ bp = Blueprint('products', __name__)
 def k_items():
     k = request.args.get('k', default=1, type=int)
     products = Product.get_top_expensive(k)
-    return render_template('product.html',
-                           avail_products=products,
-                           role=User.getRole(current_user.id))
+    if current_user.is_authenticated:
+        return render_template('product.html',
+                            avail_products=products,
+                            role=User.getRole(current_user.id))
+    else:
+        return render_template('product.html',
+                            avail_products=products,
+                            role=0)
 
 @bp.route('/products/search')
 def search():

@@ -11,9 +11,14 @@ bp = Blueprint('sellersProduct', __name__)
 def seller_products():
     product_name = request.args.get('product_name')
     products_info = SellersProduct.get_seller_products(product_name)
-    return render_template('sellersProduct.html',
-                           avail_products=products_info,
-                           role=User.getRole(current_user.id))
+    if current_user.is_authenticated:
+        return render_template('sellersProduct.html',
+                            avail_products=products_info,
+                            role=User.getRole(current_user.id))
+    else:
+        return render_template('sellersProduct.html',
+                            avail_products=products_info,
+                            role=0)
 
 @bp.route('/sellersProduct/increase', methods=['POST'])
 @login_required

@@ -91,3 +91,12 @@ Yufei Zhan (yz858):
 
 LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
 LINK to Milestone 4 Video: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5c07378e-cd40-4da1-bb05-b15500413b7b
+
+----------- Milestone Last ----------- 
+Ethan Yang (qy46):
+1. Perform data preprocessing to clean the demo data
+2. Implemented all social guru features (full-stack)
+3. Fixed bugs in product, user, order pages
+4. Updated the database design for report
+
+LINK to GITLAB REPO: https://gitlab.oit.duke.edu/youngnbroke/mini-amazon
