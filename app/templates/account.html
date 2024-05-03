@@ -54,6 +54,13 @@
 </a>
 <input type="number" id="withdrawAmount" name="withdrawAmount" value="{{ user_info.balance }}" class="number-input">
 
+<br>
+<br>
+<br>
+<center>
+  <img src="/balance_history/{{ user_info.id }}" alt="Balance History Data Visualization">
+</center>
+
 <script>
   let withdrawAmount = document.getElementById("withdrawAmount").value;
   const withdrawButton = document.getElementById("withdrawButton");
