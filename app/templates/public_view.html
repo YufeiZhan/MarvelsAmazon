@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
+
+{% block content %}
+
+<br><br>
+<h2>All {{ role_type.capitalize() }}'s Public View</h2>
+
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Email</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      {% if role_type == "sellers" %}
+      <th scole="col">Seller Summary</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for user_info_row in user_info %}
+    <tr>
+      <td>{{ user_info_row.email }}</td>
+      <td>{{ user_info_row.firstname }}</td>
+      <td>{{ user_info_row.lastname }}</td>
+      {% if role_type == "sellers" %}
+      <td>
+        <a href="{{ url_for('social.seller_reviews_summary', seller_id=user_info_row.uid, page_rr=1 )}}">Go to summary for {{ user_info_row.firstname }}</a>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+</p>
+
+{% endblock %}

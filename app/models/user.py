@@ -173,6 +173,18 @@ class User(UserMixin):
         else:
             return User(*rows[0])
     
+    @staticmethod
+    def get_all_public_info_by(role):
+        rows = app.db.execute(
+            f"""
+            SELECT uid, email, firstname, lastname
+            FROM Users
+            WHERE role_indicator = :role
+            """,
+            role=role
+        )
+        return rows
+    
 
     @staticmethod
     def get_balance(uid):
