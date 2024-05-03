@@ -57,7 +57,8 @@ def update_quantity(iid):
 @bp.route('/delete_inventory/<int:iid>', methods=['POST'])
 @login_required
 def delete_inventory(iid):
-    InventoryItem.delete(iid, current_user.id)
+    status = InventoryItem.delete(iid, current_user.id)
+    # print(status)
     flash('Product removed successfully!')
     return redirect(url_for('seller.seller_inventory'))
 
