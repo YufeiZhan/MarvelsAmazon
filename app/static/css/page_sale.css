@@ -1,5 +1,5 @@
 .main{
-    background-image: url('../images/5.jpeg');
+    background-image: url('../images/1.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -10,7 +10,8 @@
 }
 .card {
     background-color: #f0f0f084;
-    border: 1px solid #ccc;
+    color:#000000;
+    border: 1px solid #0f215c;
     box-shadow: 4px 4px 5px rgba(0,0,0,0.8);
     }
 .quantity-col { width: 100px; 
