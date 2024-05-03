@@ -1,43 +1,8 @@
 {% extends "base.html" %}
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 {% block content %}
-<style>
-    .order-details p {
-        font-size: 16px;
-        margin: 0;
-        padding: 3px 0;
-    }
-
-    .item-row {
-        border-top: 1px solid #ccc;
-        margin-top: 15px;
-        padding-top: 15px;
-    }
-
-    .total-amount h4, .total-amount h5 {
-        margin-top: 20px;
-    }
-
-    .badge {
-        padding: 5px 10px;
-        font-size: 100%;
-    }
-
-    .status {
-        font-weight: bold;
-    }
-
-    .right-corner {
-        position: fixed;
-        bottom: 100px;
-        right: 200px;
-    }
-    .back-button {
-        position: fixed;
-        bottom: 100px; 
-        left: 200px;  
-    }
-</style>
+<br>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_2.css') }}">
 <div class="container mt-5">
     <div class="back-button">
         <a href="{{ url_for('seller.sale_history') }}" class="btn btn-secondary">Back</a>

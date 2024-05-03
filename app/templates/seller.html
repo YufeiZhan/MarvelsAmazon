@@ -3,40 +3,9 @@
 {% block role %} <div id="roleData" data-my-variable="{{ role }}"></div> {% endblock %}
 
 {% block content %}
-<style>
-    .quantity-col { width: 100px; 
-    }
-    .btn-quantity {
-        border-color: #000000; 
-    }
-    .btn-quantity-decrease {
-        border-color: #000000;
-    }
-  .input-group {
-    width: 140px;
-    }
-  .quantity-control {
-    /* display: flex; */
-    align-items: center;
-    gap: 10px;
-    }
-  .btn-blue {
-    color:white;
-    background-color:rgb(18, 111, 111);
-    }
-  .delete-btn {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    }
-  .card {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    box-shadow: 4px 4px 5px rgba(0,0,0,0.2);
-    }
-</style>
-
-    <div class="container mt-5">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_sale.css') }}">
+<br>
+        <div class="container mt-5">
         <h2>Your Inventory</h2>
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages() %}
@@ -51,7 +20,7 @@
 
         <div class="row">
             {% for item in inventory_items %}
-              <div class="col-md-4 mb-4">
+              <div class="col-md-3 mb-3">
                 <div class="card">
                     <img src="{{ item.image_url }}"  style="max-height:300px; max-width:16rem; height:auto; display: block; margin: auto;" class="card-img-top" alt="{{ item.product_name }}">
                     <div class="card-body">
