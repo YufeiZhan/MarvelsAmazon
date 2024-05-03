@@ -1,6 +1,8 @@
 from flask import current_app as app
 
 class InventoryItem:
+    entry_per_page = 6
+    
     def __init__(self, iid, pid, seller_id, product_name, unit_price, quantity_available, description, type, image_url):
         self.iid = iid
         self.pid = pid
