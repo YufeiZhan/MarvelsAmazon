@@ -133,6 +133,10 @@ class User(UserMixin):
 
     @staticmethod
     def register(email, password, firstname, lastname, balance = 0, role_indicator = 0):
+        if any(not c.isalnum()for word in firstname.split() for c in word ) or any(not c.isalnum() for word in lastname.split() for c in word)\
+            or any(keyword in firstname.lower() for keyword in ['select', 'update', 'delete', 'insert'])\
+            or any(keyword in lastname.lower() for keyword in ['select', 'update', 'delete', 'insert']):
+            return None        
         try:
             rows = app.db.execute(
                 """
