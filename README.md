@@ -3,6 +3,32 @@ Based on  [Rickard Stureborg](http://www.rickard.stureborg.com) and [Yihao Hu](h
 
 **PANOPTO DEMO LINK**: https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=69a6ee32-92c2-451e-bdd3-b16501255dfe
 
+## Functionality
+#### User
+1. User Registration and Login
+![Login](Screenshots/Login.png)
+![Registration](Screenshots/Registration.png)
+
+2. User Dashboard (Info Edit/Update, Finance - Top Up/Withdraw, Analytics)
+![Dashboard](Screenshots/Dashboard.png)
+
+3. Role Switching (On-Page Buyer/Seller Toggle)
+![RoleSiwtching](Screenshots/RoleSwitching.gif)
+
+#### Product
+1. Main Page
+![Main](Screenshots/Main.png)
+
+2. Product Detailed Page
+![Product](Screenshots/Product.png)
+
+3. Product/Seller Review
+![Review](Screenshots/Review.png)
+
+#### Cart
+Add/Remove item, Coupon Redemption, Clear All, Order Submission
+![Cart](Screenshots/Cart.png)
+
 ## Dummy User
 For development purpose, we have a dummy user that can be used to test newly-implemented functionalities.
 
@@ -56,19 +82,15 @@ Some useful commands:
 **Social Guru**: Ethan <br>
 
 ### Todo:
-- [] Some database schemas creation in create.sql didn't enforce primary key constraint
-- [] Fix Cartitems status field (should only has 2 status)
-- [] Filter the reviews (most recent # reviews)
+- [x] Enforce primary key constraints for all database schemas in create.sql
+- [x] Filter the reviews (most recent # reviews)
 - [x] For buyer and seller, provide different page views
 - [x] Fix Balance value
-- [] Order History and Sale History integrate to a same page
-- [] Add image to product field
-- [] Change users's updateRole to PUT request
-- [] Deal with the case where page is out of range
-- [] Cartitems add a time field to sort it in cart
-- [] Cart: refine quantity condition + implement coupon, remove all, and submit
-- [] Seller's sale history's redirection is not consistent for now
-- [] SellerProduct used name but should use pid
+- [x] Order History and Sale History integrate to a same page
+- [x] Add image to product field
+- [x] Deal with the case where page is out of range
+- [x] Cartitems add a time field to sort it in cart
+- [x] Cart: refine quantity condition + implement coupon, remove all, and submit
 
 ## Note on Hiding Credentials
 
